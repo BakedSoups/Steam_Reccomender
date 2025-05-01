@@ -25,7 +25,7 @@ type Game struct {
 	AverageForever int    `json:"average_forever"`
 }
 
-func main() {
+func createSteamSpy() {
 	resp, err := http.Get("https://steamspy.com/api.php?request=top100in2weeks")
 	if err != nil {
 		log.Fatal(err)
@@ -98,5 +98,6 @@ func main() {
 		}
 	}
 
-	fmt.Println("Top 50 games saved to SQLite database!")
+	fmt.Println("Top 50 games have been saved to SQLite")
+
 }
