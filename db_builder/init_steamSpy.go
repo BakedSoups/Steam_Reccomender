@@ -13,7 +13,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-type steanSPY struct {
+type steamSPY struct {
 	AppID          int    `json:"appid"`
 	Name           string `json:"name"`
 	Developer      string `json:"developer"`
@@ -32,13 +32,13 @@ func createSteamSpy() {
 	}
 	defer resp.Body.Close()
 
-	var gameMap map[string]steanSPY
+	var gameMap map[string]steamSPY
 	if err := json.NewDecoder(resp.Body).Decode(&gameMap); err != nil {
 		log.Fatal(err)
 	}
 
 	//convert map to slice and sort (SteamSpy does not guarantee order)
-	games := make([]steanSPY, 0, len(gameMap))
+	games := make([]steamSPY, 0, len(gameMap))
 	for _, game := range gameMap {
 		games = append(games, game)
 	}

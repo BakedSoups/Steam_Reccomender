@@ -8,7 +8,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func steamspy_appids() []int {
+func get_steamspy_appids() []int {
 	var appids []int
 	db, err := sql.Open("sqlite3", "./steamspy_top50.db")
 	if err != nil {

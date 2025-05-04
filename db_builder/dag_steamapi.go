@@ -7,7 +7,7 @@ import (
 )
 
 // pulls from steam store page based on the unique game id
-func steamApiPull(appID string) {
+func steamApiPull(appID string) (name string, description string, price string) {
 	url := fmt.Sprintf("https://store.steampowered.com/api/appdetails?appids=%s", appID)
 
 	resp, err := http.Get(url)
@@ -19,10 +19,9 @@ func steamApiPull(appID string) {
 	var result map[string]struct {
 		Success bool `json:"success"`
 		Data    struct {
-			Name      string `json:"name"`
-			Type      string `json:"type"`
-			ShortDesc string `json:"short_description"`
-			// Developers []string `json:"developers"`
+			Name       string   `json:"name"`
+			Type       string   `json:"type"`
+			ShortDesc  string   `json:"short_description"`
 			Publishers []string `json:"publishers"`
 			IsFree     bool     `json:"is_free"`
 			Price      struct {
@@ -36,12 +35,6 @@ func steamApiPull(appID string) {
 	}
 
 	info := result[appID]
-	if info.Success {
-		fmt.Printf("Name: %s\n", info.Data.Name)
-		fmt.Printf("Description: %s\n", info.Data.ShortDesc)
-		// fmt.Printf("Developers: %v\n", info.Data.Developers)
-		fmt.Printf("Price: %s\n", info.Data.Price.FinalFormatted)
-	} else {
-		fmt.Println("Failed to fetch app details")
-	}
+
+	return info.Data.Name, info.Data.ShortDesc, info.Data.Price.FinalFormatted
 }
