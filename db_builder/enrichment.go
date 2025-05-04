@@ -13,7 +13,9 @@ func enrichWithSteamAPI(game *FinalGame) {
 	appIDStr := strconv.Itoa(game.AppID)
 
 	// Get data from Steam API
-	name, description, price := steamApiPull(appIDStr)
+	name, description, price, descriptionTags, genreTags := steamApiPull(appIDStr)
+
+	fmt.Println("DESC", descriptionTags, "GENRE", genreTags)
 
 	// Update game with new data (if available)
 	if name != "" {

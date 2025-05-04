@@ -4,10 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 )
 
 // pulls from steam store page based on the unique game id
-func steamApiPull(appID string) (name string, description string, price string) {
+func steamApiPull(appID string) (name string, description string, price string, descriptiontag string, genretag string) {
 	url := fmt.Sprintf("https://store.steampowered.com/api/appdetails?appids=%s", appID)
 
 	resp, err := http.Get(url)
@@ -27,6 +28,14 @@ func steamApiPull(appID string) (name string, description string, price string) 
 			Price      struct {
 				FinalFormatted string `json:"final_formatted"`
 			} `json:"price_overview"`
+			Categories []struct {
+				ID          int    `json:"id"`
+				Description string `json:"description"`
+			} `json:"categories"`
+			Genres []struct {
+				ID          string `json:"id"`
+				Description string `json:"description"`
+			} `json:"genres"`
 		} `json:"data"`
 	}
 
@@ -36,5 +45,19 @@ func steamApiPull(appID string) (name string, description string, price string) 
 
 	info := result[appID]
 
-	return info.Data.Name, info.Data.ShortDesc, info.Data.Price.FinalFormatted
+	var tagHolder []string
+
+	for _, category := range info.Data.Categories {
+		tagHolder = append(tagHolder, category.Description)
+	}
+
+	descriptionTags := strings.Join(tagHolder, ", ")
+
+	for _, genre := range info.Data.Genres {
+		tagHolder = append(tagHolder, genre.Description)
+	}
+
+	genreTags := strings.Join(tagHolder, ", ")
+
+	return info.Data.Name, info.Data.ShortDesc, info.Data.Price.FinalFormatted, descriptionTags, genreTags
 }
