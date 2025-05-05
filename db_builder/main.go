@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"os"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -32,130 +33,105 @@ type FinalGame struct {
 }
 
 func main() {
+
+	fmt.Println("running..")
+
 	// create update the SteamSpy database
-	fmt.Println("Initializing SteamSpy database...")
-	createSteamSpy()
+	// fmt.Println("Initializing SteamSpy database...")
+	// createSteamSpy()
 
-	//final database that will contain enriched data
-	fmt.Println("Creating final database...")
-	initFinalDB()
+	// //final database that will contain enriched data
+	// fmt.Println("Creating final database...")
+	// initFinalDB()
 
-	// Get app IDs from SteamSpy database
-	fmt.Println("Retrieving games from SteamSpy database...")
-	appIDs := get_steamspy_appids()
+	// //app IDs from SteamSpy database
+	// fmt.Println("Retrieving games from SteamSpy database...")
+	// appIDs := get_steamspy_appids()
 
-	// Process each game through the enrichment pipeline
-	fmt.Println("Processing games through enrichment pipeline...")
-	for _, appID := range appIDs {
-		fmt.Printf("Processing AppID: %d\n", appID)
-		processGame(appID)
-	}
+	// //from that we now process each game through the enrichment pipeline
+	// fmt.Println("Processing games through enrichment pipeline...")
+	// for _, appID := range appIDs {
+	// 	fmt.Printf("Processing AppID: %d\n", appID)
+	processGame(100, "name")
+	// }
 
 	// print summary of processed data
-	printSummary()
+}
+
+func createDB(db *sql.DB) {
+	createKey := `
+	CREATE TABLE IF NOT EXISTS main_game (
+		game_id INTEGER PRIMARY KEY AUTOINCREMENT,
+		game_name     TEXT,
+		steam_appid   INTEGER
+	);
+	`
+
+	_, err := db.Exec(createKey)
+	if err != nil {
+		log.Fatal("Failed to create users table:", err)
+	}
+
+	createSteamspy := `
+	CREATE TABLE IF NOT EXISTS steam_spy (
+		game_id INTEGER PRIMARY KEY AUTOINCREMENT,  
+		steam_appid   INTEGER
+		positive_reviews  INTEGER, 
+		negative_reviews  INTEGER, 
+		owners            INTEGER, 
+		FOREIGN KEY(steam_appid) REFERENCES main_game(steam_appid) ON DELETE CASCADE
+	);
+	`
+
+	_, err = db.Exec(createSteamspy)
+	if err != nil {
+		log.Fatal("Failed to create users table:", err)
+	}
+
+	createSteamapi := `
+	CREATE TABLE IF NOT EXISTS game_details (
+		detail_id INTEGER PRIMARY KEY AUTOINCREMENT,
+		game_id INTEGER,
+		genre TEXT,
+		description TEXT,
+		website TEXT,
+		header_image TEXT,
+		background TEXT,
+		icon TEXT,
+		screenshot TEXT,
+		steam_url TEXT,
+		pricing TEXT,
+		achievements TEXT,
+		FOREIGN KEY(game_id) REFERENCES main_game(game_id) ON DELETE CASCADE
+	);
+	`
+
+	_, err = db.Exec(createSteamapi)
+	if err != nil {
+		log.Fatal("Failed to create users table:", err)
+	}
+
 }
 
 // Modular way of  adding to  the full enrichment pipeline for a single game
-func processGame(appID int) {
-	// Get base data from SteamSpy
-	game, err := getBaseSteamSpyData(appID)
-	fmt.Println(game)
-	if err != nil {
-		log.Printf("Error getting base data for AppID %d: %v", appID, err)
-		return
+func processGame(appID int, name string) {
+
+	if err := os.Remove("./steam_api.db"); err != nil && !os.IsNotExist(err) {
+		log.Fatal("Failed to delete existing steam_api.db file:", err)
+	} else {
+		fmt.Println("Existing steam_api.db file deleted.")
 	}
 
-	// Enrich with Steam API
-	enrichWithSteamAPI(&game)
+	fmt.Println(appID)
+	// first lets create a table with the app id
 
-	// examples of scaling to more api
-	// enrichWithNewAPI(&game)
-	// enrichWithAnotherAPI(&game)
-
-	// Save the fully enriched game to database
-	saveEnrichedGame(game)
-}
-
-// getBaseSteamSpyData retrieves the base data from SteamSpy
-func getBaseSteamSpyData(appID int) (FinalGame, error) {
-	var game FinalGame
-
-	db, err := sql.Open("sqlite3", "./steamspy_top50.db")
-	if err != nil {
-		return game, err
-	}
-	defer db.Close()
-
-	err = db.QueryRow(`
-		SELECT appid, name, developer, publisher, score_rank, 
-			   positive, negative, owners, average_forever
-		FROM top_games
-		WHERE appid = ?
-	`, appID).Scan(
-		&game.AppID, &game.Name, &game.Developer, &game.Publisher,
-		&game.ScoreRank, &game.Positive, &game.Negative,
-		&game.Owners, &game.AvgPlaytime,
-	)
-
-	return game, err
-}
-
-// saves the fully enriched game to the database
-func saveEnrichedGame(game FinalGame) {
-	db, err := sql.Open("sqlite3", "./steam_enriched.db")
-	if err != nil {
-		log.Printf("Error opening database: %v", err)
-		return
-	}
-	defer db.Close()
-
-	// Insert enriched data into final database
-	_, err = db.Exec(`
-		INSERT OR REPLACE INTO enriched_games (
-			appid, name, description, developer, publisher, 
-			score_rank, positive, negative, owners, 
-			average_forever, price
-		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-	`,
-		game.AppID, game.Name, game.Description, game.Developer,
-		game.Publisher, game.ScoreRank, game.Positive, game.Negative,
-		game.Owners, game.AvgPlaytime, game.Price,
-	)
-
-	if err != nil {
-		log.Printf("Error saving enriched data for AppID %d: %v", game.AppID, err)
-		return
-	}
-
-	fmt.Printf("Successfully saved enriched data for %s (AppID: %d)\n", game.Name, game.AppID)
-}
-
-// creating the final db
-func initFinalDB() {
-	db, err := sql.Open("sqlite3", "./steam_enriched.db")
+	db, err := sql.Open("sqlite3", "./steam_api.db")
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.Close()
 
-	// update this scheme when adding more api infromation
-	_, err = db.Exec(`
-		CREATE TABLE IF NOT EXISTS enriched_games (
-			appid INTEGER PRIMARY KEY,
-			name TEXT,
-			description TEXT,
-			developer TEXT,
-			publisher TEXT,
-			score_rank TEXT,
-			positive INTEGER,
-			negative INTEGER,
-			owners TEXT,
-			average_forever INTEGER,
-			price TEXT
-			-- Add new columns for future APIs here
-		)
-	`)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// creates the empty tables
+	createDB(db)
+
+	defer db.Close()
 }
