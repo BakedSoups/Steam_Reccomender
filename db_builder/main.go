@@ -34,6 +34,12 @@ type FinalGame struct {
 
 func main() {
 
+	if err := os.Remove("./steam_api.db"); err != nil && !os.IsNotExist(err) {
+		log.Fatal("Failed to delete existing steam_api.db file:", err)
+	} else {
+		fmt.Println("Existing steam_api.db file deleted.")
+	}
+
 	fmt.Println("running..")
 
 	// create update the SteamSpy database
@@ -63,7 +69,7 @@ func createDB(db *sql.DB) {
 	CREATE TABLE IF NOT EXISTS main_game (
 		game_id INTEGER PRIMARY KEY AUTOINCREMENT,
 		game_name     TEXT,
-		steam_appid   INTEGER
+		steam_appid INTEGER NOT NULL UNIQUE
 	);
 	`
 
@@ -75,7 +81,7 @@ func createDB(db *sql.DB) {
 	createSteamspy := `
 	CREATE TABLE IF NOT EXISTS steam_spy (
 		game_id INTEGER PRIMARY KEY AUTOINCREMENT,  
-		steam_appid   INTEGER
+		steam_appid       INTEGER NOT NULL, 
 		positive_reviews  INTEGER, 
 		negative_reviews  INTEGER, 
 		owners            INTEGER, 
@@ -91,7 +97,7 @@ func createDB(db *sql.DB) {
 	createSteamapi := `
 	CREATE TABLE IF NOT EXISTS game_details (
 		detail_id INTEGER PRIMARY KEY AUTOINCREMENT,
-		game_id INTEGER,
+		steam_appid INTEGER NOT NULL,
 		genre TEXT,
 		description TEXT,
 		website TEXT,
@@ -102,7 +108,7 @@ func createDB(db *sql.DB) {
 		steam_url TEXT,
 		pricing TEXT,
 		achievements TEXT,
-		FOREIGN KEY(game_id) REFERENCES main_game(game_id) ON DELETE CASCADE
+		FOREIGN KEY(steam_appid) REFERENCES main_game(steam_appid) ON DELETE CASCADE
 	);
 	`
 
@@ -113,14 +119,28 @@ func createDB(db *sql.DB) {
 
 }
 
+func deleteGameByAppID(appID int) {
+	db, err := sql.Open("sqlite3", "./steam_api.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	_, err = db.Exec("PRAGMA foreign_keys = ON;")
+	if err != nil {
+		log.Fatal("Failed to enable foreign keys:", err)
+	}
+
+	_, err = db.Exec(`DELETE FROM main_game WHERE steam_appid = ?`, appID)
+	if err != nil {
+		log.Fatal("Delete failed:", err)
+	}
+
+	fmt.Println("Deleted game with steam_appid:", appID)
+}
+
 // Modular way of  adding to  the full enrichment pipeline for a single game
 func processGame(appID int, name string) {
-
-	if err := os.Remove("./steam_api.db"); err != nil && !os.IsNotExist(err) {
-		log.Fatal("Failed to delete existing steam_api.db file:", err)
-	} else {
-		fmt.Println("Existing steam_api.db file deleted.")
-	}
 
 	fmt.Println(appID)
 	// first lets create a table with the app id
@@ -130,8 +150,19 @@ func processGame(appID int, name string) {
 		log.Fatal(err)
 	}
 
+	db.Exec("PRAGMA foreign_keys = ON;")
+
 	// creates the empty tables
 	createDB(db)
 
+	//first fills in the key table
+	// res, err := db.Exec(`INSERT INTO main_game (game_name, steam_appid) VALUES (?, ?)`, name, appID)
+
+	// gameID, err = res.LastInsertId()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	// _, err := db.Exec(`INSERT INTO steam_spy (game_id, steam_appid, negative_reviews, owners) VALUES(?,?,?,?), game_id, steam_appid, negative_review, owner`)
 	defer db.Close()
 }
