@@ -95,7 +95,7 @@ func createDB(db *sql.DB) {
 	}
 
 	createSteamapi := `
-	CREATE TABLE IF NOT EXISTS game_details (
+	CREATE TABLE IF NOT EXISTS steam_api (
 		detail_id INTEGER PRIMARY KEY AUTOINCREMENT,
 		steam_appid INTEGER NOT NULL,
 		genre TEXT,
@@ -155,14 +155,57 @@ func processGame(appID int, name string) {
 	// creates the empty tables
 	createDB(db)
 
-	//first fills in the key table
-	// res, err := db.Exec(`INSERT INTO main_game (game_name, steam_appid) VALUES (?, ?)`, name, appID)
+	//first the main_game table
+	_, err = db.Exec(`INSERT INTO main_game (game_name, steam_appid) VALUES (?, ?)`, "Example Game", 123456)
+	if err != nil {
+		log.Fatal("Failed to insert into main_game:", err)
+	}
 
-	// gameID, err = res.LastInsertId()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+	// then the steam_spy table
+	_, err = db.Exec(`
+		INSERT INTO steam_spy (steam_appid, positive_reviews, negative_reviews, owners)
+		VALUES (?, ?, ?, ?)`,
+		123456, // steam_appid
+		1000,   // positive_reviews
+		200,    // negative_reviews
+		50000,  // owners
+	)
 
-	// _, err := db.Exec(`INSERT INTO steam_spy (game_id, steam_appid, negative_reviews, owners) VALUES(?,?,?,?), game_id, steam_appid, negative_review, owner`)
+	if err != nil {
+		log.Fatal("Failed to insert into steam_spy:", err)
+	}
+
+	// insert into steam_api using steam_appid
+	_, err = db.Exec(`
+	INSERT INTO steam_api (
+		steam_appid,
+		genre,
+		description,
+		website,
+		header_image,
+		background,
+		icon,
+		screenshot,
+		steam_url,
+		pricing,
+		achievements
+	) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+
+		123456,                                      // steam_appid
+		"Action, Adventure",                         // genre
+		"A thrilling adventure game.",               // description
+		"https://example.com",                       // website
+		"https://img.example.com/header.jpg",        // header_image
+		"https://img.example.com/bg.jpg",            // background
+		"https://img.example.com/icon.png",          // icon
+		"https://img.example.com/shot.png",          // screenshot
+		"https://store.steampowered.com/app/123456", // steam_url
+		"$19.99",          // pricing
+		"10 achievements", // achievements
+	)
+	if err != nil {
+		log.Fatal("Failed to insert into steam_api:", err)
+	}
+
 	defer db.Close()
 }
