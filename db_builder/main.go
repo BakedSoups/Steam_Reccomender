@@ -9,29 +9,6 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-// FinalGame contains all fields from all data sources
-type FinalGame struct {
-	// Base fields from SteamSpy
-	AppID       int    `json:"appid"`
-	Name        string `json:"name"`
-	Developer   string `json:"developer"`
-	Publisher   string `json:"publisher"`
-	ScoreRank   string `json:"score_rank"`
-	Positive    int    `json:"positive"`
-	Negative    int    `json:"negative"`
-	Owners      string `json:"owners"`
-	AvgPlaytime int    `json:"average_forever"`
-
-	// Fields from Steam API
-	Description string `json:"description"`
-	Price       string `json:"price"`
-
-	// Fields from future APIs can be added here
-	// GenreList    string `json:"genre_list"`
-	// ReleaseDate  string `json:"release_date"`
-	// Etc...
-}
-
 func main() {
 	os.Remove("./steam_api.db")
 
@@ -125,26 +102,6 @@ func createDB(db *sql.DB) {
 	}
 
 }
-
-// func deleteGameByAppID(appID int) {
-// 	db, err := sql.Open("sqlite3", "./steam_api.db")
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	defer db.Close()
-
-// 	_, err = db.Exec("PRAGMA foreign_keys = ON;")
-// 	if err != nil {
-// 		log.Fatal("Failed to enable foreign keys:", err)
-// 	}
-
-// 	_, err = db.Exec(`DELETE FROM main_game WHERE steam_appid = ?`, appID)
-// 	if err != nil {
-// 		log.Fatal("Delete failed:", err)
-// 	}
-
-// 	fmt.Println("Deleted game with steam_appid:", appID)
-// }
 
 func migrateTop50ToSteamAPI(dstDB *sql.DB) {
 	srcDB, err := sql.Open("sqlite3", "./steamspy_top50.db")
