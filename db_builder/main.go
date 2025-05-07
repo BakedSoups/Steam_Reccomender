@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -50,6 +51,7 @@ func main() {
 }
 
 func createDB(db *sql.DB) {
+	// Create main_game table
 	createKey := `
 	CREATE TABLE IF NOT EXISTS main_game (
 		game_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -57,12 +59,12 @@ func createDB(db *sql.DB) {
 		steam_appid INTEGER NOT NULL UNIQUE
 	);
 	`
-
 	_, err := db.Exec(createKey)
 	if err != nil {
-		log.Fatal("Failed to create users table:", err)
+		log.Fatal("Failed to create main_game table:", err)
 	}
 
+	// Create steam_spy table
 	createSteamspy := `
 	CREATE TABLE IF NOT EXISTS steam_spy (
 		game_id INTEGER PRIMARY KEY AUTOINCREMENT,  
@@ -73,17 +75,30 @@ func createDB(db *sql.DB) {
 		FOREIGN KEY(steam_appid) REFERENCES main_game(steam_appid) ON DELETE CASCADE
 	);
 	`
-
 	_, err = db.Exec(createSteamspy)
 	if err != nil {
-		log.Fatal("Failed to create users table:", err)
+		log.Fatal("Failed to create steam_spy table:", err)
 	}
 
+	// Create genres table
+	createGenres := `
+	CREATE TABLE IF NOT EXISTS genres (
+		steam_appid INTEGER NOT NULL,
+		genre TEXT NOT NULL,
+		PRIMARY KEY (steam_appid, genre),
+		FOREIGN KEY(steam_appid) REFERENCES main_game(steam_appid) ON DELETE CASCADE
+	);
+	`
+	_, err = db.Exec(createGenres)
+	if err != nil {
+		log.Fatal("Failed to create genres table:", err)
+	}
+
+	// Create steam_api table
 	createSteamapi := `
 	CREATE TABLE IF NOT EXISTS steam_api (
 		detail_id INTEGER PRIMARY KEY AUTOINCREMENT,
 		steam_appid INTEGER NOT NULL,
-		genre TEXT,
 		description TEXT,
 		website TEXT,
 		header_image TEXT,
@@ -95,12 +110,10 @@ func createDB(db *sql.DB) {
 		FOREIGN KEY(steam_appid) REFERENCES main_game(steam_appid) ON DELETE CASCADE
 	);
 	`
-
 	_, err = db.Exec(createSteamapi)
 	if err != nil {
-		log.Fatal("Failed to create users table:", err)
+		log.Fatal("Failed to create steam_api table:", err)
 	}
-
 }
 
 func migrateTop50ToSteamAPI(dstDB *sql.DB) {
@@ -128,14 +141,12 @@ func migrateTop50ToSteamAPI(dstDB *sql.DB) {
 			continue
 		}
 
-		// Insert into main_game
 		_, err = dstDB.Exec(`INSERT OR IGNORE INTO main_game (game_name, steam_appid) VALUES (?, ?)`, name, appID)
 		if err != nil {
 			log.Println("Insert into main_game failed:", err)
 			continue
 		}
 
-		// Insert into steam_spy
 		_, err = dstDB.Exec(`
 			INSERT OR REPLACE INTO steam_spy (steam_appid, positive_reviews, negative_reviews, owners)
 			VALUES (?, ?, ?, ?)`,
@@ -151,10 +162,10 @@ func migrateTop50ToSteamAPI(dstDB *sql.DB) {
 
 func add_steam_API(appID int, tx *sql.Tx) error {
 	genre, description, website, headerImage, background, screenshot, steamURL, pricing, achievements := steamApiPull(appID)
+
 	_, err := tx.Exec(`
 		INSERT INTO steam_api (
 			steam_appid,
-			genre,
 			description,
 			website,
 			header_image,
@@ -163,8 +174,25 @@ func add_steam_API(appID int, tx *sql.Tx) error {
 			steam_url,
 			pricing,
 			achievements
-		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-		appID, genre, description, website, headerImage, background, screenshot, steamURL, pricing, achievements,
+		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+		appID, description, website, headerImage, background, screenshot, steamURL, pricing, achievements,
 	)
-	return err
+	if err != nil {
+		return err
+	}
+
+	//genres into genres table
+	genreList := strings.Split(genre, ", ")
+	for _, g := range genreList {
+		_, err = tx.Exec(`
+			INSERT OR REPLACE INTO genres (steam_appid, genre)
+			VALUES (?, ?)`,
+			appID, g,
+		)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

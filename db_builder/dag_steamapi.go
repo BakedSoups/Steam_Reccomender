@@ -56,15 +56,15 @@ func steamApiPull(appID int) (
 	}
 	genre = strings.Join(genreList, ", ")
 
-	//first screenshot if exists
+	// first screenshot if exists
 	if len(info.Screenshots) > 0 {
 		screenshot = info.Screenshots[0].PathFull
 	}
 
-	//steam store URL
+	// steam store URL
 	steamURL = fmt.Sprintf("https://store.steampowered.com/app/%s", str)
 
-	//achievements to string
+	// achievements to string
 	achievements = fmt.Sprintf("%d achievements", info.Achievements.Total)
 
 	return genre, info.ShortDesc, info.Website, info.HeaderImage, info.Background, screenshot, steamURL, info.PriceOverview.FinalFormatted, achievements
