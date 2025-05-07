@@ -33,35 +33,43 @@ type FinalGame struct {
 }
 
 func main() {
+	os.Remove("./steam_api.db")
 
-	if err := os.Remove("./steam_api.db"); err != nil && !os.IsNotExist(err) {
-		log.Fatal("Failed to delete existing steam_api.db file:", err)
-	} else {
-		fmt.Println("Existing steam_api.db file deleted.")
+	db, err := sql.Open("sqlite3", "./steam_api.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+	db.Exec("PRAGMA foreign_keys = ON;")
+
+	createDB(db)
+	migrateTop50ToSteamAPI(db)
+
+	rows, err := db.Query(`SELECT steam_appid FROM main_game`)
+	if err != nil {
+		log.Fatal("Failed to retrieve appIDs:", err)
+	}
+	defer rows.Close()
+	tx, err := db.Begin()
+	if err != nil {
+		log.Fatal("Failed to begin transaction:", err)
 	}
 
-	fmt.Println("running..")
+	for rows.Next() {
+		var appID int
+		if err := rows.Scan(&appID); err != nil {
+			log.Println("Scan failed:", err)
+			continue
+		}
+		if err := add_steam_API(appID, tx); err != nil {
+			log.Println("Insert failed for appID", appID, ":", err)
+		}
+	}
 
-	// create update the SteamSpy database
-	// fmt.Println("Initializing SteamSpy database...")
-	// createSteamSpy()
+	if err := tx.Commit(); err != nil {
+		log.Fatal("Failed to commit transaction:", err)
+	}
 
-	// //final database that will contain enriched data
-	// fmt.Println("Creating final database...")
-	// initFinalDB()
-
-	// //app IDs from SteamSpy database
-	// fmt.Println("Retrieving games from SteamSpy database...")
-	// appIDs := get_steamspy_appids()
-
-	// //from that we now process each game through the enrichment pipeline
-	// fmt.Println("Processing games through enrichment pipeline...")
-	// for _, appID := range appIDs {
-	// 	fmt.Printf("Processing AppID: %d\n", appID)
-	processGame(100, "name")
-	// }
-
-	// print summary of processed data
 }
 
 func createDB(db *sql.DB) {
@@ -103,7 +111,6 @@ func createDB(db *sql.DB) {
 		website TEXT,
 		header_image TEXT,
 		background TEXT,
-		icon TEXT,
 		screenshot TEXT,
 		steam_url TEXT,
 		pricing TEXT,
@@ -119,93 +126,88 @@ func createDB(db *sql.DB) {
 
 }
 
-func deleteGameByAppID(appID int) {
-	db, err := sql.Open("sqlite3", "./steam_api.db")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
+// func deleteGameByAppID(appID int) {
+// 	db, err := sql.Open("sqlite3", "./steam_api.db")
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	defer db.Close()
 
-	_, err = db.Exec("PRAGMA foreign_keys = ON;")
+// 	_, err = db.Exec("PRAGMA foreign_keys = ON;")
+// 	if err != nil {
+// 		log.Fatal("Failed to enable foreign keys:", err)
+// 	}
+
+// 	_, err = db.Exec(`DELETE FROM main_game WHERE steam_appid = ?`, appID)
+// 	if err != nil {
+// 		log.Fatal("Delete failed:", err)
+// 	}
+
+// 	fmt.Println("Deleted game with steam_appid:", appID)
+// }
+
+func migrateTop50ToSteamAPI(dstDB *sql.DB) {
+	srcDB, err := sql.Open("sqlite3", "./steamspy_top50.db")
 	if err != nil {
-		log.Fatal("Failed to enable foreign keys:", err)
+		log.Fatal("Failed to open source DB:", err)
+	}
+	defer srcDB.Close()
+
+	rows, err := srcDB.Query(`SELECT appid, name, positive, negative, owners FROM top_games`)
+	if err != nil {
+		log.Fatal("Failed to query source DB:", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var appID int
+		var name string
+		var positive int
+		var negative int
+		var owners string
+
+		if err := rows.Scan(&appID, &name, &positive, &negative, &owners); err != nil {
+			log.Println("Row scan failed:", err)
+			continue
+		}
+
+		// Insert into main_game
+		_, err = dstDB.Exec(`INSERT OR IGNORE INTO main_game (game_name, steam_appid) VALUES (?, ?)`, name, appID)
+		if err != nil {
+			log.Println("Insert into main_game failed:", err)
+			continue
+		}
+
+		// Insert into steam_spy
+		_, err = dstDB.Exec(`
+			INSERT OR REPLACE INTO steam_spy (steam_appid, positive_reviews, negative_reviews, owners)
+			VALUES (?, ?, ?, ?)`,
+			appID, positive, negative, owners,
+		)
+		if err != nil {
+			log.Println("Insert into steam_spy failed:", err)
+		}
 	}
 
-	_, err = db.Exec(`DELETE FROM main_game WHERE steam_appid = ?`, appID)
-	if err != nil {
-		log.Fatal("Delete failed:", err)
-	}
-
-	fmt.Println("Deleted game with steam_appid:", appID)
+	fmt.Println("Migration from steamspy_top50.db to steam_api.db completed.")
 }
 
-// Modular way of  adding to  the full enrichment pipeline for a single game
-func processGame(appID int, name string) {
-
-	fmt.Println(appID)
-	// first lets create a table with the app id
-
-	db, err := sql.Open("sqlite3", "./steam_api.db")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	db.Exec("PRAGMA foreign_keys = ON;")
-
-	// creates the empty tables
-	createDB(db)
-
-	//first the main_game table
-	_, err = db.Exec(`INSERT INTO main_game (game_name, steam_appid) VALUES (?, ?)`, "Example Game", 123456)
-	if err != nil {
-		log.Fatal("Failed to insert into main_game:", err)
-	}
-
-	// then the steam_spy table
-	_, err = db.Exec(`
-		INSERT INTO steam_spy (steam_appid, positive_reviews, negative_reviews, owners)
-		VALUES (?, ?, ?, ?)`,
-		123456, // steam_appid
-		1000,   // positive_reviews
-		200,    // negative_reviews
-		50000,  // owners
+func add_steam_API(appID int, tx *sql.Tx) error {
+	genre, description, website, headerImage, background, screenshot, steamURL, pricing, achievements := steamApiPull(appID)
+	_, err := tx.Exec(`
+		INSERT INTO steam_api (
+			steam_appid,
+			genre,
+			description,
+			website,
+			header_image,
+			background,
+			screenshot,
+			steam_url,
+			pricing,
+			achievements
+		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+		appID, genre, description, website, headerImage, background, screenshot, steamURL, pricing, achievements,
 	)
-
-	if err != nil {
-		log.Fatal("Failed to insert into steam_spy:", err)
-	}
-
-	// insert into steam_api using steam_appid
-	_, err = db.Exec(`
-	INSERT INTO steam_api (
-		steam_appid,
-		genre,
-		description,
-		website,
-		header_image,
-		background,
-		icon,
-		screenshot,
-		steam_url,
-		pricing,
-		achievements
-	) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-
-		123456,                                      // steam_appid
-		"Action, Adventure",                         // genre
-		"A thrilling adventure game.",               // description
-		"https://example.com",                       // website
-		"https://img.example.com/header.jpg",        // header_image
-		"https://img.example.com/bg.jpg",            // background
-		"https://img.example.com/icon.png",          // icon
-		"https://img.example.com/shot.png",          // screenshot
-		"https://store.steampowered.com/app/123456", // steam_url
-		"$19.99",          // pricing
-		"10 achievements", // achievements
-	)
-	if err != nil {
-		log.Fatal("Failed to insert into steam_api:", err)
-	}
-
-	defer db.Close()
+	return err
 }

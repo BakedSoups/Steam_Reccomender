@@ -4,12 +4,16 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
 // pulls from steam store page based on the unique game id
-func steamApiPull(appID string) (name string, description string, price string, descriptiontag string, genretag string) {
-	url := fmt.Sprintf("https://store.steampowered.com/api/appdetails?appids=%s", appID)
+func steamApiPull(appID int) (
+	genre, description, website, headerImage, background, screenshot, steamURL, pricing, achievements string,
+) {
+	str := strconv.Itoa(appID)
+	url := fmt.Sprintf("https://store.steampowered.com/api/appdetails?appids=%s", str)
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -20,22 +24,22 @@ func steamApiPull(appID string) (name string, description string, price string, 
 	var result map[string]struct {
 		Success bool `json:"success"`
 		Data    struct {
-			Name       string   `json:"name"`
-			Type       string   `json:"type"`
-			ShortDesc  string   `json:"short_description"`
-			Publishers []string `json:"publishers"`
-			IsFree     bool     `json:"is_free"`
-			Price      struct {
-				FinalFormatted string `json:"final_formatted"`
-			} `json:"price_overview"`
-			Categories []struct {
-				ID          int    `json:"id"`
-				Description string `json:"description"`
-			} `json:"categories"`
-			Genres []struct {
-				ID          string `json:"id"`
+			ShortDesc   string `json:"short_description"`
+			Website     string `json:"website"`
+			HeaderImage string `json:"header_image"`
+			Background  string `json:"background"`
+			Genres      []struct {
 				Description string `json:"description"`
 			} `json:"genres"`
+			Screenshots []struct {
+				PathFull string `json:"path_full"`
+			} `json:"screenshots"`
+			PriceOverview struct {
+				FinalFormatted string `json:"final_formatted"`
+			} `json:"price_overview"`
+			Achievements struct {
+				Total int `json:"total"`
+			} `json:"achievements"`
 		} `json:"data"`
 	}
 
@@ -43,21 +47,25 @@ func steamApiPull(appID string) (name string, description string, price string, 
 		panic(err)
 	}
 
-	info := result[appID]
+	info := result[str].Data
 
-	var tagHolder []string
+	// Join genres
+	var genreList []string
+	for _, g := range info.Genres {
+		genreList = append(genreList, g.Description)
+	}
+	genre = strings.Join(genreList, ", ")
 
-	for _, category := range info.Data.Categories {
-		tagHolder = append(tagHolder, category.Description)
+	//first screenshot if exists
+	if len(info.Screenshots) > 0 {
+		screenshot = info.Screenshots[0].PathFull
 	}
 
-	descriptionTags := strings.Join(tagHolder, ", ")
+	//steam store URL
+	steamURL = fmt.Sprintf("https://store.steampowered.com/app/%s", str)
 
-	for _, genre := range info.Data.Genres {
-		tagHolder = append(tagHolder, genre.Description)
-	}
+	//achievements to string
+	achievements = fmt.Sprintf("%d achievements", info.Achievements.Total)
 
-	genreTags := strings.Join(tagHolder, ", ")
-
-	return info.Data.Name, info.Data.ShortDesc, info.Data.Price.FinalFormatted, descriptionTags, genreTags
+	return genre, info.ShortDesc, info.Website, info.HeaderImage, info.Background, screenshot, steamURL, info.PriceOverview.FinalFormatted, achievements
 }
