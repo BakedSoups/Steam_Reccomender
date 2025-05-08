@@ -6,9 +6,10 @@ from selenium.webdriver.chrome.options import Options
 import json
 import re
 import time
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import requests
 from bs4 import BeautifulSoup
+import random
 
 def clean_title(raw_title):
     """Extract clean game title from raw text"""
@@ -19,32 +20,95 @@ def clean_title(raw_title):
     title = re.sub(r'[A-Z]{2,}.*$', '', title)
     return title.strip()
 
-def fetch_article_content(url):
-    """Fetch article HTML content"""
+def fetch_article_content(url, retry_count=3, base_delay=5):
+    """Fetch article HTML content with retry logic and exponential backoff"""
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'DNT': '1',
+        'Connection': 'keep-alive',
+        'Upgrade-Insecure-Requests': '1'
     }
-    try:
-        response = requests.get(url, headers=headers, timeout=10)
-        response.raise_for_status()
-        soup = BeautifulSoup(response.content, 'html.parser')
+    
+    for attempt in range(retry_count):
+        try:
+            # Add random delay to avoid rate limiting
+            time.sleep(random.uniform(2, 5))
+            
+            response = requests.get(url, headers=headers, timeout=15)
+            
+            # If we get a 429 (Too Many Requests), wait and retry
+            if response.status_code == 429:
+                retry_after = response.headers.get('Retry-After', base_delay * (2 ** attempt))
+                wait_time = int(retry_after) if retry_after.isdigit() else base_delay * (2 ** attempt)
+                print(f"Rate limited. Waiting {wait_time} seconds before retry... (Attempt {attempt + 1}/{retry_count})")
+                time.sleep(wait_time)
+                continue
+            
+            response.raise_for_status()
+            soup = BeautifulSoup(response.content, 'html.parser')
+            
+            content_selectors = [
+                'div.article-content',
+                'div.content-page',
+                'article',
+                'main',
+                'div[class*="article"]'
+            ]
+            
+            for selector in content_selectors:
+                content = soup.select_one(selector)
+                if content:
+                    return str(content)
+            
+            return response.text
+            
+        except requests.exceptions.RequestException as e:
+            if attempt < retry_count - 1:
+                wait_time = base_delay * (2 ** attempt) + random.uniform(0, 1)
+                print(f"Error fetching {url}: {str(e)}. Retrying in {wait_time:.1f} seconds... (Attempt {attempt + 1}/{retry_count})")
+                time.sleep(wait_time)
+            else:
+                return f"Error after {retry_count} attempts: {str(e)}"
+    
+    return f"Error: Max retries exceeded for {url}"
+
+def fetch_articles_with_rate_limit(games, max_workers=5, delay_between_batches=10):
+    """Fetch articles with proper rate limiting and concurrent requests"""
+    print(f"\nFetching article contents for {len(games)} games...")
+    print(f"Using {max_workers} concurrent workers with rate limiting...")
+    
+    # Process in smaller batches to avoid overwhelming the server
+    batch_size = 10
+    
+    for i in range(0, len(games), batch_size):
+        batch = games[i:i + batch_size]
+        print(f"\nProcessing batch {i//batch_size + 1}/{(len(games) + batch_size - 1)//batch_size}")
         
-        content_selectors = [
-            'div.article-content',
-            'div.content-page',
-            'article',
-            'main',
-            'div[class*="article"]'
-        ]
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            future_to_game = {
+                executor.submit(fetch_article_content, game['game_url']): game 
+                for game in batch
+            }
+            
+            for future in as_completed(future_to_game):
+                game = future_to_game[future]
+                try:
+                    game['html_contents'] = future.result()
+                    if "Error" in game['html_contents']:
+                        print(f"Error fetching {game['name']}: {game['html_contents']}")
+                    else:
+                        print(f"Successfully fetched: {game['name']}")
+                except Exception as e:
+                    game['html_contents'] = f"Error: {str(e)}"
+                    print(f"Exception for {game['name']}: {str(e)}")
         
-        for selector in content_selectors:
-            content = soup.select_one(selector)
-            if content:
-                return str(content)
-        
-        return response.text
-    except Exception as e:
-        return f"Error: {str(e)}"
+        # Wait between batches to avoid rate limiting
+        if i + batch_size < len(games):
+            print(f"Waiting {delay_between_batches} seconds before next batch...")
+            time.sleep(delay_between_batches)
 
 def scrape_ign_all_games(url, max_scrolls=30):
     """Scrape ALL games from IGN using Selenium with infinite scrolling"""
@@ -202,18 +266,8 @@ def scrape_ign_all_games(url, max_scrolls=30):
         driver.quit()
     
     if games:
-        print(f"\nFetching article contents for {len(games)} games...")
-        
-        with ThreadPoolExecutor(max_workers=10) as executor:
-            futures = [executor.submit(fetch_article_content, game['game_url']) for game in games]
-            
-            for i, future in enumerate(futures):
-                try:
-                    games[i]['html_contents'] = future.result()
-                    print(f"Fetched {i+1}/{len(games)}: {games[i]['name']}")
-                except Exception as e:
-                    games[i]['html_contents'] = f"Error: {str(e)}"
-                    print(f"Error fetching {games[i]['name']}: {str(e)}")
+        # Use the new rate-limited fetch function
+        fetch_articles_with_rate_limit(games, max_workers=3, delay_between_batches=15)
     
     return games
 
@@ -226,7 +280,7 @@ def save_to_json(data, filename='ign_all_games.json'):
 if __name__ == "__main__":
     url = "https://www.ign.com/reviews/games/pc"
     
-    print("Starting complete IGN scraper...")
+    print("Starting complete IGN scraper with rate limiting...")
     print("This will scroll through ALL available games on the page.")
     print("This may take several minutes...\n")
     
@@ -240,17 +294,20 @@ if __name__ == "__main__":
         print(f"Total games: {len(games)}")
         print(f"Games with scores: {len([g for g in games if g['score'] != 'N/A'])}")
         print(f"Games without scores: {len([g for g in games if g['score'] == 'N/A'])}")
+        print(f"Games with errors: {len([g for g in games if 'Error' in g['html_contents']])}")
         
         with open('ign_scraping_summary.txt', 'w', encoding='utf-8') as f:
             f.write(f"IGN PC Games Scraping Summary\n")
             f.write(f"============================\n\n")
             f.write(f"Total games scraped: {len(games)}\n")
             f.write(f"Games with scores: {len([g for g in games if g['score'] != 'N/A'])}\n")
-            f.write(f"Games without scores: {len([g for g in games if g['score'] == 'N/A'])}\n\n")
+            f.write(f"Games without scores: {len([g for g in games if g['score'] == 'N/A'])}\n")
+            f.write(f"Games with fetch errors: {len([g for g in games if 'Error' in g['html_contents']])}\n\n")
             f.write("Games list:\n")
             f.write("-----------\n")
             for i, game in enumerate(games, 1):
-                f.write(f"{i}. {game['name']} (Score: {game['score']})\n")
+                error_status = " (FETCH ERROR)" if "Error" in game['html_contents'] else ""
+                f.write(f"{i}. {game['name']} (Score: {game['score']}){error_status}\n")
     else:
         print("No games were scraped")
         print("Check 'selenium_debug.html' for the page structure")

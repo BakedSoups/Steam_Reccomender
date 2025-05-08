@@ -1,1 +1,22 @@
-venv
+# Ignore JSON files
+*.json
+
+# Ignore database files
+*.db
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+
+# Ignore virtual environments
+venv/
+.env/
+
+# Ignore Go build/cache files
+*.exe
+*.out
+*.test
+
+# Ignore IDE/editor files
+.vscode/
+.idea/

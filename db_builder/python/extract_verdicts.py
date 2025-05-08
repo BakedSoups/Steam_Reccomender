@@ -1,6 +1,12 @@
 import json
 import re
 from bs4 import BeautifulSoup
+from openai import OpenAI
+import os
+from typing import List, Dict
+
+# Initialize OpenAI client
+client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
 def extract_verdict_or_conclusion(html_content):
     """
@@ -71,9 +77,57 @@ def extract_verdict_or_conclusion(html_content):
     except Exception as e:
         return f"Error extracting content: {str(e)}"
 
-def process_all_reviews(input_file='ign_all_games.json', output_file='game_verdicts_complete.json'):
+def generate_game_tags(game_name: str, verdict: str, score: str) -> List[str]:
     """
-    Process all reviews and ensure every game has a verdict
+    Use OpenAI to generate game tags based on the verdict text
+    """
+    system_prompt = """You are a game categorization expert. Based on game review verdicts, you generate relevant tags that describe:
+    - Genre (e.g., RPG, FPS, puzzle, adventure, platformer)
+    - Art style (e.g., cel-shaded, pixel art, realistic, noir)
+    - Mood/atmosphere (e.g., dark, cheerful, melancholic, intense)
+    - Themes (e.g., fantasy, sci-fi, mystery, horror, emotional)
+    - Gameplay elements (e.g., open-world, narrative-driven, combat-focused)
+    
+    Return only tags in parentheses format like: (tag1) (tag2) (tag3)
+    Aim for 3-8 relevant tags per game. Keep tags concise (1-3 words)."""
+    
+    user_prompt = f"""Game: {game_name}
+Score: {score}
+Verdict: {verdict}
+
+Based on this verdict, what tags best describe this game?"""
+    
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
+            ],
+            temperature=0.3,
+            max_tokens=100
+        )
+        
+        tags_text = response.choices[0].message.content.strip()
+        
+        # Extract tags from the response
+        tags = re.findall(r'\(([^)]+)\)', tags_text)
+        
+        # If no tags were found in parentheses, try to parse the response differently
+        if not tags:
+            # Split by common delimiters and clean up
+            potential_tags = re.split(r'[,\n]', tags_text)
+            tags = [tag.strip().strip('()') for tag in potential_tags if tag.strip()]
+        
+        return tags
+        
+    except Exception as e:
+        print(f"Error generating tags for {game_name}: {str(e)}")
+        return []
+
+def process_all_reviews(input_file='ign_all_games.json', output_file='game_verdicts_with_tags.json'):
+    """
+    Process all reviews, extract verdicts, and generate tags using OpenAI
     """
     try:
         with open(input_file, 'r', encoding='utf-8') as f:
@@ -82,8 +136,7 @@ def process_all_reviews(input_file='ign_all_games.json', output_file='game_verdi
         print(f"\nProcessing {len(reviews)} reviews...")
         print("="*80)
         
-        verdicts = []
-        no_verdict_count = 0
+        verdicts_with_tags = []
         
         for i, review in enumerate(reviews, 1):
             name = review.get('name', 'Unknown')
@@ -91,59 +144,121 @@ def process_all_reviews(input_file='ign_all_games.json', output_file='game_verdi
             url = review.get('game_url', '')
             html_content = review.get('html_contents', '')
             
+            # Extract verdict
             verdict = extract_verdict_or_conclusion(html_content)
             
-            if "not found" in verdict.lower() or "error" in verdict.lower():
-                no_verdict_count += 1
+            # Generate tags using OpenAI
+            tags = generate_game_tags(name, verdict, score)
             
             verdict_data = {
                 'name': name,
                 'score': score,
                 'url': url,
-                'verdict': verdict
+                'verdict': verdict,
+                'tags': tags
             }
             
-            verdicts.append(verdict_data)
+            verdicts_with_tags.append(verdict_data)
             
-            status = "✓" if len(verdict) > 100 else "?"
-            print(f"{i:2d}. {status} {name} (Score: {score})")
+            print(f"{i:2d}. {name} (Score: {score})")
+            print(f"    Tags: {' '.join([f'({tag})' for tag in tags])}")
             print(f"    Verdict length: {len(verdict)} characters")
-            if len(verdict) < 200:
-                print(f"    Verdict: {verdict}")
-            else:
-                print(f"    Verdict: {verdict[:200]}...")
             print("-" * 80)
         
+        # Save results
         with open(output_file, 'w', encoding='utf-8') as f:
-            json.dump(verdicts, f, ensure_ascii=False, indent=2)
+            json.dump(verdicts_with_tags, f, ensure_ascii=False, indent=2)
         
-        with open('verdicts_summary_complete.txt', 'w', encoding='utf-8') as f:
-            for verdict in verdicts:
+        # Save summary with tags
+        with open('verdicts_summary_with_tags.txt', 'w', encoding='utf-8') as f:
+            for verdict in verdicts_with_tags:
                 f.write(f"Game: {verdict['name']}\n")
                 f.write(f"Score: {verdict['score']}\n")
+                f.write(f"Tags: {' '.join([f'({tag})' for tag in verdict['tags']])}\n")
                 f.write(f"URL: {verdict['url']}\n")
                 f.write(f"Verdict: {verdict['verdict']}\n")
                 f.write("="*80 + "\n\n")
         
         print(f"\nSummary:")
         print(f"Total reviews processed: {len(reviews)}")
-        print(f"Reviews with extracted verdicts: {len(reviews) - no_verdict_count}")
-        print(f"Reviews with fallback content: {no_verdict_count}")
-        print(f"\nResults saved to {output_file} and verdicts_summary_complete.txt")
+        print(f"Results saved to {output_file} and verdicts_summary_with_tags.txt")
         
-        return verdicts
+        return verdicts_with_tags
+        
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return []
+
+def process_existing_verdicts(verdicts_file='game_verdicts_complete.json', output_file='game_verdicts_with_tags.json'):
+    """
+    Process an existing verdicts file and add tags to it
+    """
+    try:
+        with open(verdicts_file, 'r', encoding='utf-8') as f:
+            verdicts = json.load(f)
+        
+        print(f"\nProcessing {len(verdicts)} existing verdicts...")
+        print("="*80)
+        
+        verdicts_with_tags = []
+        
+        for i, verdict_data in enumerate(verdicts, 1):
+            name = verdict_data.get('name', 'Unknown')
+            score = verdict_data.get('score', 'N/A')
+            url = verdict_data.get('url', '')
+            verdict = verdict_data.get('verdict', '')
+            
+            # Generate tags using OpenAI
+            tags = generate_game_tags(name, verdict, score)
+            
+            updated_data = {
+                'name': name,
+                'score': score,
+                'url': url,
+                'verdict': verdict,
+                'tags': tags
+            }
+            
+            verdicts_with_tags.append(updated_data)
+            
+            print(f"{i:2d}. {name} (Score: {score})")
+            print(f"    Tags: {' '.join([f'({tag})' for tag in tags])}")
+            print("-" * 80)
+        
+        # Save results
+        with open(output_file, 'w', encoding='utf-8') as f:
+            json.dump(verdicts_with_tags, f, ensure_ascii=False, indent=2)
+        
+        print(f"\nSummary:")
+        print(f"Total verdicts processed: {len(verdicts)}")
+        print(f"Results saved to {output_file}")
+        
+        return verdicts_with_tags
         
     except Exception as e:
         print(f"Error: {str(e)}")
         return []
 
 if __name__ == "__main__":
-    verdicts = process_all_reviews()
+    # Check if OpenAI API key is set
+    if not os.getenv('OPENAI_API_KEY'):
+        print("Error: OPENAI_API_KEY environment variable not set")
+        print("Please set it using: export OPENAI_API_KEY='your-api-key'")
+        exit(1)
+    
+    # You can either process all reviews from scratch
+    # verdicts = process_all_reviews()
+    
+    # Or process an existing verdicts file (if you already have verdicts extracted)
+    verdicts = process_existing_verdicts()
     
     if verdicts:
-        print(f"\nFinal check: {len(verdicts)} verdicts extracted")
-        missing = [v for v in verdicts if len(v['verdict']) < 50]
-        if missing:
-            print(f"Warning: {len(missing)} games have very short verdicts:")
-            for m in missing:
-                print(f"  - {m['name']}: {len(m['verdict'])} characters")
+        print(f"\nFinal check: {len(verdicts)} verdicts processed with tags")
+        
+        # Show some examples
+        print("\nExample outputs:")
+        for verdict in verdicts[:3]:
+            print(f"\nGame: {verdict['name']}")
+            print(f"Score: {verdict['score']}")
+            print(f"Tags: {' '.join([f'({tag})' for tag in verdict['tags']])}")
+            print(f"Verdict preview: {verdict['verdict'][:200]}...")

@@ -1,5 +1,11 @@
 [
   {
+    "name": "The Midnight Walk",
+    "score": "9",
+    "url": "https://www.ign.com/articles/the-midnight-walk-review",
+    "verdict": "I haven’t been able to stop thinking about The Midnight Walk since I saw its endings. It’s something I know I’ll come back to so that I can wander this dark world again. Not because I’m looking to complete a checklist, but because everything I’ve learned has recontextualized the emotional stories I saw and changed what I believed about the world. I want to hear the mournful, haunting music again, and spend more time by the fire with these characters. I want to travel with Potboy, my charge, my companion, my friend who says so much without ever speaking a word. The Midnight Walk is not long — I would put my playthrough at around seven or eight hours, and I took my time — but it is gorgeous and touching, and it took hold of me early and never let me go until I took the last step on my journey. It isn’t mechanically ambitious other than to play with perception in unexpected ways, and it challenged me to go into the dark unafraid, and find truth, and companionship, and I did. Out of darkness, light. One cannot exist without the other, and neither offers every answer. I lit a match, and found my way, and I was not alone."
+  },
+  {
     "name": "La Quimera Early Access",
     "score": "4",
     "url": "https://www.ign.com/articles/la-quimera-review-early-access",
@@ -729,7 +735,7 @@
     "name": "Final Fantasy",
     "score": "8",
     "url": "https://www.ign.com/articles/final-fantasy-xiv-dawntrail-review",
-    "verdict": "Dawntrail has some growing pains and notable lulls as it establishes a new era for Final Fantasy XIV, but the compelling cultures of the Tural region are strong enough to carry you to its greater moments – it’s also nice to see real-world influences near and dear to me represented so well in FFXIV. And though it takes a bit to get there, once the main story flips the switch and shows you what it’s really about, it hits the kinds of peaks we’ve seen from the MMORPG time and time again. Dawntrail left me floored with a unique sense of self-reflection and stunned by spectacular combat encounters, and to go through that journey with characters I’ve grown to love, both new and old, proves that this experience can only exist in the form that it does. This expansion is a worthy extension of FFXIV, and it leaves a world of fascinating possibilities for the future. Dawntrail doesn’t forget that this is a Final Fantasy story, and the way it ties in its past, present, and future makes for incredible moments that continue to uplift and define the series."
+    "verdict": "...[extracted conclusion] Error after attempts: 503 Server Error: Internal Service Error for url: https://www.ign.com/articles/final-fantasy-xiv-dawntrail-review"
   },
   {
     "name": "The First Descendant",
@@ -741,13 +747,13 @@
     "name": "Zenless Zone Zero",
     "score": "8",
     "url": "https://www.ign.com/articles/zenless-zone-zero-review",
-    "verdict": "By leaning into early 2000s nostalgia and then blending it with a stylish vision for the future, Zenless Zone Zero crafts an inimitable world that is easy to get invested in. Exploring New Eridu and getting to know this charming cast both in and out of combat was a thrilling ride I was keen to keep at for hours on end. It’s not necessarily as deep as many of its gameplay inspirations, and momentum-killing hacking puzzles can sometimes sour the mood slightly – but with exhilarating, approachable combat and so many extracurricular activities to take care of, it was always easy to turn a corner and get swept back up in the captivating culture of Zenless Zone Zero."
+    "verdict": "...[extracted conclusion] Error after attempts: 503 Server Error: Internal Service Error for url: https://www.ign.com/articles/zenless-zone-zero-review"
   },
   {
     "name": "The Legend of Heroes: Trails through Daybreak",
     "score": "8",
     "url": "https://www.ign.com/articles/the-legend-of-heroes-trails-through-daybreak-review",
-    "verdict": "The Legend of Heroes: Trails through Daybreak is an exciting new start for the series. With a fresh cast of characters joined by a handful of familiar faces, it’s a welcoming point for potential new fans to jump in while also rewarding veteran players for returning. Daybreak’s updated hybrid battle system still has a few kinks to work out with its real-time elements, but enhanced movement options and other impressive tweaks make the turn-based aspects better than ever. Wrap that up in an engaging story full of political drama and a compelling new setting, and Daybreak is exactly what the Trails series needed to reach new heights."
+    "verdict": "...[extracted conclusion] Error after attempts: 503 Server Error: Internal Service Error for url: https://www.ign.com/articles/the-legend-of-heroes-trails-through-daybreak-review"
   },
   {
     "name": "Lorelei and the Laser Eyes",
@@ -1083,648 +1089,642 @@
     "name": "The Outlast Trials",
     "score": "7",
     "url": "https://www.ign.com/articles/the-outlast-trials-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/the-outlast-trials-review"
+    "verdict": "As it exits Early Access, The Outlast Trials is a really enjoyable and unique cooperative horror game, but it runs out of runway more quickly than I would have liked. Each of the five stages are memorable and wildly entertaining thanks to their over-the-top horror (despite repeatedly reused antagonists), and the enemy AI is aggressive enough that I was always on my toes. But with just five levels and two main bosses, there isn’t much variety available to support all of the progression that’s in store, and even all of the neat upgrades to chase and some truly devious difficulty options that unlock after your first run through each of the stages can’t jolt life back into them. Some more meat on the bones of the story would have gone a long way to keeping my interest long term, but that’s little more than a skeleton. There are plenty of fun, grotesque memories to be forged in the first few hours of murderous bliss The Outlast Trials provides, but that novelty quickly subsides once you’ve seen everything once."
   },
   {
     "name": "Terminator: Dark Fate",
     "score": "5",
     "url": "https://www.ign.com/articles/terminator-dark-fate-defiance-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/terminator-dark-fate-defiance-review"
+    "verdict": "Terminator: Dark Fate - Defiance is an RTS that tries its best to bring a vicious, dirty, gritty war between humans and machines to life. It delivers flashes of that promise in motion, but lets itself down with obnoxious missions designed around inconsistent rules. Couple that with a confused campaign structure and anemic multiplayer skirmishes, and this otherwise appealing idea tips into the better-left-unplayed pile."
   },
   {
     "name": "Sons of the Forest",
     "score": "9",
     "url": "https://www.ign.com/articles/sons-of-the-forest-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/sons-of-the-forest-review"
+    "verdict": "Sons of the Forest takes everything its predecessor did well and does it a little bit better. And considering how much I enjoyed the original, I can easily recommend this strong follow-up. Exploring a huge, beautiful, deadly island through the changing seasons is a treat on its own. The new base building mechanics could entertain me for days without ever touching the main story. And to top it all off, we have smarter and more unsettling enemy behavior paired with thoughtfully improved combat. The technical polish and touched up story since its Early Access release round out what is easily one of my favorite open world survival crafting games ever."
   },
   {
     "name": "Last Epoch",
     "score": "8",
     "url": "https://www.ign.com/articles/last-epoch-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/last-epoch-review"
+    "verdict": "Last Epoch is an impressive, time-bending action RPG that combines rich customization with modern action. In the mechanical sense, it serves as an important stepping stone between Diablo and Path of Exile – but even without making direct comparisons, it competently stands on its own merits thanks to a flurry of unique, intertwining systems and a strong endgame that make it difficult to resist pouring an entire weekend into its endless loops. Just don’t let its poorly told story or the handful of bugs that have yet to be squashed discourage you from seeing this adventure through to the end of time."
   },
   {
     "name": "Pacific Drive",
     "score": "7",
     "url": "https://www.ign.com/articles/pacific-drive-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/pacific-drive-review"
+    "verdict": "A singular survival game steeped in an unnerving world, Pacific Drive pairs meticulous management with intense excursions that will test your motoring mettle. Balancing its symphony of systems can sometimes be an overly punishing process, but the riveting tension of each run was enough to keep me on my toes even through some repetitious pain points. And when my battered station wagon came screaming out of the portal to safety with no doors and a dead engine, I always felt compelled to fix its faults, buckle back in, and maybe play with the Laika bobblehead on the dash. That frustrating hunk of metal was mine, after all."
   },
   {
     "name": "Helldivers 2",
     "score": "9",
     "url": "https://www.ign.com/articles/helldivers-2-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/helldivers-2-review"
+    "verdict": "Helldivers 2 is the rare modern multiplayer game that does almost everything right. It gives you a ton of freedom, feels fantastic to play, and has a smart progression system that doesn’t nickel and dime you or rely too much on a paid battle pass. It manages to keep its missions fresh by introducing a ton of enemies, modifiers, and objectives, and varying them in interesting ways. There are some matchmaking and performance issues that still need to be worked out, and you can only go so far by yourself or with random players – but if you’ve got a solid squad, it’s an incredible time, and certainly one of the most fun multiplayer shooters I’ve played in years. When I’m not Helldiving, I’m thinking about Helldiving, counting down the time until my next drop. Now, if you’ll excuse me, I’m going to pour myself a nice, hot cup of Liber-tea and get back at it. Those bugs and robots look like they could use some freedom, and Managed Democracy isn’t going to spread itself. For Super Earth!"
   },
   {
     "name": "Skull and Bones",
     "score": "7",
     "url": "https://www.ign.com/articles/skull-and-bones-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/skull-and-bones-review"
+    "verdict": "Skull and Bones isn’t the successor to Assassin’s Creed 4: Black Flag that many seem to want, and it isn’t many of things Ubisoft itself said it would be at various points in its storied history, but the seafaring RPG we ultimately got is still surprisingly good. Sailing around the Indian Ocean firing cannons, mortars, and giant ballista at your foes is a fun time, the RPG mechanics and cooperative buildcrafting is as deep as the ocean with plenty of awesome gadgets to grind for, and the economy simulator is impressively in-depth. It doesn’t quite fulfill the promise of a decade-long cruise to port yet either, with a thin endgame, almost no story to speak of, and general instability that sometimes makes the adventure feel like a rough draft. But here’s hoping some of those shortcomings can be washed away by the waves of content already planned to come in an ambitious live-service roadmap that’s fast approaching. For now, its maiden voyage is a good start."
   },
   {
     "name": "Deep Rock Galactic: Survivor Early Access",
     "score": "8",
     "url": "https://www.ign.com/articles/deep-rock-galactic-survivor-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/deep-rock-galactic-survivor-review"
+    "verdict": "While Deep Rock Galactic: Survivor’s Early Access status is clear in the limited number of modes and maps it currently contains, it doesn't feel unpolished or annoying to play at all. Translating the adventurous, raucous, party game spirit of its shooter big brother to a single-player roguelite about as well as anyone could have, it's an enjoyable addition to one of my favorite franchises. Whether it’s first-person or top-down, wielding a small arsenal of wonderful, punchy weapons as I sprint through critter-filled caverns on my murderous quest for loot and glory warms my stony heart."
   },
   {
     "name": "Atomic Heart: Trapped in Limbo",
     "score": "3",
     "url": "https://www.ign.com/articles/atomic-heart-trapped-in-limbo-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/atomic-heart-trapped-in-limbo-review"
+    "verdict": "Atomic Heart: Trapped in Limbo may be wild and wacky to look at, but playing it is a huge disappointment. Beginning as a candy-coated version of Counter-Strike’s surfing and ending as an exhausting Temple Run clone, this DLC add-on stretches its limited ideas into an equally limited set of levels that seem to get less fun the longer they go on. Much as I appreciate the idea of expanding on both of the main campaign’s endings, if this is the result then it should’ve been left on the drawing board."
   },
   {
     "name": "Banishers: Ghosts of New Eden",
     "score": "7",
     "url": "https://www.ign.com/articles/banishers-ghosts-of-new-eden-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/banishers-ghosts-of-new-eden-review"
+    "verdict": "Banishers: Ghosts of New Eden is a fun action game with a solid concept and a stellar paranormal investigation system. Its story about struggling to let go of loved ones in death is worth hearing, even when its pacing occasionally gets sluggish and indulgent. The combat system also tries some interesting new things that largely work out, only dragged down by poor enemy variety and wonky controls. Still, swapping between the corporeal and ghostly planes instantaneously is every bit as cool when solving mysteries as it is during fights, and the writing and characters help carry Banishers across its rougher patches. That made saying goodbye to them fittingly difficult, decaying flesh and all."
   },
   {
     "name": "The Inquisitor",
     "score": "6",
     "url": "https://www.ign.com/articles/the-inquisitor-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/the-inquisitor-review"
+    "verdict": "The Inquisitor takes place in a fascinating, dark world, and its story often puts you in strange and interesting situations. Searching for a vampire and trying to solve murders in a medieval town is a great idea, and it's compelling to search a scene for clues, to try to puzzle out the best choices in conversations and interrogations, and to attempt to stitch the whole thing together. But it doesn't pay off its ambition, whether that’s because of action scenes that are never really challenging or choices that are either too opaque to see where they're taking you, or take you to the same destination regardless of what you pick. The Inquisitor is always holding your hand too tightly as it points you at clues and destinations, and as a result, it's a detective game that does most of the detecting for you."
   },
   {
     "name": "Suicide Squad: Kill the Justice League",
     "score": "5",
     "url": "https://www.ign.com/articles/suicide-squad-kill-the-justice-league-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/suicide-squad-kill-the-justice-league-review"
+    "verdict": "Suicide Squad: Kill the Justice League is a thoroughly frustrating game to play. There are things to enjoy here, with combat that’s snappy enough to carry it through a genuinely good DC comics story artfully dressed in high production values. But everything else just falls down around it. Engaging mission design is nearly non-existent, the looter-shooter mechanics are tired and dull, and the grotesquely-repetitive postgame leaves little-to-nothing to do of interest. The result is a bit of a mess that doesn't ever impress with any of its numerous ill-conceived ideas. It's not bad, it's just disappointing from Rocksteady - pioneers of single-player story action chasing already outdated multiplayer trends. A City of Tomorrow built on the unstable foundations of yesterday."
   },
   {
     "name": "Granblue Fantasy: Relink",
     "score": "8",
     "url": "https://www.ign.com/articles/granblue-fantasy-relink-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/granblue-fantasy-relink-review"
+    "verdict": "Granblue Fantasy: Relink bucks the RPG genre’s usual trend of long and slow-paced stories, but the relative brevity of its campaign doesn’t compromise on the quality of its storytelling. Its mobile game origins don’t always translate over well, feeling a little thin in some aspects, but questing with friends in multiplayer is very exciting – even if the lack of crossplay is disappointing. However, Relink’s fun action combat and interesting cast of characters has kept me happily playing long after I beat the final boss."
   },
   {
     "name": "Persona 3 Reload",
     "score": "9",
     "url": "https://www.ign.com/articles/persona-3-reload-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/persona-3-reload-review"
+    "verdict": "A stellar visual overhaul and countless small changes and additions beyond it leave a significant impact, making Persona 3 Reload a more fully realized version of a beloved RPG. Although still dated in some respects, quality of life improvements and new features refresh its exciting turn-based combat and add depth to its touching story moments. Through an incredible new voice cast that embodies these unforgettable characters and an endearing soundtrack to reforge its identity, Persona 3 Reload tells a powerful, timeless story of tragedy and hope with sharp emotional sincerity. This is the kind of remake I’ve hoped for, and even after spending 70 hours to see it all the way to its conclusion, I still find it hard to believe it's real."
   },
   {
     "name": "Palworld Early Access",
     "score": "7",
     "url": "https://www.ign.com/articles/palworld-review-xbox-game-pass",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/palworld-review-xbox-game-pass"
+    "verdict": "The version of Palworld on Xbox and the Microsoft Store might not be nearly as polished as the Steam version, but that doesn’t mean it isn’t still a ton of fun. Performance is obviously worse, the audio issues are glaring, you won’t be able to nickname your beloved Pals, and you’re limited to a much smaller group of friends. All of that adds up to an experience that is indisputably worse, but I was at least able to look past the vast majority of these bumps in the road with relative ease, because underneath it all is the same awesome survival game that I haven’t been able to put down. Given time, I fully expect the Xbox-specific issues to get cleaned up as this Early Access dark horse continues to evolve – until then, Xbox players still have a solid game on their hands."
   },
   {
     "name": "Enshrouded Early Access",
     "score": "8",
     "url": "https://www.ign.com/articles/enshrouded-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/enshrouded-review"
+    "verdict": "Enshrouded will likely be an instant hit for anyone who’s ever wanted to build a castle in a fantasy world full of danger, and it makes all that building fun and easy with an intuitive set of tools. But even if you don’t care much about crafting or building, Enshrouded’s RPG systems are already solid enough to carry you through its open world for a few dozen hours – even if its vague story isn’t all that powerful, its puzzles are forgettable, and its combat and movement systems could use some fine-tuning. Thankfully, there’s usually no pressure to do anything but try to unlock the next visually-breathtaking area, and that made for a smooth 62-hour journey."
   },
   {
     "name": "Stargate: Timekeepers",
     "score": "8",
     "url": "https://www.ign.com/articles/stargate-timekeepers-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/stargate-timekeepers-review"
+    "verdict": "I'm pretty pleased with the first seven episodes of Stargate: Timekeepers. SG-1 and Atlantis have been off the air for 15 years now, and it sounds like we won't be getting any more Shadow Tactics games. So to get an experience that combines both of those bygone things I adore so effectively is a great surprise. I wish the story and characters had a bit more depth to them, and there are some issues with enemy behavior and missing keyboard shortcuts that could use a bit more polish. But overall, I would gladly venture forth through this stargate again."
   },
   {
     "name": "Palworld Early Access",
     "score": "8",
     "url": "https://www.ign.com/articles/palworld-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/palworld-review"
+    "verdict": "Even in its Early Access state, Palworld is amusingly irreverent, has a surprising amount of content and deep survival mechanics, and is absurdly difficult to put down. It’s impossible to overlook just how shamelessly it takes ideas and designs from Pokémon, it’s got some unsurprising bugs and performance issues, and the work of keeping your base’s supplies topped off needs a little retuning – but when you’re riding on the back of a flying dragon while shooting a blue duck with an assault rifle, most of those blemishes wash away entirely. This is already one of my favorite survival games, and I’m incredibly excited to see how it evolves."
   },
   {
     "name": "Like a Dragon: Infinite Wealth",
     "score": "9",
     "url": "https://www.ign.com/articles/like-a-dragon-infinite-wealth-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/like-a-dragon-infinite-wealth-review"
+    "verdict": "Like a Dragon: Infinite Wealth’s overhauled combat system injects some welcome flexibility and flash into every turn, its difficulty curve has been pruned of nasty spikes to remove the need for repetitive grinding we endured in the last turn-based game, and its spectacular Hawaiian setting is crammed with enough enjoyable activities to overload even the most ambitious of holiday itineraries. A compelling, country-hopping crime story kept me on the hook like a freshly lured barracuda for the 50 hours it took to complete, and the vibrant new job classes and unique combat arenas ensured that the fighting continued to feel fresh. Sprawling, enthralling, and packed with dynamic brawling, Like a Dragon: Infinite Wealth isn’t just the best turn-based Like a Dragon game, it’s one of the greatest games in the entire series."
   },
   {
     "name": "Tekken 8",
     "score": "9",
     "url": "https://www.ign.com/articles/tekken-8-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/tekken-8-review"
+    "verdict": "Tekken 8 is an amazing new entry in the long-running series. Interesting tweaks to its classic fighting systems, a full suite of fun offline modes, great new characters, incredible training tools, and a vastly improved online experience all add up to a fighting game I will be playing for many years to come. By honoring its legacy, but continuing to move forward, Tekken 8 manages to stand out as something special."
   },
   {
     "name": "Turnip Boy Robs a Bank",
     "score": "8",
     "url": "https://www.ign.com/articles/turnip-boy-robs-a-bank-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/turnip-boy-robs-a-bank-review"
+    "verdict": "Turnip Boy has already committed a bunch of crimes, and he does even more in Turnip Boy Robs a Bank. While it’s not much longer than its predecessor and has similar pacing problems towards the end, this sequel has gotten a huge overhaul for the better. It’s changed genres from a dungeon crawler to an action roguelite, with massive improvements to the combat that help make that switch work. And with more quests to complete, more jokes to laugh at, and more secrets to uncover, it still holds onto what made its predecessor so charming. It goes to show that there’s always room for Turnip Boy in our lives, even if he’s killed way more people (veggies?) since the last time we saw him."
   },
   {
     "name": "Prince of Persia: The Lost Crown",
     "score": "8",
     "url": "https://www.ign.com/articles/prince-of-persia-the-lost-crown-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/prince-of-persia-the-lost-crown-review"
+    "verdict": "Prince of Persia: The Lost Crown captures not only what made games such as The Sands of Time so good, but it irons out a lot of the little issues that plagued the 3D games in this series by opting for a 2D perspective – and owning it. It also works extremely well as a traditional Metroidvania, sticking with tried-and-true elements of the genre but executing on them with precision. The story can feel a bit jumbled at times, but it's the fast and fun combat system, the tight and satisfying controls, and the stylish look and feel that elevate Sargon’s journey and make The Lost Crown a worthy successor to the best of the Prince of Persia legacy."
   },
   {
     "name": "Supernormal",
     "score": "6",
     "url": "https://www.ign.com/articles/supernormal-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/supernormal-review"
+    "verdict": "Despite an uneven start and a woefully predictable story, Supernormal can offer some sincerely spooky scares. The creepy house you'll explore is a tense treat to look at, though that atmosphere can get undercut in the first half by truly terrible writing. It's a shame such a brief game offers so little replayability, but while it's far from a PT killer, Supernormal is at least a decent way for a horror fan to kill a little time. Just don't look behind you."
   },
   {
     "name": "Rocket Racing",
     "score": "6",
     "url": "https://www.ign.com/articles/fortnite-rocket-racing-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/fortnite-rocket-racing-review"
+    "verdict": "Rocket Racing is certainly worth a few rounds if you’re already into either Fortnite or arcadey racers, though it doesn’t yet have enough going for it to permanently attract anyone away from other beloved multiplayer games like Rocket League or Mario Kart. Still, its brief races are speedy enough to keep me entertained between other activities, and I love how simple and easy it is to get online buddies playing together across platforms – even though its underdeveloped racing mechanics, lack of content, and absence of local multiplayer mean it struggles to stay fresh for too long."
   },
   {
     "name": "Silent Hill: Ascension",
     "score": "5",
     "url": "https://www.ign.com/articles/silent-hill-ascension-mid-season-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/silent-hill-ascension-mid-season-review"
+    "verdict": "I can see what Silent Hill: Ascension is trying to be: an interactive horror show in which the audience decides the fate of the characters. Sadly, though, the piecemeal delivery and community vote system mean the story is disjointed at best, and nonsensical at worst. Story progression, character development, and exposition all suffer as a result. No, I don't yet know how the story will resolve itself in several months' time, but I'm not sure I care enough to stick around to find out… and therein lies the problem."
   },
   {
     "name": "The Finals",
     "score": "8",
     "url": "https://www.ign.com/articles/the-finals-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/the-finals-review"
+    "verdict": "The Finals does a great job standing out from the competitive shooter crowd thanks to its fast-paced action, excellent environmental destruction, and gameshow-meets-squad shooter vibes. The way flying through the battlefield with a grappling hook or hulk-smashing through buildings mixes with its strict, objective-based modes is a breath of fresh air. It’s a concern that there are only two of those modes total right now, and it definitely feels like both in-game balance and the overall reward economy need some adjustments. But those are small critiques relative to the outrageous fun and breathtaking spectacle of buildings crumbling around you."
   },
   {
     "name": "Warhammer 40,000: Rogue Trader",
     "score": "8",
     "url": "https://www.ign.com/articles/warhammer-40000-rogue-trader-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/warhammer-40000-rogue-trader-review"
+    "verdict": "Even in such a banner year for RPGs, Warhammer 40,000: Rogue Trader stands out as one I wouldn't want to have missed. Excellent writing, great combat, and the chance to get up close and personal with some of the most interesting and exciting elements of the 40K universe makes for a stimulating gore-feast of a journey. Its systems are a complicated beast to master and the bugs are numerous and significant, but it speaks to the quality of everything surrounding them that they didn't sour the experience for me more than they did. Owlcat has taken a proud step forward as an RPG developer to keep an augmentic eye on. Count this one among the Imperium's finest."
   },
   {
     "name": "Resident Evil 4 Remake",
     "score": "8",
     "url": "https://www.ign.com/articles/resident-evil-4-remake-vr-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/resident-evil-4-remake-vr-review"
+    "verdict": "Resident Evil 4 Remake VR Mode is yet another great iteration of the iconic survival horror game, and definitely worth playing for anyone searching for grounds to revisit parasite-infested rural Spain. The catch is that translating a third-person shooter into a first-person VR game doesn’t always work as well as one might hope, and some of the ways you interact with the world feel half-baked by the standards set in the VR modes of Biohazard and Village. Even so, this fantastic remake is otherwise as stellar as you might expect in VR form, especially where the incredibly impressive graphics and audio design are concerned. So sure, you’ve probably already played this game before, but one more time through it honestly couldn’t hurt – Resident Evil 4 Remake VR Mode is more than enough reason."
   },
   {
     "name": "Granblue Fantasy Versus Rising",
     "score": "9",
     "url": "https://www.ign.com/articles/granblue-fantasy-versus-rising-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/granblue-fantasy-versus-rising-review"
+    "verdict": "Granblue Fantasy Versus: Rising is more than just a simple “version-up” of the original game. It systematically addresses virtually every issue I had with it at launch in 2020 – including replacing the dated, delay-based netcode with excellent rollback, filling out the initially small roster of 11 to an excellent collection of 28 highly unique and varied characters, and adding a number of quality-of-life improvements, like better training tools, character-specific tutorials, and more. Even in a crowded year of excellent fighting games, Granblue Fantasy Versus: Rising stands out as one of the best."
   },
   {
     "name": "Cookie Cutter",
     "score": "7",
     "url": "https://www.ign.com/articles/cookie-cutter-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/cookie-cutter-review"
+    "verdict": "Despite an occasionally frustrating early game, Cookie Cutter is a thoughtful, creative, and (mostly) approachable metroidvania that embodies all the things you'd expect from the genre with its own distinctive style. If this type of game isn't usually your thing, then its fairly standard structure probably won't do much to win you over, especially when its map can sometimes feel a little less open than it first appears. But as a fast, frantic action game to keep you busy, you could do a lot worse than spending a little quality time with Cherry and her gruesome friends."
   },
   {
     "name": "House Flipper 2",
     "score": "7",
     "url": "https://www.ign.com/articles/house-flipper-2-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/house-flipper-2-review"
+    "verdict": "House Flipper 2 takes what made House Flipper weirdly addictive and cleans, paints, and builds its way to a worthwhile iterative upgrade on the renovation sim. A few visual tweaks give it a personality the original never quite managed, while the addition of the sandbox mode will give builders who want more power than paint choices the chance to run wild with their tools."
   },
   {
     "name": "Fortnite Festival",
     "score": "4",
     "url": "https://www.ign.com/articles/fortnite-festival-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/fortnite-festival-review"
+    "verdict": "Fortnite Festival forgets the bulk of what really made Rock Band the peak rhythm series of its era and injects the husk that’s leftover full of insidious money-extracting service game tricks and baffling design decisions. With no local shared-screen co-op, it falls at the first hurdle as a worthy peer of Harmonix’s party-game powerhouse. You can’t even see the note highways for the other players you’re online with, leaving the Main Stage mode barely feeling like multiplayer at all – and the Fuser-ish Jam Stage mode feels like a waste of effort entirely, demanding a king’s ransom to collect enough of the disgracefully expensive songs to be able to meaningfully engage with it. Binning karaoke support and charting the singing as button taps on the note highway is bewildering. Does Fortnite Festival have small glimmers of that musical magic Harmonix has been humming for over two decades? Yes. Is it a temporarily compulsive throwback to cult-favourite, controller-only Harmonix curios like Frequency, Amplitude, and Rock Band Blitz? Sure. Can I see myself continuing to play it in its initial state? Not a chance. If Fortnite really is the future of rhythm games, they can beat it."
   },
   {
     "name": "Lego Fortnite",
     "score": "7",
     "url": "https://www.ign.com/articles/lego-fortnite-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/lego-fortnite-review"
+    "verdict": "Lego Fortnite is a great entry point into survival games thanks to its cooperative focus (either with friends or helpful NPCs) and its easygoing approach when compared to other, more hardcore games in the genre. The recognizably repetitive grind of climbing the tech tree and growing your village can be quite fun, but right now it feels more like a foundation than a full-fledged game. What's here shows potential, especially with all the possibilities afforded by Lego's construction elements and the idea of custom-made vehicles, but more needs to be added before Lego Fortnite feels like a full set."
   },
   {
     "name": "The Day Before Early Access",
     "score": "1",
     "url": "https://www.ign.com/articles/the-day-before-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/the-day-before-review"
+    "verdict": "The Day Before is easily one of the worst games I’ve ever played, to the point where I’m afraid to continue running it on my PC. Sure, you could say there are the bones of something coherent here, but even those bones feel splintered and brittle. Its map is lifeless, its enemies are idiotic, its PvP is an exploitable mess, its story is pointless, and its progression is downright infuriating. While the now-defunct developer FNTASTIC said it wasn’t done, certain baseline standards have been established in the years since Early Access became a thing, and this game met none of them. The many mysterious questions around The Day Before’s development will likely go unanswered now that the curtain has fallen a mere four days after its release, leaving the playerbase to fend for itself until the servers are inevitably shut down for good. Steam is already diligently refunding anyone who made the mistake of buying it – and if you didn’t manage to try it, you can count yourself as one of the lucky ones."
   },
   {
     "name": "The Anacrusis",
     "score": "4",
     "url": "https://www.ign.com/articles/the-anacrusis-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/the-anacrusis-review"
+    "verdict": "The Anacrusis borrows so much from Left 4 Dead that it forgets to do its own thing and refuses to benefit from 15 years of co-op shooter evolution. The cool disco aesthetic and alien armies definitely offer a much-needed break from zombie hordes, but that can only get you so far when poor enemy variety, dreadfully boring gunplay, and lifeless levels make shooting your way to the next safe zone an uneventful affair. The 4v4 mode at least offers some good opportunities for an over-the-top alien-slaying competition with friends, but that well runs dry pretty quickly too, and the five short campaign episodes and tacked on horde mode become dull even faster."
   },
   {
     "name": "Avatar: Frontiers of Pandora",
     "score": "7",
     "url": "https://www.ign.com/articles/avatar-frontiers-of-pandora-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/avatar-frontiers-of-pandora-review"
+    "verdict": "Avatar: Frontiers of Pandora features a stunning alien world to explore with a refreshingly uncluttered approach to navigation, countless enemy bases to destroy and Na’vi clan sidequests to complete, and no shortage of exotic flora and fauna to harvest and hunt. However, its combat is pretty one-dimensional, its mission design is a bit on the repetitive side, and its environment is generally lacking in any major surprises beyond visual splendor, meaning that Avatar: Frontiers of Pandora is a solid shooting adventure that’s more inside the box than truly out of this world."
   },
   {
     "name": "Arizona Sunshine 2",
     "score": "8",
     "url": "https://www.ign.com/articles/arizona-sunshine-2-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/arizona-sunshine-2-review"
+    "verdict": "Time and time again, Arizona Sunshine 2 expertly ramps up the pressure of oncoming hordes of zombies and then rewards you with spectacular gore when your bullets and hatchets connect with rotten faces. Its VR shooting and relatively complex reloading mean you always have to be on your toes and thinking about how many bullets are left in your guns as you blast your way through a lengthy, occasionally poignant story about a man and his new four-legged best buddy. The variety of enemy types is pretty limited for a 15-plus-hour game, but there’s enough light puzzle-solving and climbing mixed in to keep it moving along, and the physics glitches provide as much humor as the one-liners and co-op antics."
   },
   {
     "name": "Lethal Company Early Access",
     "score": "7",
     "url": "https://www.ign.com/articles/lethal-company-early-access-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/lethal-company-early-access-review"
+    "verdict": "There’s nothing quite like a multiplayer survival-horror game that’s as unceasingly spooky as it is hilariously chaotic – and there are few that manage to balance horror and comedy as well as Lethal Company. Even in its early access phase, this co-op loot hunt manages to transcend its limited content and missing systems, making it a good time for those willing to brave its haunted halls – especially with the volume turned up. Still, there’s no real story to speak of, and its tension is deflated a bit by an unappealing and jankily animated art style, overused dungeon templates, and an unrealized progression system that feels as cold and lifeless as the void. We can expect to see a lot of that get improved on during early access, of course. But what it lacks in features right now, it makes up for by offering a strong survival loop that’s satisfying enough to make me want to stick around and see it get built upon. It’s already well worth trying out with a group of buds."
   },
   {
     "name": "The Walking Dead: Destinies",
     "score": "2",
     "url": "https://www.ign.com/articles/the-walking-dead-destinies-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/the-walking-dead-destinies-review"
+    "verdict": "A boring, ugly mess of a game to be avoided at all costs, The Walking Dead: Destinies fails to do anything interesting with the story and characters of the popular TV show it’s based on. While the ghost of a promising concept haunts the periphery – that of making choices different from what happened i the early seasons of the show and watching them play out – its horrendous graphics, weightless combat, repetitive mission design, and as many bugs as zombies reduce Destinies to the gaming equivalent of a biological hazard."
   },
   {
     "name": "SteamWorld Build",
     "score": "7",
     "url": "https://www.ign.com/articles/steamworld-build-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/steamworld-build-review"
+    "verdict": "SteamWorld Build is an enjoyable little city builder that doesn't give you grindy busywork or overstretch itself with bloated padding, focusing on a solid foundation of laying out a city and providing it with supplies. Its underground layer is a cool additional system that has you expanding, improving, and defending your mining operation in a way that matches the laid back pace of the surface nicely. At the same time, SteamWorld Build’s simplicity cuts both ways, and there isn’t much variety on return trips aside from fitting the old bits into new maps. That makes it a refreshing city builder worthy of a few fun weekends, but not a particularly deep one I’m likely to boot up year after year."
   },
   {
     "name": "Bluey: The Videogame",
     "score": "4",
     "url": "https://www.ign.com/articles/bluey-the-videogame-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/bluey-the-videogame-review"
+    "verdict": "Wedged somewhere between Wi-Fi and The Wiggles as one of Australia’s greatest exports, Bluey has been a staggeringly successful animated series. Tens of billions of minutes of the show have been streamed into households in more than 60 countries, and the Heelers have subsequently been transformed into over 1,000 bits of merchandising tat. In an unfortunate turn of events, Bluey: The Videogame feels a lot like another forgettable piece of the latter, hovering somewhere between the countless toys and the tubes of licensed toothpaste. Low on innovation and high on what feels like contractual obligation, Bluey: The Videogame is really a low-effort mobile game masquerading as a mid-price console and PC product. It may absolutely look the part compared to the show itself, but with its assortment of shallow minigames rife with annoying bugs, frustrating controls, and a bafflingly brief runtime of a little over an hour, everywhere else it’s a dog’s breakfast."
   },
   {
     "name": "Flashback 2",
     "score": "2",
     "url": "https://www.ign.com/articles/flashback-2-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/flashback-2-review"
+    "verdict": "While the original Flashback is an Amiga classic, Flashback 2 can only be described as a meagre sequel. Rehashed story elements, dull and clunky combat, a shockingly modest presentation, peculiar design decisions, and wholly unacceptable technical deficiencies (the bulk of which persist even after two post-release patches) make for an adventure that left me underwhelmed at best and utterly infuriated at worst. While I’ll always feel nostalgic for Conrad Hart’s original adventure, Flashback 2 is unfortunately not the blast from the past I had hoped for – instead, it’s a total misfire."
   },
   {
     "name": "Naruto x Boruto Ultimate Ninja Storm Connections",
     "score": "5",
     "url": "https://www.ign.com/articles/naruto-x-boruto-ultimate-ninja-storm-connections-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/naruto-x-boruto-ultimate-ninja-storm-connections-review"
+    "verdict": "Naruto x Boruto Ultimate Ninja Storm Connections may have the biggest roster and flashiest graphics in the series, but its unenthusiastic re-telling of the source material in what should be a celebration of Naruto, Shippuden, and Boruto falls flat. Even when it’s fun and nostalgic, there’s almost nothing here to make me seek it out over past entries with basically the same fighting system and better single-player stories. If all you want is the newest, biggest, and shiniest way to watch your favorite shinobi battle it out, Ninja Storm Connections at least delivers that. But just because it understands the assignment doesn’t mean its execution gets high marks. Even as someone who dabbles in annual series like Call of Duty and FIFA with friends from time to time, this is the most “just another one of these” games I’ve played in a long time."
   },
   {
     "name": "Call of Duty: Modern Warfare 3 Zombies",
     "score": "6",
     "url": "https://www.ign.com/articles/call-of-duty-modern-warfare-3-zombies-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/call-of-duty-modern-warfare-3-zombies-review"
+    "verdict": "Operation Deadbolt's attempt to reanimate Call of Duty: Modern Warfare 3’s Zombies mode by merging it with the machinery of DMZ isn't always successful, but it's not an inherently bad idea. When you start hitting on the right combinations of difficulty, planning, and random chance, it leads to fun, intense moments that leverage some of the best ideas from both. But what's fun here is frequently undercut by way too much time spent grinding for gear needed to survive the intense enemies in the center of the map, busywork story objectives, and crashes that can kill any desire to play. Operation Deadbolt has great moments of tough battles against gross monsters that had me full of panic and dread, but only if I was willing to put in a lot of time and effort to make them happen."
   },
   {
     "name": "Assassin's Creed Nexus",
     "score": "7",
     "url": "https://www.ign.com/articles/assassins-creed-nexus-vr-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/assassins-creed-nexus-vr-review"
+    "verdict": "Assassin’s Creed Nexus VR isn’t just another fragmented tech demo, but a fully realized Assassin’s Creed game that benefits greatly from its new medium and breathes life into the familiar Ubisoft formula. Running across rooftops in Renaissance-era Italy and sneaking through the streets of ancient Athens is a blast, and the fact that none of that made me want to hurl is a testament to just how much Nexus takes advantage of the Meta Quest 3’s shiny new hardware. It’s unfortunate that combat seems like an afterthought compared to the rest of Nexus’s polished systems, and occasional technical issues and immersion-breaking bugs definitely pulled me out of the experience from time to time. Even so, Nexus has reignited my interest in virtual reality, as only dancing through the streets of Venice as Ezio could do – and it feels good to be back."
   },
   {
     "name": "Modern Warfare 3 Multiplayer",
     "score": "6",
     "url": "https://www.ign.com/articles/call-of-duty-modern-warfare-3-multiplayer-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/call-of-duty-modern-warfare-3-multiplayer-review"
+    "verdict": "I enjoy Modern Warfare 3’s multiplayer in the same way I’ve enjoyed nearly every one of Call of Duty’s competitive kill-fests. When you get down to it, there are few games out there that can match how this series looks and feels in the heat of a firefight. To its credit, this year’s game has brought back some great maps and made some meaningful tweaks to movement and recoil mechanics. But… that’s kind of it for what you get with Modern Warfare 3’s contributions – there aren’t any big new ideas to change up the same gunbattles we’ve had for years, with the most thrilling one being that cosmetic purchases carry over from Modern Warfare 2, which is only possible because so little has changed. Especially when you put those improvements next to a cumbersome and frustrating new progression system, it’s not enough to get excited about."
   },
   {
     "name": "The Last Faith",
     "score": "7",
     "url": "https://www.ign.com/articles/the-last-faith-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/the-last-faith-review"
+    "verdict": "If you’ve already played genre leaders like Blasphemous 2 or Bloodstained, then I see no problem spending some time in the dark and largely derivative world of The Last Faith. I don’t think you’ll leave its samey dungeons or lackluster boss fights with a new favorite action game on your list, but navigating the maze of different areas and busting their big ugly masters is challenging and satisfying. The smattering of spells look fun and the collection weapons is genuinely cool with special abilities that are a blast to let loose, I just wish this game gave you more space to experiment without having to trade combat effectiveness. All that said, The Last Faith is not the pinnacle of what this sort of game has to offer by any stretch, and there are plenty of amazing ones I’d recommend that you play before crossing this one off of your list."
   },
   {
     "name": "Persona 5 Tactica",
     "score": "8",
     "url": "https://www.ign.com/articles/persona-5-tactica-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/persona-5-tactica-review"
+    "verdict": "When all is said and done, I had a really good time with Persona 5 Tactica. It's a smaller, easier, less epic experience than its JRPG big brother, but none of that spoils the adventure too much. The combat is quick, clever, and exciting, even if – along with the writing and art style – it seems geared toward younger players or an overall more casual experience. Getting to spend another 40-some hours with my beloved Shujin classmates and bob my head along to some of the best music in video games is well worth my time. Long live the revolution!"
   },
   {
     "name": "My Time at Sandrock",
     "score": "8",
     "url": "https://www.ign.com/articles/my-time-at-sandrock-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/my-time-at-sandrock-review"
+    "verdict": "Whether collecting resources, building items, or passing the day away playing minigames with townies, My Time at Sandrock is a joy. It's clear the team behind Sandrock took lessons from My Time at Portia to build significant quality-of-life improvements to boost almost every main feature, though dungeon design is still a little too basic to be consistently fun. Even though it doesn't nail everything it attempts and it's got a few odd visual bugs, it's hard to linger on those when the townspeople's golden personalities and Sandrock's general unrelenting dedication to goofiness outshine any minor stumbles. The new multiplayer mode is also another fun way to take on building up this desert town, with different challenges that make playing both it and the campaign a great time."
   },
   {
     "name": "For the King 2",
     "score": "6",
     "url": "https://www.ign.com/articles/for-the-king-2-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/for-the-king-2-review"
+    "verdict": "For the King 2 is a very simply designed turn-based game that definitely accomplishes its goal: It's an interesting, challenging, and engaging fantasy adventure RPG that can serve up novel experiences solo or cooperatively on the first play or the tenth, with plenty of personality along the way. For all that goodness it's hobbled by an interface that works against what should be very smooth gameplay. The mysteries of where to go, how to find a lost dungeon, or how to defeat a dangerous enemy are fun ones; the mysteries of how and when your Farmer makes a scarecrow, not so much."
   },
   {
     "name": "Nickelodeon All",
     "score": "9",
     "url": "https://www.ign.com/articles/nickelodeon-all-star-brawl-2-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/nickelodeon-all-star-brawl-2-review"
+    "verdict": "Nickelodeon All-Star Brawl 2 finally lives up to its name, standing as an all-star platform fighter. Not only is it a fantastic sequel that takes criticisms of the first game to heart and sends them to the blast zone, it expands way beyond those adjustments. Decent (if samey) single-player options with a good amount of challenge, a training mode clearly made by people who know exactly how to construct a platform-fighting laboratory on a level rarely seen, and stellar rollback netplay bolster a supremely fun fighting system. The excellent new Slime mechanic then elevates it to a new level by introducing a huge amount of creativity to every character in its impressive roster without making it unapproachable for the party game audience. Nickelodeon All-Star Brawl 2 belongs among the greats of the platform fighting genre – and the moment I’m done writing this, I’m going back for more."
   },
   {
     "name": "Like a Dragon Gaiden: The Man Who Erased His Name",
     "score": "7",
     "url": "https://www.ign.com/articles/like-a-dragon-gaiden-the-man-who-erased-his-name-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/like-a-dragon-gaiden-the-man-who-erased-his-name-review"
+    "verdict": "Like a Dragon Gaiden: The Man Who Erased His Name is kind of like the cup of miso soup served before Infinite Wealth’s main course – it delivers an enjoyably familiar flavour that stimulates the appetite, but doesn’t really make for a substantial meal in its own right. It effectively feels like an appropriate lead-in to next year’s game in ways both good and bad – on the one hand, it gives a satisfying bit of back story to account for Kiryu’s presence in Hawaii, but on the other its uninspired substories and rehashed side activities are proof positive that the series is crying out for the seachange that Infinite Wealth looks to provide. That said, Gaiden’s gadget-heavy combat definitely kept me consistently entertained over the course of its compact crime story, so although I was less inclined to search for distractions outside of the destruction, I still enjoyed this latest dose of Kazama Kiryu carnage while it lasted."
   },
   {
     "name": "Call of Duty: Modern Warfare 3 Single",
     "score": "4",
     "url": "https://www.ign.com/articles/call-of-duty-modern-warfare-3-single-player-campaign-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/call-of-duty-modern-warfare-3-single-player-campaign-review"
+    "verdict": "Modern Warfare 3’s campaign commits the biggest sin possible for a globe-trotting action thriller: it's boring. What had the promise to be an intriguingly spun web of mystery instead ends up being a dusty cobweb you'd find at the back of your shed, clinging onto 15-year-old garden toys you once had fun with. It's a pale imitation of the past, made up of underbaked story moments that clash with attempts to introduce new open combat missions designed to encourage player freedom that instead fall flat on their face. Yes, the gunplay is still great and the graphics and sound design are top-tier, but I couldn't help but feel I was playing a shinier, less subtle version of something I've played too many times before. If this is the quality we've come to expect from Call of Duty campaigns, maybe it's for the best if a year or two is taken to reset and raise this low bar back to the heights of old."
   },
   {
     "name": "The Talos Principle 2",
     "score": "8",
     "url": "https://www.ign.com/articles/the-talos-principle-2-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/the-talos-principle-2-review"
+    "verdict": "Puzzles are meant to be solved; philosophy deals with something that, inherently, can’t be. That The Talos Principle 2 manages to explore both simultaneously is incredibly impressive. There are issues with the difficulty curve in spots and I wish certain things were more clear, but those complaints pale in comparison to everything The Talos Principle 2 does right. Its puzzles had me saying “I don’t know… I really don’t know,” out loud one moment and shouting “I am the smartest man alive!” moments later; its exploration of philosophy both challenged and supported my existing beliefs and made me consider new ones while managing to add a heck of a lot of books to my reading list; and perhaps most importantly, its thoughtful, heartfelt, and deeply moving story reaffirmed my faith in people, and in what we can accomplish if we are determined, to quote Tennyson, “to strive, to seek, to find, and not to yield.”"
   },
   {
     "name": "The Invincible",
     "score": "5",
     "url": "https://www.ign.com/articles/the-invincible-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/the-invincible-review"
+    "verdict": "The Invincible is a prime example of trying to fit a square peg of a story into the round hole that is the medium of video games. While the premise and story both contain worthwhile parts, the light, pointless gameplay built around it could be much better, as it lacks any depth to its puzzles and is weighed down by too much tedious walking around lifeless locations that feature impressive backdrops but empty foregrounds that aren't worth exploring. There’s only so much even a likable protagonist like Yasna can do with a story, environment, and mechanics that don’t give you much to do until you’re seven hours in. If you are looking for an enjoyable sci-fi story about space exploration and mystery, your time would likely be better spent simply reading Stanislaw Lem's 1964 novel, The Invincible; at least your imagination won’t be as limited as this game seems to be."
   },
   {
     "name": "Thirsty Suitors",
     "score": "8",
     "url": "https://www.ign.com/articles/thirsty-suitors-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/thirsty-suitors-review"
+    "verdict": "Thirsty Suitors’ heartfelt story of reconciliation and finding oneself offers intimate conversations that hit close to home. Its dramatic combat kept me engaged with a satisfying combination of turn-based actions and timing-based attacks, and its cooking even more so with the deep connections it earnestly put on display. It also confidently stars non-white characters in a way very few games even come close to, though it can try to say and do a little too much in this single package, making parts of the story feel rushed. But overall, Thirsty Suitors manages a great blend of hilarious antics and genuine conversations that will leave you thinking about your own relationships."
   },
   {
     "name": "RoboCop: Rogue City",
     "score": "7",
     "url": "https://www.ign.com/articles/robocop-rogue-city-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/robocop-rogue-city-review"
+    "verdict": "RoboCop: Rogue City is a pitch-perfect throwback to the action movies of the ‘80s. It’s over-the-top violence with charm, largely well put together but rough on the edges. Most importantly, it's a fun way to spend time in a beloved fictional universe that doesn’t overstay its welcome. Blasting at goons as an unstoppable walking machine remains as extremely entertaining as it seemed on the big screen, thanks in part to an impressive commitment to capturing the look and feel of the original film. Mixing in elements like routine police work and side quests does a great job changing the pace, too. Even if it’s not the best example of visual fidelity, and prone to some bugs along the way, that love of RoboCop shines through. This is a solid B movie of a video game, which is exactly what the source material demands."
   },
   {
     "name": "Dead Island 2: Haus",
     "score": "6",
     "url": "https://www.ign.com/articles/dead-island-2-haus-dlc-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/dead-island-2-haus-dlc-review"
+    "verdict": "I enjoyed revisiting Dead Island 2 for an evening of gore-filled good times with its Haus DLC, but with very few additions to shake up gameplay and a surprisingly short runtime, there isn’t much here worth diving  back in to see on its own. It certainly has a few laughs to offer, some beautiful new areas to explore, and a crossbow that’s actually pretty fun to use, but it only took half an hour of fighting the same undead goons from the base game for me to grow sick of them all over again. Unless you’ve got a great desire to drink the Kool-Aid, you might be better off waiting for additional DLC before making a return to Hell-A."
   },
   {
     "name": "The Lord of the Rings: Return to Moria",
     "score": "4",
     "url": "https://www.ign.com/articles/the-lord-of-the-rings-return-to-moria-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/the-lord-of-the-rings-return-to-moria-review"
+    "verdict": "As a big fan of both The Lord of the Rings and survival games, I was enticed by the idea that I can dive into a genre I already know and love with the rich lore of Middle-earth to keep me company (as well as a party of friends), but it’s disappointing to see such a promising concept do little more than a barely passable impression of better games. Combat is dull and repetitive, owing to overused enemy types and braindead AI, and limited mining opportunities or freedom with settlement building throws a wet blanket over the creativity that’s typically a selling point for the genre. Throw in rough technical performance and it becomes difficult to recommend Return to Moria to even my fellow Tolkien stans. There’s a decent game in here somewhere, as the compelling progression loop and chaotic multiplayer capabilities can make for a really good time – I just can’t give you many reasons to pick this survival game over the plethora of better options when it’s only ever by-the-numbers at best."
   },
   {
     "name": "Alan Wake",
     "score": "9",
     "url": "https://www.ign.com/articles/alan-wake-ii-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/alan-wake-ii-review"
+    "verdict": "Alan Wake II delivers one of the boldest and most brain-bending survival-horror storylines this side of Silent Hill 2, presents it with uniformly immaculate art direction and audio design, and reinvigorates the series’ signature light-based shooting as though it’s been locked and loaded with a fresh pack of Energizers. Even though its skill-upgrade systems seem a little superfluous and there were a few repeated cliches in Saga’s story that stuck in my craw, I nonetheless found both sides of this twisted tale to be endlessly fascinating, frequently fear-inducing, and consistently surprising. Alan Wake II is a superb survival-horror sequel that makes the cult-classic original seem like little more than a rough first draft by comparison."
   },
   {
     "name": "Stray Souls",
     "score": "4",
     "url": "https://www.ign.com/articles/stray-souls-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/stray-souls-review"
+    "verdict": "Despite a genuinely unsettling introductory chapter, Stray Souls is an ambitious but unsatisfying horror game that never quite gets going. Its characters are shallow and uninteresting, and while the sights and sounds of its world can be impressive, the mystery that unravels within it is told mostly through boring exposition dumps and left unsatisfyingly dangling. With poor optimization, zero polish, and some of the dullest bosses I've ever had the displeasure of fighting, Stray Souls is its own worst enemy, destroying its own subtlety with inelegant scares and tedious combat."
   },
   {
     "name": "Ghostrunner 2",
     "score": "9",
     "url": "https://www.ign.com/articles/ghostrunner-2-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/ghostrunner-2-review"
+    "verdict": "Ghostrunner 2 is an electric sequel that supercharges everything that was great about the original and elevates it to a whole new level. The lightning fast, skill-heavy, one-hit kill combat is as exciting as ever, packed with even more tricks that give you plenty of new options to approach every scenario. The parkour also remains as smooth as silk, and some of the new motorcycle sequences are among the most exhilarating moments I’ve had all year. Those who didn’t vibe with the intensely reflex-heavy gameplay of the first Ghostrunner probably won’t be swayed by any of these improvements, but if the original was up your alley, I can’t imagine a better sequel than this."
   },
   {
     "name": "Cities: Skylines 2",
     "score": "6",
     "url": "https://www.ign.com/articles/cities-skylines-2-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/cities-skylines-2-review"
+    "verdict": "Cities: Skylines 2 is not the best game in the lineage of Will Wright's original 1989 classic. The champion is still the original Cities: Skylines, at least for now. If Skylines 2 gets the same incredible post-launch support and additional paid and free content as its predecessor, and if the modding community is allowed to thrive, I think this sequel might come out ahead in the long run. There are so many enjoyable new systems and exciting additions, sadly encased in an awful-looking block of concrete that gets in the way of how much I know I could be loving them. It makes too many promises of realism that its most basic features like zoning can't deliver on. It feels like playing a beta, or a very early Early Access game. Frankly, Skylines 2 could have used another few months in the city planning office. For now, it's more of a fixer-upper."
   },
   {
     "name": "Laika: Aged Through Blood",
     "score": "9",
     "url": "https://www.ign.com/articles/laika-aged-through-blood-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/laika-aged-through-blood-review"
+    "verdict": "Laika: Aged Through Blood is an unrelenting motorcycle ride through a bloody wasteland with one of the most unique and compelling spins on the metroidvania genre. It expertly blends ruthless death-defying combat with a beautiful hand-painted side scrolling world with a riveting story of revenge, desperation, and survival. Though uncompromising in its insistence that you quickly become adept at handling your bike in addition to taking on multiple threats, a heaping helping of checkpoints guarantees revenge is always within striking distance. If you’ve ever considered yourself a fan of exploring and platforming across 2D landscapes, you’ll find these open roads well worth your time."
   },
   {
     "name": "Hellboy Web of Wyrd",
     "score": "6",
     "url": "https://www.ign.com/articles/hellboy-web-of-wyrd-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/hellboy-web-of-wyrd-review"
+    "verdict": "Missed opportunity haunts every inch of Hellboy Web of Wyrd. Its faithful adaptation of the striking look and sharp wit of Mignola’s classic comic books is excellent, but the focus on action above all else comes at the cost of any real resonance that goes deeper than monster-of-the-week-style pulp. As a brawler, it's simple and fun to dive in and play, but all too soon you reach the bottom of its shallow gameplay, without any room for unique play styles or mechanical discovery and a complete lack of challenging enemies that would demand that you up your demon-slaying game. As a roguelite, I appreciated the short runs that were just long enough not to overstay their welcome, because spending too much time in maps that felt so similar with nothing all that interesting to see and do in them besides slap underpowered bad guys around would be a real purgatory."
   },
   {
     "name": "Skull Island: Rise of Kong",
     "score": "3",
     "url": "https://www.ign.com/articles/skull-island-rise-of-kong-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/skull-island-rise-of-kong-review"
+    "verdict": "Skull Island: Rise of Kong is ugly and full of bugs, but the real trouble is that, at its core, it’s just boring. It makes no meaningful attempts to do anything new or clever, with mindless combat and pointless platforming that make it feel like a worse version of every action game from the last 20 years. This isn't the kind of bad game you can play to laugh at, or that took some cool swings but missed them, or that creates weird combinations of technical snafus that lead to unexpected but entertaining results. It doesn't even rate enough to be called frustrating. Rise of Kong is fundamentally disinterested in itself: a giant ape game that doesn't even care enough about what it's doing to make the ape feel giant."
   },
   {
     "name": "Wizard with a Gun",
     "score": "6",
     "url": "https://www.ign.com/articles/wizard-with-a-gun-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/wizard-with-a-gun-review"
+    "verdict": "Wizard with a Gun does what it says on the tin, but not much more. There are tons of cool guns and spells to craft, elemental enemies to defeat, and neat areas to explore. But poor balance in almost every aspect of combat and an unsatisfying ending make a lot of the time spent not seem worthwhile. With some updates and improvements where it counts, Wizard with a Gun could be all that its first few excellent hours set it up to be — but right now it feels incomplete."
   },
   {
     "name": "Endless Dungeon",
     "score": "8",
     "url": "https://www.ign.com/articles/endless-dungeon-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/endless-dungeon-review"
+    "verdict": "It requires an almost brash confidence to mash up a twin-stick shooter with a tower defense game, and then further mix that into a sci-fi roguelite. But somehow Endless Dungeon pulls it off, blending them all seamlessly into a great package that strikes just the right balance of action, strategy, and rewarding progression. It can occasionally be frustrating when the random elements stack the deck completely against you, but strong persistent upgrade options make each run still feel like you’ve accomplished something. With a great cast of heroes, a deep roster of monsters, and stellar co-op, Endless Dungeon is an audacious blend that’s worth opening that next door to find."
   },
   {
     "name": "Hot Wheels Unleashed 2: Turbocharged",
     "score": "8",
     "url": "https://www.ign.com/articles/hot-wheels-unleashed-2-turbocharged-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/hot-wheels-unleashed-2-turbocharged-review"
+    "verdict": "An impeccably detailed and blisteringly fast racer with incredible graphics and rock-solid arcade underpinnings, Hot Wheels Unleashed 2 picks up where the surprisingly excellent 2021 original left off. That is, it’s not just the best thing on the breakfast bench since Micro Machines – it’s one of the strongest and most imaginative arcade racers available today. It’s definitely guilty of forgetting to suitably cater to its wide audience at times, it’s stingy on older cars, and it would’ve been a much bigger and better package if it didn’t completely shed its previous track locations, but the last time Mattel had wheels this worthy of a whirl they were welded beneath Ryan Gosling’s rollerblades."
   },
   {
     "name": "Sonic Superstars",
     "score": "7",
     "url": "https://www.ign.com/articles/sonic-superstars-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/sonic-superstars-review"
+    "verdict": "I started hedgehog over heels for Sonic Superstars, but the more time I put into it, the easier it was for me to see its Eggman-sized flaws. The decision to focus more on exploration was a great idea on paper and creates a unique dynamic to each level, but I wish it hadn’t sacrificed speed in exchange. The boss designs are creative and clever, but often wear out their welcome with long periods of being untargetable and occasionally frustrating one-hit KO mechanics. The soundtrack may not have anything as iconic as Hydro City or Spring Yard Zone, but it features some excellent additions to an already long list of Sonic bangers – if only the sound design was up to the same quality standard. And while the campaign is still enjoyable, Superstars’ multiplayer components are far worse options than anything in past Sonic games. Like digging Emeralds out of the rough, Sonic Superstars’ new ideas end up feeling like a mix of both interesting and ill-advised, making it an amusing Sonic game but not exactly a Super one."
   },
   {
     "name": "Star Trek: Infinite",
     "score": "5",
     "url": "https://www.ign.com/articles/star-trek-infinite-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/star-trek-infinite-review"
+    "verdict": "Star Trek: Infinite does a great job of capturing the look and feel of Star Trek, but those enticing bones splinter under the weight of its bugs and glitches. Each Major Power feels distinct, Mission Trees add choices and story elements to encourage you to roleplay your faction a certain way, and the consistent date and map set-up provides room for experimentation and familiarity in each new run. But that doesn’t matter much if none of it works properly. I have yet to play a single game where I haven’t encountered a backbreaking bug that either halts my progress entirely or cuts me out of fundamental features, whether that’s integrating another civilization into my own or simply building my ships. The end result often feels a lot more like The Original Series than The Next Generation. You can see the promise here, but it’s held back by so many problems that it can be hard to enjoy. Maybe these issues will get patched and sorted out with time, but right now this is a journey into the unknown you’re better off avoiding."
   },
   {
     "name": "Lords of the Fallen",
     "score": "8",
     "url": "https://www.ign.com/articles/lords-of-the-fallen-review-2023",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/lords-of-the-fallen-review-2023"
+    "verdict": "Lords of the Fallen is a great soulslike, and its killer new idea of swapping between two versions of the world to solve puzzles and slay enemies is an excellent twist to set it apart from the pack. That concept is unfortunately hamstrung by numerous, highly annoying technical issues and weak boss fights, but awesome explorable areas and fantastic buildcrafting more than make up for those shortcomings. If, like me, you’re a sucker for a quality action-RPG even amid a clear overabundance of them, then this reboot is well worth your time."
   },
   {
     "name": "Total War: Pharaoh",
     "score": "8",
     "url": "https://www.ign.com/articles/total-war-pharaoh-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/total-war-pharaoh-review"
+    "verdict": "Total War: Pharaoh looks incredible, with diverse and interesting battles complemented by an uncommonly deep and rich campaign layer. The focus is firmly on Egypt, and the experiences available outside that region don't really match up in terms of content or quality to what is on offer to the civilizations of the Nile. But when I'm sailing up and down that majestic river, fending off invasions from hostile tribes, politicking my way to the top of the power pyramid, and sending my besandaled soldiers to spill blood across the shining sands, I feel confident in saying historical Total War is back, baby. Creative Assembly Sophia has refined every part of its take on this franchise since Troy, and the results are just shy of glorious."
   },
   {
     "name": "Cricket 24",
     "score": "5",
     "url": "https://www.ign.com/articles/cricket-24-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/cricket-24-review"
+    "verdict": "Cricket 24 is a bit like English opener Rory Burns. That is, capable of quality play for decent periods – and getting the job done despite looking a little peculiar at times – but a bit too inconsistent overall to be considered an automatic selection. Since developer Big Ant Studios’ has previously displayed a penchant for post-release tweaking, future updates may well address a lot of the lingering issues with licensed players and smooth out the rough edges of its AI and presentation, and in six months’ time this could potentially be a simulation worth going into bat for. However, as of right now Cricket 24 is a disappointingly modest and often slipshod update that seemingly lacks the confidence or creativity to advance further down the wicket."
   },
   {
     "name": "Assassin's Creed Mirage",
     "score": "8",
     "url": "https://www.ign.com/articles/assassins-creed-mirage-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/assassins-creed-mirage-review"
+    "verdict": "Assassin’s Creed Mirage’s return to the stealthy style that launched this series doesn’t do everything right, but everything it does feels like it was done with purpose. This means a shorter game with a smaller map, fewer collectibles, smaller scope in combat, and a limited selection of gear to play with – all of which I found refreshing relative to the arguably bloated scale of 100-hour games like Odyssey and Valhalla. It also means an overly simplistic plot with mostly forgettable characters, but what the story lacks in depth it makes up for with its straightforward quest progression and fast pacing. Though there's no big standout “wow” moment, Baghdad is a beautiful location in its own right, and the world’s detail is focused inward, making every alley and hovel feel well traveled and full of detail and history. I’d recommend Mirage to anyone who’s lapsed on Assassin’s Creed, as its back-to-basics approach is a successful first step in returning the feeling that the earlier industry-defining games gave me so long ago."
   },
   {
     "name": "Forza Motorsport",
     "score": "8",
     "url": "https://www.ign.com/articles/forza-motorsport-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/forza-motorsport-review"
+    "verdict": "After six long years, Forza Motorsport is off the lift and back in our lives. It looks great, feels great, sounds great, and it’s brought with it the most impressive multiplayer we’ve seen in the series so far. With 500 cars and 20 track locations it’s hardly a small start but, now positioned as a platform, Forza Motorsport has the potential to expand into a seriously rich racing destination over the coming years. If Flight Simulator on four wheels is the plan, I’m here for it. First on the list of improvements Turn 10 should focus on is revamping the new RPG-inspired upgrade system that turns progression into an unnecessarily long road ahead of each individual car, and maybe bringing back the joys of split-screen multiplayer racing to complement the excellent online modes."
   },
   {
     "name": "Station to Station",
     "score": "8",
     "url": "https://www.ign.com/articles/station-to-station-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/station-to-station-review"
+    "verdict": "Station to Station is a relaxing, cozy railway planner with clear goals, flexibility in how you accomplish them, and the absolute perfect amount of challenge. It doesn't try to be anything more than a fun and easy going experience, and the fact you can randomize levels and crank their difficulty up a bit provides some nice variety to how you approach each session. I love its voxel-based graphics so much, the music is soothing, and it just oozes charm. Even failing a level didn’t frustrate, because it just meant I got another opportunity to roll through the blocky countryside and do a little better. Its biggest strength lies in its simplicity, and it doesn't stray too far from that initial gameplay premise. Honestly, it doesn't have to."
   },
   {
     "name": "High On Life: High on Knife",
     "score": "6",
     "url": "https://www.ign.com/articles/high-on-life-high-on-knife-dlc-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/high-on-life-high-on-knife-dlc-review"
+    "verdict": "High on Knife is a decent add-on for those searching for an excuse to jump back into Squanch Games’ gross world of naughty words and cartoon violence, but it doesn’t offer a whole lot of reasons to stick around for more than a couple of hours. With a disappointingly short questline and an ill-advised focus on some of the weaker members of the High on Life cast, it doesn’t come close to reaching the same highs (pun intended) as it did last year. There are certainly some decent laughs to be had, and more of this shamelessly idiotic world is by no means a bad thing, but there just isn’t enough here for me to be able to enthusiastically recommend anyone clear even this small amount of time on their busy gaming schedule."
   },
   {
     "name": "Avatar: The Last Airbender",
     "score": "4",
     "url": "https://www.ign.com/articles/avatar-the-last-airbender-quest-for-balance-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/avatar-the-last-airbender-quest-for-balance-review"
+    "verdict": "We haven’t quite been waiting 100 years for an Avatar game that lives up to the potential of the show, but it’s certainly beginning to feel that way after playing Avatar: The Last Airbender - Quest for Balance. This half-baked and wildly inconsistent retelling of the excellent TV series shows the promise of what an Avatar game could maybe be, but a baffling choice of which scenes to highlight, a clunky camera and combat, hilarious balance problems, and an overreliance on middling block puzzles and boring fetch quests leaves our search for the real Avatar still desperately out of luck. With more Avatar shows and movies on the way, it’s just downright odd how Quest for Balance has managed to arrive at this point in time as both an unsatisfying entry point for newcomers and a poor way to revisit it for dedicated fans."
   },
   {
     "name": "Cocoon",
     "score": "9",
     "url": "https://www.ign.com/articles/cocoon-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/cocoon-review"
+    "verdict": "Cocoon is a breathtaking puzzle-platformer that borders on psychedelic. Building on what made Inside designer Jeppe Carlsen's previous work stand out, Cocoon not only presents a mind-bending journey through the cosmos via fascinating worlds-within-worlds puzzle mechanics that beg you to delve another layer deeper, but an interesting take on the repetition of work, life, and being part of a \"bigger picture.\" With a relatively short playtime and some well-hidden collectibles that make it worth replaying, Cocoon is a must-play for fans of Limbo or Inside, or anyone looking for a new puzzle adventure to play and then sit down and think about for a while."
   },
   {
     "name": "The Lamplighters League",
     "score": "7",
     "url": "https://www.ign.com/articles/the-lamplighters-league-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/the-lamplighters-league-review"
+    "verdict": "The Lamplighters League takes proven concepts from other tactics games and puts them together into a novel blend. It takes an unfortunate amount of time to get going, but once it does the tight, meaningful strategic layer ensures that every mission, no matter how banal, matters to your overall campaign. The superb enemy and hero design gives you great stuff to work with as you use real-time stealth takedowns to prepare for tactical fights. Sure, sometimes the partially procedurally generated maps throw up a frustrating scenario, or an ability works a bit weird, but I was more than happy to take those in stride in order to undertake a globetrotting pulp adventure in such an interesting and engaging world."
   },
   {
     "name": "Wargroove 2",
     "score": "8",
     "url": "https://www.ign.com/articles/wargroove-2-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/wargroove-2-review"
+    "verdict": "Wargroove 2 is a lot bigger, even if its tactical combat isn’t much better to match – but with how good the original Wargroove was already, that’s forgivable. The story of its three campaigns isn’t as cohesive as its predecessor and there aren’t many truly new gameplay features in the campaign levels themselves, but its Advance Wars-style tactical combat once again manages to make the hours fly by.A satisfyingly challenging new roguelike mode also provides a new way to play that could have practically been a whole game of its own. It’s a familiar package even with that mode, but if you loved the original then Wargroove 2 provides a whole lot more of what made it so great."
   },
   {
     "name": "Super Bomberman R 2",
     "score": "7",
     "url": "https://www.ign.com/articles/super-bomberman-r-2-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/super-bomberman-r-2-review"
+    "verdict": "Super Bomberman R 2's extensive set of classically entertaining multiplayer modes, powerful but frustrating level editor, and fun customization options give you more than enough to do to make up for the dull story mode. Though it doesn't completely atone for its predecessor's throwaway plot, simplistic character models, and lack of content, it changes things up enough to court both new and old fans. With its large-scale Battle 64 battle royale and a new tower defense-inspired Castle mode, it’s worth playing for a few new spins on the age-old idea of blowing your friends up."
   },
   {
     "name": "Mineko's Night Market",
     "score": "5",
     "url": "https://www.ign.com/articles/minekos-night-market-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/minekos-night-market-review"
+    "verdict": "Mineko’s Night Market is an adorable little sim that could’ve been cozy, but is mostly just boring chores that don’t reward you in the kinds of satisfying ways we see in other popular games in this relaxed genre. After putting you to work, it doesn’t let up, trapping you in a grind of gathering resources and making crafts for lifeless NPCs. Beyond some purring cats, gorgeous artwork, and a handful of legitimately funny bits, it doesn’t provide anything to make all your work worth it."
   },
   {
     "name": "The Making of Karateka",
     "score": "9",
     "url": "https://www.ign.com/articles/the-making-of-karateka-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/the-making-of-karateka-review"
+    "verdict": "Before playing The Making of Karateka, I had no interest in Karateka beyond it being a historical stepping stone to Prince of Persia. But I get it now. I I see its many parts: The animation that was hand drawn from Jordan Mechner’’s snapshots of his family’s karate instructor; the music that began as a fatherly lesson in Wagner’s leitmotifs; and the cinematic framing of a story that cuts between scenes in a far more complicated way than, say, the “They Meet” cutscene in Ms. Pac-Man. Karateka is significant, but the story behind it is remarkable, and The Making of Karateka tells that story in the coolest way possible."
   },
   {
     "name": "Resident Evil 4: Separate Ways",
     "score": "9",
     "url": "https://www.ign.com/articles/resident-evil-4-remake-separate-ways-dlc-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/resident-evil-4-remake-separate-ways-dlc-review"
+    "verdict": "Resident Evil 4: Separate Ways lifts up and reinvents Ada Wong’s story much the same way the Resident Evil 4 Remake itself did for Leon Kennedy. The relatively short four-hour runtime leaves very little room for the action-packed adventure to make a misstep, and it never does: levels are familiar but feel new, encounters and boss fights are reworked and fantastically varied, Ada’s grapple gun abilities feel right at home alongside the remake’s new features, and surprises wait in store even for die-hard Resident Evil fans who think they’ve seen everything. As modestly sized DLC expansions go, it’s hard to ask for much more than this."
   },
   {
     "name": "Cyberpunk 2077: Phantom Liberty",
     "score": "9",
     "url": "https://www.ign.com/articles/cyberpunk-2077-phantom-liberty-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/cyberpunk-2077-phantom-liberty-review"
+    "verdict": "Last year, I said in my review of Cyberpunk Edgerunners that CDPR now has a blueprint for where to go with Cyberpunk 2077, and Phantom Liberty shows the studio already had exactly that in mind. Between a more sophisticated level of storytelling with excellent performances, smarter insights on the cyberpunk genre and its dystopian themes, and landing on top of a much-improved gameplay experience thanks to its fresh 2.0 update, Phantom Liberty marks a new chapter for Cyberpunk 2077 and is finally close to what I’d hoped it would be when I first sat down to play three years ago."
   },
   {
     "name": "Mortal Kombat 1 For Switch",
     "score": "3",
     "url": "https://www.ign.com/articles/mortal-kombat-1-for-switch-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/mortal-kombat-1-for-switch-review"
+    "verdict": "Mortal Kombat 1 on the Switch is nowhere close to the experience you’ll have with it on PlayStation 5, Xbox Series X|S, or PC. There’s a hint of a great fighting game still peeking through the blurry backgrounds, but its horrendous load times, inconsistent framerate, muddy visuals, and plethora of bugs make the Switch version an altogether aggravating way to play what is a great fighting game on other platforms. It quite simply shouldn’t have released in this state, and certainly not at a price that’s equal to the superior, current gen versions."
   },
   {
     "name": "Payday 3",
     "score": "7",
     "url": "https://www.ign.com/articles/payday-3-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/payday-3-review"
+    "verdict": "Payday 3 is a solid step forward for my favorite heist simulator franchise, even though that step is a lot smaller than I’d hoped due to a lack of content and the unsurprising but still majorly annoying bugs and performance issues. The awesome combat, greatly improved AI, and especially the stealth options are so massive they alone justify this as a full sequel, and the new and improved heists with clear phases to navigate them are absolutely fantastic. I just wish there was more loot in the proverbial vault at the outset, and that Starbreeze would have used its years of experience in order to ensure this was a more robust and far more stable launch. I’m confident Payday 3 could become the sequel we all deserve with a year or two of updates – for now, it’s a nice start."
   },
   {
     "name": "Mortal Kombat 1",
     "score": "8",
     "url": "https://www.ign.com/articles/mortal-kombat-1-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/mortal-kombat-1-review"
+    "verdict": "Mortal Kombat 1 is another great entry in this legendary series, but it’s not one without issues. The new Kameo system is excellent, there are smart changes to the fighting mechanics that address many of the fundamental issues that cropped up over  Mortal Kombat 11’s life, and predictably, the fantastic single-player story mode that continues to be the gold standard of the genre. But certain elements of online play are starting to feel dated, and Invasions mode is not nearly engaging enough to hold my attention for as long as is needed to unlock a majority of the goodies hidden behind its many treasure chests and gimmicky battles. Still, Mortal Kombat 1 marks a new beginning for the franchise, and it’s a very exciting launching point for the next era."
   },
   {
     "name": "Party Animals",
     "score": "7",
     "url": "https://www.ign.com/articles/party-animals-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/party-animals-review"
+    "verdict": "With smooth online multiplayer, a handful of mostly distinct maps, and downright adorable characters, Party Animals delivers a fun party game that brings cuddly, chaotic fun where it counts the most. The intentionally wobbly controls take a moment to get used to, but once you do it’s wonderfully satisfying to land a punch and send another player flying into an environmental hazard for a KO. It does commit an all-too-common cardinal sin for contemporary multiplayer games in making local play less enjoyable than going online, but all three main modes are a good time, especially in a full lobby of eight players."
   },
   {
     "name": "The Crew Motorfest",
     "score": "7",
     "url": "https://www.ign.com/articles/the-crew-motorfest-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/the-crew-motorfest-review"
+    "verdict": "It’s said that imitation is the sincerest form of flattery. LEGO has Mega Bloks. E.T. has Mac and Me. Now Forza Horizon has The Crew Motorfest. To be fair, Motorfest is a robust racer with a confident sense of style, a quality arcade handling model, and a long list of generally well-planned events right out of the box. However, the shift to a smaller map has seen it lose a part of its old identity, boats and aircraft feel like they’ve been sidelined, and some of its event Playlists work a lot better than others. Ultimately, The Crew Motorfest is a little more Ice Ice Baby and a little less Under Pressure. It’s a catchy enough copy, but it ain’t exactly back with a brand new invention."
   },
   {
     "name": "Dune: Spice Wars",
     "score": "9",
     "url": "https://www.ign.com/articles/dune-spice-wars-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/dune-spice-wars-review"
+    "verdict": "Dune: Spice Wars is a clever, multilayered, challenging RTS that translates the very essence of what I love about Dune into systems that demonstrate a respect for the lore and an uncommon understanding of interesting strategic gameplay. It looks great, it sounds great, and the pacing is excellent. Every faction is flavorful and different, lending it loads of replayability. The tactical AI could definitely use some work, and not all of the ideas in the Conquest campaign mode landed gracefully. But the fact is: this is my favorite video game set in the Dune universe, and I think I'll be playing it for a long time."
   },
   {
     "name": "Lies of P",
     "score": "8",
     "url": "https://www.ign.com/articles/lies-of-p-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/lies-of-p-review"
+    "verdict": "Lies of P might not branch out particularly far from its soulslike inspiration, but like a marionette controlled by a skilled puppet master, it plays the part extremely well in a wonderfully dark fantasy world. It must be said that its uneven difficulty didn’t always make me feel like an underdog, especially when playing as a brawny, overpowered version of Pinocchio with a massive weapon, and combat pigeonholed me into a specific playstyle while the levels are less open and twisting than most. But with an awesome weapon crafting system, some really memorable boss fights, and one of the better stories we’ve seen in this genre, I can enthusiastically recommend you spend your time hanging out with Gepetto and friends. If you’ve been waiting for a Bloodborne remaster or sequel that may never come, Lies of P is the next best thing."
   },
   {
     "name": "Starfield",
     "score": "7",
     "url": "https://www.ign.com/articles/starfield-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/starfield-review"
+    "verdict": "It’s never a great sign when someone recommends a game on the grounds that it gets good after more than a dozen hours, but that’s very much the kind of game Starfield is, and I do recommend it. There are a lot of forces working against it, and the combination of disjointed space travel, nonexistent maps, aggravating inventory management, and a slow rollout of essential abilities very nearly did it in. It was the joys piloting a custom spaceship into and out of all sorts of morally ambiguous situations in a rich sci-fi universe that eventually pulled it out of a nosedive. I’m glad that I powered through the early hours, because its interstellar mystery story pays off and, once the ball got rolling, combat on foot and in space gradually became good enough that its momentum carried me into New Game+ after I’d finished the main story after around 60 hours. Like Skryim and Fallout 4 before it, there’s still an immense amount of quality roleplaying quests and interesting NPCs out there, waiting to be stumbled across, and the pull to seek it out is strong."
   },
   {
     "name": "Trine 5: A Clockwork Conspiracy",
     "score": "8",
     "url": "https://www.ign.com/articles/trine-5-a-clockwork-conspiracy-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/trine-5-a-clockwork-conspiracy-review"
+    "verdict": "Trine 5: A Clockwork Conspiracy is an awesome sequel that keeps the good times rolling for one of the best co-op puzzle-platformer series out there. This set of puzzles are some of the strongest they’ve ever been, and boss fights are creative and original – even if those highlights are occasionally cut short with snooze-inducing combat sections and a predictable story. It may not do much to innovate beyond what we’ve done four times before, but Trine 5 plays to its strengths extremely well and makes some important tweaks here and there that definitely make it worthy of a playthrough or two."
   },
   {
     "name": "Sea of Stars",
     "score": "8",
     "url": "https://www.ign.com/articles/sea-of-stars-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/sea-of-stars-review"
+    "verdict": "Sea of Stars is an excellent tribute RPG that channels the best parts of its ‘90s-era forebears like Chrono Trigger, Final Fantasy 6, and even Star Ocean: The Second Story. Because of that, it’s fair to say that its world, graphical style, and mechanics aren’t wholly original, but there are enough interesting twists in its 30-hour story to make for a rich and enjoyable experience of its own merit. This isn’t just nostalgia fodder. That said, its twitchy combat can be difficult to get a handle on, and once you do, it only stays interesting for so long before its limited customization options make it start to feel just a little repetitive. That’s made up for by a strong soundtrack, an approachable and endearing story, and a wide number of fun zones and boss fights that make this a trip worth taking."
   },
   {
     "name": "Armored Core 6: Fires of Rubicon",
     "score": "8",
     "url": "https://www.ign.com/articles/armored-core-6-fires-of-rubicon-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/armored-core-6-fires-of-rubicon-review"
+    "verdict": "Armored Core 6 doesn’t look to reinvent the bipedal legs of the mech action genre, but it does update, refine, and polish them to an aggressive shine. Every sortie is a satisfying combat puzzle to solve thanks to fantastic mission design, intense boss encounters, an extremely wide assortment of weapons and parts that can dramatically affect how your mech plays, and excellent, explosive combat that manages to take very complex systems and mechanics and make them easy to understand and execute. Its interesting premise is stifled by bland storytelling told through mission briefings and radio chatter, but this is still nonetheless a welcome return of a classic mecha series."
   },
   {
     "name": "Madden",
     "score": "6",
     "url": "https://www.ign.com/articles/madden-nfl-24-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/madden-nfl-24-review"
+    "verdict": "Madden NFL 24 makes several much-needed improvements to the on-field experience thanks to fantastic additions to animations and AI, but it still suffers from the same problems it always has once you get off the field: everything here is just done better in every other sports sim, even the other ones made by EA, and this year’s tweaks just aren’t enough to make up for the series’ continued feeling of sameness and lack of progress. To continue the metaphor, Madden feels like a decent but not great football team: content to coast. If it were in the right division I could see it sneaking into the playoffs, or overperforming in a good year. But it’s the kind of team that typically gets eliminated in the first round. The on-field game might be the best it’s ever been, but there are too many off-field issues here to ignore, and with each passing year it feels more and more like they’ll never be fixed. Perpetually, Madden seems like it could be a contender with time and the right changes, but right now it feels like an also-ran. And you don’t win the Super Bowl like that."
   },
   {
     "name": "Immortals of Aveum",
     "score": "8",
     "url": "https://www.ign.com/articles/immortals-of-aveum-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/immortals-of-aveum-review"
+    "verdict": "Immortals of Aveum is an impressively confident first-person shooter that successfully trades muzzles and magazines for mages and magic. Its fast-paced, spellcasting combat is both satisfying to master and spectacular to look at, and it features a lengthy and hearty campaign packed with secrets to keep us going well after the story has wrapped. As someone who desperately hopes that unapologetically single-player shooters will live forever, these Immortals have done a great job of making sure they’re definitely not dead yet."
   },
   {
     "name": "Baldur's Gate 3 Final",
     "score": "10",
     "url": "https://www.ign.com/articles/baldurs-gate-3-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/baldurs-gate-3-review"
+    "verdict": "I don't want to say every CRPG going forward should aspire to be like Baldur's Gate 3. Not everything needs to be nearly this big and ambitious, or even this dense. But it is a landmark moment in the genre, and if I had to point to one paragon that I would like everyone else making these to take inspiration from, this is absolutely it. I waited 14 years for the stars to align again so that we could get the ideal mix of crunchy, tactical, old-school RPG combat, an epic and well-written story with complex characters and lots of meaningful choices, and a level of polish and cinematic presentation that let me see the sweat and the sorrow on characters' faces in their darkest hours. Plenty of other games have partially completed that list, but the last time they all came together was Dragon Age: Origins in 2009. And I can finally say that game, and its Infinity Engine predecessors, have a worthy successor that’s not just matched their RPG greatness, but surpassed it. Baldur’s Gate 3 is just about everything I could have asked for."
   },
   {
     "name": "Blasphemous 2",
     "score": "8",
     "url": "https://www.ign.com/articles/blasphemous-2-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/blasphemous-2-review"
+    "verdict": "Blasphemous 2 is an excellent Metroidvania and a marked improvement over the original, even if it did occasionally make me cancel my lunch plans with its grotesqueries. What it lacks in originality with its design it more than makes up for with its bizarre world, appalling story, and inspired look and sound. The new weapons and focus on platforming definitely helped sustain my enjoyment for the campaign’s sizable duration, even when underwhelming enemy variety and unchallenging bosses leave something to be desired. Its stomach-churning religious torture porn might be as far as you can get from the adorable world of Hollow Knight, but you’d be hard-pressed to find something better to play while you continue your interminable wait for Silksong."
   },
   {
     "name": "WrestleQuest",
     "score": "6",
     "url": "https://www.ign.com/articles/wrestlequest-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/wrestlequest-review"
+    "verdict": "WrestleQuest is truly an earnest attempt at telling an authentic wrestling tale in old-school RPG format. Competent combat mechanics add flair and depth to a usually pretty banal aspect of this style of game, but much of the depth feels easy to ignore, and the parts that aren't – namely dramatic moments – supply the opposite of a fun challenge. Likewise, it may take a bit of fighting spirit to make it through the slow and arduous dungeons and some of the bloated and jarring plot, yet it captures the intrepid lives of people who travel the world, beating each other up for fame and fortune in charming and touching ways that are enhanced by its Toy Story-style innocence. For being the first attempt at telling a pro wrestling tale in such a story-forward medium, WrestleQuest is championship material – but maybe just a mid-card title."
   },
   {
     "name": "Shadow Gambit: The Cursed Crew",
     "score": "9",
     "url": "https://www.ign.com/articles/shadow-gambit-the-cursed-crew-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/shadow-gambit-the-cursed-crew-review"
+    "verdict": "Shadow Gambit: The Cursed Crew is a peak example of the stealth tactics genre from a studio that is clearly mastering its craft. Its mission structure is spread across excellently entertaining levels with rich detail to find and master, while characters shine with voice performances, endearing humor, and colorful art that both delight and impress. With innumerable ways to approach its levels and an extremely smart integration of the practice of saving and reloading into the world’s fiction, it’s firing on all cylinders in all categories except perhaps enemy AI. Frankly, I don't know anyone I wouldn't recommend it to."
   },
   {
     "name": "Gord",
     "score": "4",
     "url": "https://www.ign.com/articles/gord-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/gord-review"
+    "verdict": "Any way you look at it, whether it’s an RPG, a real-time strategy game, or a colony sim, Gord is as miserable as its downtrodden villagers. Other games are bad because they aim too high, attempt too much, and fall down on their own merits. They are at the very least hoisted on their own petard, doing us the favor of digging their own grave or being entertaining in their failures. Gord does not; it simply falls flat and rots where it lies, surrounded by monotonous micromanagement, a poor interface, and by-the-numbers combat. I am content to leave it there, but you may bury it if you like."
   },
   {
     "name": "The Texas Chain Saw Massacre: The Game",
     "score": "6",
     "url": "https://www.ign.com/articles/the-texas-chain-saw-massacre-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/the-texas-chain-saw-massacre-review"
+    "verdict": "I have little doubt that in a year or two, when they’ve added more scenarios and maps, fixed the most pressing technical issues, and maybe thought up a better way for newcomers to learn how to play, The Texas Chain Saw Massacre will become a staple in my growing asymmetrical horror games library. For now, however, my recommendation comes with a lot of caveats. While the less lopsided take on the asymmetrical horror format definitely works, the shallow number of samey maps can get monotonous pretty quickly, and even with a fair number of playable characters and a solid progression system, I found myself way too comfortable with the three scenarios after just a few hours. Still, the potential behind this format and the reverence for the beloved horror classic it’s based on is clear, even when it does feel a tad half-baked coming out the gates."
   },
   {
     "name": "Moving Out 2",
     "score": "8",
     "url": "https://www.ign.com/articles/moving-out-2-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/moving-out-2-review"
-  },
-  {
-    "name": "Atomic Heart: Annihilation Instinct",
-    "score": "6",
-    "url": "https://www.ign.com/articles/atomic-heart-annihilation-instinct-review",
-    "verdict": "...[extracted conclusion] Error: 429 Client Error: Too many requests for url: https://www.ign.com/articles/atomic-heart-annihilation-instinct-review"
+    "verdict": "Moving Out 2 is an extremely colourful and calamitous co-op sequel that’s as challenging as it is charming, serving up an enjoyably distinct set of crazy cargo collections that task you with bending at the knees while consistently splitting your sides. Spreading its preposterous brand of pass the parcel across multiple dimensions has empowered the developers to get really creative with the setup of each stage, although that added ambition has meant that some smaller corners have seemingly been cut. Still, the addition of online multiplayer should mean that more players will be able to rope in a moving buddy whether they share the same couch or not, which will hopefully go a long way towards making up for its lingering deficiencies as a single-player experience. If you’re up for another hectic house party with friends, Moving Out 2 hits harder than a thrown fridge."
   }
 ]
