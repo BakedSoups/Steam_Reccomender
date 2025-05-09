@@ -1,4 +1,4 @@
-# Steam Reccomender
+# Steam Recommender ( but it actually works no offense gabe)
 Scrapes the entire internet to find the appropiate tags to describe what a game is like, 
 
 so if the user ask " I want a game like Persona 5" 
