@@ -49,7 +49,7 @@ func steamApiPull(appID int) (
 
 	info := result[str].Data
 
-	// Join genres
+	// join genres
 	var genreList []string
 	for _, g := range info.Genres {
 		genreList = append(genreList, g.Description)

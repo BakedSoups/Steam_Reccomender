@@ -1,3 +1,7 @@
+# this scrapes ign and stores the raw output in ign_all_game.json
+# I seperated the logic of cleaning the outputs after saving the json file to avoid having ign shut the 
+# scrapper down before its done
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
