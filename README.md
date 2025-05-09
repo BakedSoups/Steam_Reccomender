@@ -15,4 +15,4 @@ we can use our data base to disect what Persona 5 is like and give back to the u
 
 
 ### Tech Stack 
-![image](https://github.com/user-attachments/assets/95824a16-4749-4233-91b6-567fb417c61f)
+![image](https://github.com/user-attachments/assets/8a6d81e3-5a80-4f65-a37d-0d6864f77459)
