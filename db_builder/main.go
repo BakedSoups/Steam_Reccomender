@@ -177,7 +177,7 @@ func add_steam_API(appID int, tx *sql.Tx) error {
 		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 		appID, description, website, headerImage, background, screenshot, steamURL, pricing, achievements,
 	)
-	if err != nil 
+	if err != nil {
 		return err
 	}
 

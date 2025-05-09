@@ -34,12 +34,12 @@ def fetch_article_content(url, retry_count=3, base_delay=5):
     
     for attempt in range(retry_count):
         try:
-            # Add random delay to avoid rate limiting
+            # random delay to avoid rate limiting
             time.sleep(random.uniform(2, 5))
             
             response = requests.get(url, headers=headers, timeout=15)
             
-            # If we get a 429 (Too Many Requests), wait and retry
+            #if ign trys to stop me ill wait 
             if response.status_code == 429:
                 retry_after = response.headers.get('Retry-After', base_delay * (2 ** attempt))
                 wait_time = int(retry_after) if retry_after.isdigit() else base_delay * (2 ** attempt)
@@ -80,7 +80,7 @@ def fetch_articles_with_rate_limit(games, max_workers=5, delay_between_batches=1
     print(f"\nFetching article contents for {len(games)} games...")
     print(f"Using {max_workers} concurrent workers with rate limiting...")
     
-    # Process in smaller batches to avoid overwhelming the server
+    # smaller batches to avoid overwhelming the server
     batch_size = 10
     
     for i in range(0, len(games), batch_size):
@@ -105,13 +105,11 @@ def fetch_articles_with_rate_limit(games, max_workers=5, delay_between_batches=1
                     game['html_contents'] = f"Error: {str(e)}"
                     print(f"Exception for {game['name']}: {str(e)}")
         
-        # Wait between batches to avoid rate limiting
         if i + batch_size < len(games):
             print(f"Waiting {delay_between_batches} seconds before next batch...")
             time.sleep(delay_between_batches)
 
 def scrape_ign_all_games(url, max_scrolls=30):
-    """Scrape ALL games from IGN using Selenium with infinite scrolling"""
     options = Options()
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
@@ -266,7 +264,6 @@ def scrape_ign_all_games(url, max_scrolls=30):
         driver.quit()
     
     if games:
-        # Use the new rate-limited fetch function
         fetch_articles_with_rate_limit(games, max_workers=3, delay_between_batches=15)
     
     return games

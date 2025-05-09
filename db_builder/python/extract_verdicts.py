@@ -5,7 +5,6 @@ from openai import OpenAI
 import os
 from typing import List, Dict
 
-# Initialize OpenAI client
 client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
 def extract_verdict_or_conclusion(html_content):
@@ -25,7 +24,7 @@ def extract_verdict_or_conclusion(html_content):
         verdict_elem = soup.find(['div', 'section', 'p'], class_=re.compile('verdict', re.I))
         if verdict_elem:
             text = verdict_elem.get_text(strip=True)
-            if len(text) > 50:  # Make sure it's substantial
+            if len(text) > 50:  # make sure sure it didn't get limited
                 return text
         
         verdict_heading = soup.find(['h1', 'h2', 'h3', 'h4'], string=re.compile('verdict', re.I))
@@ -50,18 +49,15 @@ def extract_verdict_or_conclusion(html_content):
                 # find the last substantial paragraph before any polls/ads
                 for i in range(len(substantial_paragraphs) - 1, -1, -1):
                     para_text = substantial_paragraphs[i].get_text(strip=True)
-                    # Check if this looks like a conclusion
                     if len(para_text) > 100 and not para_text.startswith('Advertisement'):
                         return para_text
                 
                 # no good conclusion found, return the last substantial paragraph
                 return substantial_paragraphs[-1].get_text(strip=True)
-        
-        # Strategy 5: Get any text from the page (last resort)
         all_text = soup.get_text()
         words = all_text.split()
         
-        # Find the last 300 meaningful words
+        # if there is not (verdict) then just extract the last 300 meaningful words
         meaningful_words = []
         for word in reversed(words):
             if len(word) > 2:  # Skip very short words
@@ -110,12 +106,10 @@ Based on this verdict, what tags best describe this game?"""
         
         tags_text = response.choices[0].message.content.strip()
         
-        # Extract tags from the response
         tags = re.findall(r'\(([^)]+)\)', tags_text)
         
-        # If no tags were found in parentheses, try to parse the response differently
         if not tags:
-            # Split by common delimiters and clean up
+            # clean up potential hallucinations
             potential_tags = re.split(r'[,\n]', tags_text)
             tags = [tag.strip().strip('()') for tag in potential_tags if tag.strip()]
         
@@ -125,74 +119,7 @@ Based on this verdict, what tags best describe this game?"""
         print(f"Error generating tags for {game_name}: {str(e)}")
         return []
 
-def process_all_reviews(input_file='ign_all_games.json', output_file='game_verdicts_with_tags.json'):
-    """
-    Process all reviews, extract verdicts, and generate tags using OpenAI
-    """
-    try:
-        with open(input_file, 'r', encoding='utf-8') as f:
-            reviews = json.load(f)
-        
-        print(f"\nProcessing {len(reviews)} reviews...")
-        print("="*80)
-        
-        verdicts_with_tags = []
-        
-        for i, review in enumerate(reviews, 1):
-            name = review.get('name', 'Unknown')
-            score = review.get('score', 'N/A')
-            url = review.get('game_url', '')
-            html_content = review.get('html_contents', '')
-            
-            # Extract verdict
-            verdict = extract_verdict_or_conclusion(html_content)
-            
-            # Generate tags using OpenAI
-            tags = generate_game_tags(name, verdict, score)
-            
-            verdict_data = {
-                'name': name,
-                'score': score,
-                'url': url,
-                'verdict': verdict,
-                'tags': tags
-            }
-            
-            verdicts_with_tags.append(verdict_data)
-            
-            print(f"{i:2d}. {name} (Score: {score})")
-            print(f"    Tags: {' '.join([f'({tag})' for tag in tags])}")
-            print(f"    Verdict length: {len(verdict)} characters")
-            print("-" * 80)
-        
-        # Save results
-        with open(output_file, 'w', encoding='utf-8') as f:
-            json.dump(verdicts_with_tags, f, ensure_ascii=False, indent=2)
-        
-        # Save summary with tags
-        with open('verdicts_summary_with_tags.txt', 'w', encoding='utf-8') as f:
-            for verdict in verdicts_with_tags:
-                f.write(f"Game: {verdict['name']}\n")
-                f.write(f"Score: {verdict['score']}\n")
-                f.write(f"Tags: {' '.join([f'({tag})' for tag in verdict['tags']])}\n")
-                f.write(f"URL: {verdict['url']}\n")
-                f.write(f"Verdict: {verdict['verdict']}\n")
-                f.write("="*80 + "\n\n")
-        
-        print(f"\nSummary:")
-        print(f"Total reviews processed: {len(reviews)}")
-        print(f"Results saved to {output_file} and verdicts_summary_with_tags.txt")
-        
-        return verdicts_with_tags
-        
-    except Exception as e:
-        print(f"Error: {str(e)}")
-        return []
-
 def process_existing_verdicts(verdicts_file='game_verdicts_complete.json', output_file='game_verdicts_with_tags.json'):
-    """
-    Process an existing verdicts file and add tags to it
-    """
     try:
         with open(verdicts_file, 'r', encoding='utf-8') as f:
             verdicts = json.load(f)
@@ -208,7 +135,7 @@ def process_existing_verdicts(verdicts_file='game_verdicts_complete.json', outpu
             url = verdict_data.get('url', '')
             verdict = verdict_data.get('verdict', '')
             
-            # Generate tags using OpenAI
+            # tags using OpenAI
             tags = generate_game_tags(name, verdict, score)
             
             updated_data = {
@@ -225,7 +152,7 @@ def process_existing_verdicts(verdicts_file='game_verdicts_complete.json', outpu
             print(f"    Tags: {' '.join([f'({tag})' for tag in tags])}")
             print("-" * 80)
         
-        # Save results
+        # save results into json not sqlite (gasp)
         with open(output_file, 'w', encoding='utf-8') as f:
             json.dump(verdicts_with_tags, f, ensure_ascii=False, indent=2)
         
@@ -240,16 +167,15 @@ def process_existing_verdicts(verdicts_file='game_verdicts_complete.json', outpu
         return []
 
 if __name__ == "__main__":
-    # Check if OpenAI API key is set
     if not os.getenv('OPENAI_API_KEY'):
         print("Error: OPENAI_API_KEY environment variable not set")
         print("Please set it using: export OPENAI_API_KEY='your-api-key'")
         exit(1)
     
-    # You can either process all reviews from scratch
+    # process all reviews from scratch
     # verdicts = process_all_reviews()
     
-    # Or process an existing verdicts file (if you already have verdicts extracted)
+    # Or process an existing verdicts file
     verdicts = process_existing_verdicts()
     
     if verdicts:
