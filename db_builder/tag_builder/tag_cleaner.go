@@ -19,7 +19,7 @@ type Gametag struct {
 }
 
 func main() {
-	file, err := os.Open("python/game_verdicts_with_tags.json")
+	file, err := os.Open("game_verdicts_with_tags.json")
 
 	if err != nil {
 		log.Fatal("ERROR: ", err)
@@ -45,5 +45,7 @@ func main() {
 		fmt.Printf("URL: %s\n", game.Url)
 		fmt.Printf("Tags: %v\n", game.Tags)
 	}
+
+	// ok now I want to comapare any potential duplicates before data insertion
 
 }
