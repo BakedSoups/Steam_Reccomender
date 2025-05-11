@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+
 	"log"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -16,18 +17,29 @@ func main() {
 	}
 	defer db.Close()
 
-	searchName := "dota 2"
-
-	match, err := searchInCardTable(db, searchName)
+	// Get all game verdicts from JSON
+	verdicts, err := gameVerdicts()
 	if err != nil {
 		log.Fatal(err)
 	}
+	count := 0
+	// For each game in verdicts, search in database
+	for _, verdict := range verdicts {
+		match, err := searchInCardTable(db, verdict.Name)
+		if err != nil {
+			// log.Printf("Error searching for %s: %v\n", verdict.Name, err)
+			continue
+		}
 
-	if match != "" {
-		fmt.Printf("Found match: %s\n", match)
-	} else {
-		fmt.Printf("No match found for: %s\n", searchName)
+		if match != "" {
+			count += 1
+			fmt.Printf("%s matched with %s\n", verdict.Name, match)
+		} else {
+			fmt.Printf("%s no match\n", verdict.Name)
+		}
 	}
+	fmt.Printf("matches found %v\n", count)
+
 }
 
 func searchInCardTable(db *sql.DB, searchName string) (string, error) {
@@ -50,7 +62,6 @@ func searchInCardTable(db *sql.DB, searchName string) (string, error) {
 				rows.Close()
 				return "", err
 			}
-			fmt.Printf("Found %v with %v\n", name, searchName)
 			if match, found := Match(name, searchName); found {
 				rows.Close()
 				return match, nil

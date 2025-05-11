@@ -1,12 +1,14 @@
 package main
 
 import (
+	"bufio"
 	"database/sql"
 	"fmt"
 	"log"
-
 	"os"
+	"strconv"
 	"strings"
+	"time"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -26,30 +28,81 @@ func initDB() {
 	createDB(db)
 	migrateTop50ToSteamAPI(db)
 
-	rows, err := db.Query(`SELECT steam_appid FROM main_game`)
+	// Track progress to allow resuming
+	processedFile := "./processed_apps.txt"
+	processedApps := loadProcessedApps(processedFile)
+
+	rows, err := db.Query(`SELECT steam_appid FROM main_game ORDER BY steam_appid`)
 	if err != nil {
 		log.Fatal("Failed to retrieve appIDs:", err)
 	}
 	defer rows.Close()
-	tx, err := db.Begin()
-	if err != nil {
-		log.Fatal("Failed to begin transaction:", err)
-	}
 
+	var appIDs []int
 	for rows.Next() {
 		var appID int
 		if err := rows.Scan(&appID); err != nil {
 			log.Println("Scan failed:", err)
 			continue
 		}
-		if err := add_steam_API(appID, tx); err != nil {
-			log.Println("Insert failed for appID", appID, ":", err)
+		if !processedApps[appID] {
+			appIDs = append(appIDs, appID)
 		}
 	}
 
-	if err := tx.Commit(); err != nil {
-		log.Fatal("Failed to commit transaction:", err)
+	log.Printf("Found %d apps to process", len(appIDs))
+
+	// Process in larger batches with less waiting
+	batchSize := 25  // Increased from 10
+	saveEvery := 100 // Save every 100 apps
+	processedCount := 0
+
+	for i := 0; i < len(appIDs); i += batchSize {
+		end := i + batchSize
+		if end > len(appIDs) {
+			end = len(appIDs)
+		}
+
+		batch := appIDs[i:end]
+		log.Printf("Processing batch %d-%d of %d", i+1, end, len(appIDs))
+
+		tx, err := db.Begin()
+		if err != nil {
+			log.Fatal("Failed to begin transaction:", err)
+		}
+
+		for _, appID := range batch {
+			if err := add_steam_API(appID, tx); err != nil {
+				log.Printf("Insert failed for appID %d: %v", appID, err)
+			} else {
+				// Mark as processed only on success
+				saveProcessedApp(processedFile, appID)
+				processedCount++
+			}
+
+			// Reduced delay between requests
+			time.Sleep(1500 * time.Millisecond) // 1.5 seconds instead of 3
+		}
+
+		if err := tx.Commit(); err != nil {
+			log.Printf("Failed to commit batch: %v", err)
+		}
+
+		// Show progress every 100 apps
+		if processedCount > 0 && processedCount%saveEvery == 0 {
+			log.Printf("Progress: %d/%d apps processed (%.1f%%)",
+				processedCount, len(appIDs),
+				float64(processedCount)/float64(len(appIDs))*100)
+		}
+
+		// Reduced delay between batches
+		if i+batchSize < len(appIDs) {
+			log.Printf("Batch complete. Waiting 10 seconds before next batch...")
+			time.Sleep(10 * time.Second) // Reduced from 30 seconds
+		}
 	}
+
+	log.Printf("All apps processed successfully! Total: %d", processedCount)
 }
 
 func createDB(db *sql.DB) {
@@ -119,13 +172,13 @@ func createDB(db *sql.DB) {
 }
 
 func migrateTop50ToSteamAPI(dstDB *sql.DB) {
-	srcDB, err := sql.Open("sqlite3", "./init_steamspy.db")
+	srcDB, err := sql.Open("sqlite3", "./steamspy_all_games.db")
 	if err != nil {
 		log.Fatal("Failed to open source DB:", err)
 	}
 	defer srcDB.Close()
 
-	rows, err := srcDB.Query(`SELECT appid, name, positive, negative, owners FROM top_games`)
+	rows, err := srcDB.Query(`SELECT appid, name, positive, negative, owners FROM all_games`)
 	if err != nil {
 		log.Fatal("Failed to query source DB:", err)
 	}
@@ -165,6 +218,11 @@ func migrateTop50ToSteamAPI(dstDB *sql.DB) {
 func add_steam_API(appID int, tx *sql.Tx) error {
 	genre, description, website, headerImage, background, screenshot, steamURL, pricing, achievements := steamApiPull(appID)
 
+	// Skip if we got no data
+	if genre == "" && description == "" && website == "" {
+		return fmt.Errorf("no data retrieved for app %d", appID)
+	}
+
 	_, err := tx.Exec(`
 		INSERT INTO steam_api (
 			steam_appid,
@@ -184,17 +242,49 @@ func add_steam_API(appID int, tx *sql.Tx) error {
 	}
 
 	//genres into genres table
-	genreList := strings.Split(genre, ", ")
-	for _, g := range genreList {
-		_, err = tx.Exec(`
-			INSERT OR REPLACE INTO genres (steam_appid, genre)
-			VALUES (?, ?)`,
-			appID, g,
-		)
-		if err != nil {
-			return err
+	if genre != "" {
+		genreList := strings.Split(genre, ", ")
+		for _, g := range genreList {
+			if g != "" { // Skip empty genres
+				_, err = tx.Exec(`
+					INSERT OR REPLACE INTO genres (steam_appid, genre)
+					VALUES (?, ?)`,
+					appID, g,
+				)
+				if err != nil {
+					return err
+				}
+			}
 		}
 	}
 
 	return nil
+}
+
+// Helper functions for tracking progress
+func loadProcessedApps(filename string) map[int]bool {
+	processed := make(map[int]bool)
+	file, err := os.Open(filename)
+	if err != nil {
+		return processed
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		if appID, err := strconv.Atoi(scanner.Text()); err == nil {
+			processed[appID] = true
+		}
+	}
+	return processed
+}
+
+func saveProcessedApp(filename string, appID int) {
+	file, err := os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		return
+	}
+	defer file.Close()
+
+	fmt.Fprintf(file, "%d\n", appID)
 }
