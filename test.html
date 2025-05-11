@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dictionary Search</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background: #f9f9f9;
+    }
+    #container {
+      max-width: 400px;
+      margin: auto;
+      padding: 1rem;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    input {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+    .result {
+      font-size: 1.1rem;
+      color: #333;
+    }
+    ul {
+      padding-left: 1rem;
+    }
+    li {
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <h2>Dictionary Search</h2>
+    <input type="text" id="searchBox" placeholder="Enter a word..." />
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    const dictionary = {
+      banana: "$0.50",
+      bananas: "$0.60",
+      bananad: "$0.55",
+      bananao: "$0.52",
+      apple: "$0.80",
+      apples: "$0.90",
+      carrot: "$0.30",
+      carrots: "$0.35",
+      pineapple: "$1.50"
+    };
+
+    const searchBox = document.getElementById('searchBox');
+    const resultDiv = document.getElementById('result');
+
+    searchBox.addEventListener('input', () => {
+      const query = searchBox.value.trim().toLowerCase();
+      resultDiv.innerHTML = "";
+
+      if (query === "") return;
+
+      const matches = Object.keys(dictionary).filter(item => item.includes(query));
+
+      if (matches.length > 0) {
+        const ul = document.createElement('ul');
+        matches.forEach(item => {
+          const li = document.createElement('li');
+          li.textContent = `${item}: ${dictionary[item]}`;
+          ul.appendChild(li);
+        });
+        resultDiv.appendChild(ul);
+      } else {
+        resultDiv.textContent = "No result found.";
+      }
+    });
+  </script>
+</body>
+</html>
