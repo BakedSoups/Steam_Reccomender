@@ -4,41 +4,42 @@ import (
 	"database/sql"
 	"fmt"
 
-	"log"
+	// "log"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
 	// Open the database
-	db, err := sql.Open("sqlite3", "./steam_api.db")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
+	// db, err := sql.Open("sqlite3", "./steam_api.db")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// defer db.Close()
 
-	// Get all game verdicts from JSON
-	verdicts, err := gameVerdicts()
-	if err != nil {
-		log.Fatal(err)
-	}
-	count := 0
-	// For each game in verdicts, search in database
-	for _, verdict := range verdicts {
-		match, err := searchInCardTable(db, verdict.Name)
-		if err != nil {
-			// log.Printf("Error searching for %s: %v\n", verdict.Name, err)
-			continue
-		}
+	// // Get all game verdicts from JSON
+	// verdicts, err := gameVerdicts()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// count := 0
+	// // For each game in verdicts, search in database
+	// for _, verdict := range verdicts {
+	// 	match, err := searchInCardTable(db, verdict.Name)
+	// 	if err != nil {
+	// 		// log.Printf("Error searching for %s: %v\n", verdict.Name, err)
+	// 		continue
+	// 	}s
 
-		if match != "" {
-			count += 1
-			fmt.Printf("%s matched with %s\n", verdict.Name, match)
-		} else {
-			fmt.Printf("%s no match\n", verdict.Name)
-		}
-	}
-	fmt.Printf("matches found %v\n", count)
+	// 	if match != "" {
+	// 		count += 1
+	// 		fmt.Printf("%s matched with %s\n", verdict.Name, match)
+	// 	} else {
+	// 		fmt.Printf("%s no match\n", verdict.Name)
+	// 	}
+	// }
+	// fmt.Printf("matches found %v\n", count)
+	initDB()
 
 }
 
