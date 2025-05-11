@@ -1,48 +1,28 @@
 package main
 
 import (
-	"context"
 	"encoding/json"
-	"fmt"
 	"io"
 	"os"
 
+	"github.com/lithammer/fuzzysearch/fuzzy"
 	_ "github.com/mattn/go-sqlite3"
-	openai "github.com/sashabaranov/go-openai"
 )
 
+// working with simpler json file
 type Gametag struct {
-	Name    string   `json:"name"`
-	Score   string   `json:"score"`
-	Url     string   `json:"url"`
-	Verdict string   `json:"verdict"`
-	Tags    []string `json:"tags"`
+	Name string `json:"name"`
 }
 
-func findMatches(client openai.Client) {
-	resp, err := client.CreateChatCompletion(
-		context.Background(),
-		openai.ChatCompletionRequest{
-			Model: openai.GPT3Dot5Turbo,
-			Messages: []openai.ChatCompletionMessage{
-				{
-					Role:    openai.ChatMessageRoleUser,
-					Content: "Hello!",
-				},
-			},
-		},
-	)
-
-	if err != nil {
-		fmt.Printf("ChatCompletion error: %v\n", err)
-		return
+func Match(appidName, inputName string) (string, bool) {
+	if fuzzy.MatchFold(inputName, appidName) {
+		return appidName, true
 	}
-
-	fmt.Println(resp.Choices[0].Message.Content)
+	return "", false
 }
 
 func gameVerdicts() ([]Gametag, error) {
-	file, err := os.Open("game_verdicts_with_tags.json")
+	file, err := os.Open("./tag_builder/game_verdicts_complete.json")
 
 	if err != nil {
 		return nil, err

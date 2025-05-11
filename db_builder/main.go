@@ -1,32 +1,67 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 
-	"os"
-
 	_ "github.com/mattn/go-sqlite3"
-	openai "github.com/sashabaranov/go-openai"
 )
 
 func main() {
-
-	gametags, err := gameVerdicts()
+	// Open the database
+	db, err := sql.Open("sqlite3", "./steam_api.db")
 	if err != nil {
-		log.Fatal("ERROR: ", err)
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	searchName := "dota 2"
+
+	match, err := searchInCardTable(db, searchName)
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	for i, game := range gametags {
-		fmt.Printf("\nGame %d:\n", i+1)
-		fmt.Printf("Name: %s\n", game.Name)
-		fmt.Printf("Score: %s\n", game.Score)
-		fmt.Printf("URL: %s\n", game.Url)
-		fmt.Printf("Tags: %v\n", game.Tags)
+	if match != "" {
+		fmt.Printf("Found match: %s\n", match)
+	} else {
+		fmt.Printf("No match found for: %s\n", searchName)
 	}
+}
 
-	// ok now I want to find the steam appid assoiated with  before data insertion
-	client := openai.NewClient(os.Getenv("OPENAI_API_KEY"))
+func searchInCardTable(db *sql.DB, searchName string) (string, error) {
+	offset := 0
+	batchSize := 50
 
-	findMatches(*client)
+	for {
+		query := "SELECT game_name FROM main_game LIMIT ? OFFSET ?"
+		rows, err := db.Query(query, batchSize, offset)
+		if err != nil {
+			return "", err
+		}
+
+		hasRows := false
+
+		for rows.Next() {
+			hasRows = true
+			var name string
+			if err := rows.Scan(&name); err != nil {
+				rows.Close()
+				return "", err
+			}
+			fmt.Printf("Found %v with %v\n", name, searchName)
+			if match, found := Match(name, searchName); found {
+				rows.Close()
+				return match, nil
+			}
+		}
+		rows.Close()
+
+		if !hasRows {
+			return "", fmt.Errorf("no match found for '%s'", searchName)
+		}
+		// Move to next batch
+		offset += batchSize
+	}
 }
