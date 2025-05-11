@@ -10,55 +10,54 @@ import (
 )
 
 func main() {
-	// Open the database
-
-	// db, err := sql.Open("sqlite3", "./steam_api.db")
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// defer db.Close()
-
-	// // Game verdicts from JSON
-	// verdicts, err := gameVerdicts()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// count := 0
-	// // Each game in verdicts, search in database
-	// for _, verdict := range verdicts {
-	// 	match, err := searchInCardTable(db, verdict.Name)
-	// 	if err != nil {
-	// 		// log.Printf("Error searching for %s: %v\n", verdict.Name, err)
-	// 		continue
-	// 	}
-
-	// 	if match != "" {
-	// 		count += 1
-	// 		fmt.Printf("%s matched with %s\n", verdict.Name, match)
-	// 	}
-
-	// }
-	// fmt.Printf("matches found %v\n", count)
-
-	db, err := sql.Open("sqlite3", "./example.db")
+	dbo, err := sql.Open("sqlite3", "./example.db")
 	if err != nil {
 		log.Fatal("Sql Error: ", err)
 	}
-	defer db.Close()
-	db.Exec("PRAGMA foreign_keys = ON;")
+	defer dbo.Close()
+	dbo.Exec("PRAGMA foreign_keys = ON;")
 
-	createIGNTable(db)
-	add_match(db, 1, 22223)
+	createIGNTable(dbo)
+
+	db, err := sql.Open("sqlite3", "./steam_api.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	// Game verdicts from JSON
+	verdicts, err := gameVerdicts()
+	if err != nil {
+		log.Fatal(err)
+	}
+	count := 0
+	// Each game in verdicts, search in database
+	for _, verdict := range verdicts {
+		match, appid, err := searchInCardTable(db, verdict.Name)
+		if err != nil {
+			// log.Printf("Error searching for %s: %v\n", verdict.Name, err)
+			continue
+		}
+
+		if match != "" {
+			count += 1
+			fmt.Printf("%s matched with %s this is the appid%d\n", verdict.Name, match, appid)
+
+			add_match(dbo, match, appid)
+		}
+
+	}
+	fmt.Printf("matches found %v\n", count)
 
 }
 
-func add_match(db *sql.DB, gameName, appid int) error {
+func add_match(db *sql.DB, gameName string, appid int) error {
 	tx, err := db.Begin()
 	if err != nil {
 		return err
 	}
 	_, err = tx.Exec(` 
-	INSERT INTO ign_tags(game_id, steam_appid)
+	INSERT INTO ign_tags(game_name, steam_appid)
 	VALUES(?,?)`, gameName, appid)
 
 	if err != nil {
@@ -74,6 +73,7 @@ func createIGNTable(db *sql.DB) {
 	ignKey := `
 	CREATE TABLE IF NOT EXISTS ign_tags( 
 	game_id INTEGER PRIMARY KEY AUTOINCREMENT, 
+	game_name TEXT NOT NULL,
 	steam_appid INTEGER NOT NULL UNIQUE 
 	);
 	`
@@ -85,15 +85,15 @@ func createIGNTable(db *sql.DB) {
 
 }
 
-func searchInCardTable(db *sql.DB, searchName string) (string, error) {
+func searchInCardTable(db *sql.DB, searchName string) (string, int, error) {
 	offset := 0
 	batchSize := 50
 
 	for {
-		query := "SELECT game_name FROM main_game LIMIT ? OFFSET ?"
+		query := "SELECT game_name, steam_appid FROM main_game LIMIT ? OFFSET ?"
 		rows, err := db.Query(query, batchSize, offset)
 		if err != nil {
-			return "", err
+			return "", 0, err
 		}
 
 		hasRows := false
@@ -101,19 +101,22 @@ func searchInCardTable(db *sql.DB, searchName string) (string, error) {
 		for rows.Next() {
 			hasRows = true
 			var name string
-			if err := rows.Scan(&name); err != nil {
+			var appid int
+
+			if err := rows.Scan(&name, &appid); err != nil {
 				rows.Close()
-				return "", err
+				return "", 0, err
 			}
 			if match, found := Match(name, searchName); found {
 				rows.Close()
-				return match, nil
+				// returns match that is IN the database
+				return match, appid, nil
 			}
 		}
 		rows.Close()
 
 		if !hasRows {
-			return "", fmt.Errorf("no match found for '%s'", searchName)
+			return "", 0, fmt.Errorf("no match found for '%s'", searchName)
 		}
 		// Move to next batch
 		offset += batchSize
