@@ -54,7 +54,7 @@ func createSteamSpy() {
 	}
 
 	//set up SQLite database
-	db, err := sql.Open("sqlite3", "./steamspy_top50.db")
+	db, err := sql.Open("sqlite3", "./init_steamspy.db")
 	if err != nil {
 		log.Fatal(err)
 	}

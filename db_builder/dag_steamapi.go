@@ -9,6 +9,7 @@ import (
 )
 
 // pulls from steam store page based on the unique game id
+
 func steamApiPull(appID int) (
 	genre, description, website, headerImage, background, screenshot, steamURL, pricing, achievements string,
 ) {
