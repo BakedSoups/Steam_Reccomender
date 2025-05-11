@@ -35,15 +35,14 @@ func main() {
 	for _, verdict := range verdicts {
 		match, appid, err := searchInCardTable(db, verdict.Name)
 		if err != nil {
-			// log.Printf("Error searching for %s: %v\n", verdict.Name, err)
 			continue
 		}
 
 		if match != "" {
 			count += 1
 			fmt.Printf("%s matched with %s this is the appid%d\n", verdict.Name, match, appid)
-
-			add_match(dbo, match, appid)
+			// GREAT we found a match we know the appid to insert now
+			add_match(dbo, appid, verdict)
 		}
 
 	}
@@ -51,14 +50,16 @@ func main() {
 
 }
 
-func add_match(db *sql.DB, gameName string, appid int) error {
+func add_match(db *sql.DB, appid int, verdict Gametag) error {
+	fmt.Println(verdict)
 	tx, err := db.Begin()
 	if err != nil {
 		return err
 	}
+
 	_, err = tx.Exec(` 
-	INSERT INTO ign_tags(game_name, steam_appid)
-	VALUES(?,?)`, gameName, appid)
+	INSERT INTO ign_tags(steam_appid)
+	VALUES(?,?)`, appid)
 
 	if err != nil {
 		tx.Rollback() // Rollback
@@ -73,7 +74,6 @@ func createIGNTable(db *sql.DB) {
 	ignKey := `
 	CREATE TABLE IF NOT EXISTS ign_tags( 
 	game_id INTEGER PRIMARY KEY AUTOINCREMENT, 
-	game_name TEXT NOT NULL,
 	steam_appid INTEGER NOT NULL UNIQUE 
 	);
 	`

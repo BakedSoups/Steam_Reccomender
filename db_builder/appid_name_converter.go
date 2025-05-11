@@ -12,7 +12,36 @@ import (
 
 // working with simpler json file
 type Gametag struct {
-	Name string `json:"name"`
+	Name          string         `json:"name"`
+	Score         float64        `json:"numeric_score"`
+	Ratio         map[string]int `json:"tag_ratios"` //this is going to have to be in a seperate table
+	MainGenre     string         `json:"main_genre"`
+	UniqueTag     []string       `json:"unique_tags"`
+	SubjectiveTag []string       `json:"subjective_tags"`
+}
+
+// this extracts the output json and gives me what I need for matching
+func gameVerdicts() ([]Gametag, error) {
+	file, err := os.Open("./tag_builder/game_verdicts_with_ratio_tags.json")
+
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	bytes, err := io.ReadAll(file)
+	if err != nil {
+		return nil, err
+	}
+	var gametags []Gametag
+
+	err = json.Unmarshal(bytes, &gametags)
+	if err != nil {
+		return nil, err
+	}
+
+	return gametags, nil
+
 }
 
 // takes in the data base name and current name, then returns the db name and boolean
@@ -113,6 +142,7 @@ func Match(dbName, searchName string) (string, bool) {
 }
 
 // Helper func to check if two slices of number strings have the same content
+// this is to help remove matching sequels
 func sameNumbers(nums1, nums2 []string) bool {
 	if len(nums1) != len(nums2) {
 		return false
@@ -162,27 +192,4 @@ func calculateSimilarity(s1, s2 string) float64 {
 	}
 
 	return float64(matches) / float64(len(longer))
-}
-
-func gameVerdicts() ([]Gametag, error) {
-	file, err := os.Open("./tag_builder/game_verdicts_with_ratio_tags.json")
-
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-
-	bytes, err := io.ReadAll(file)
-	if err != nil {
-		return nil, err
-	}
-	var gametags []Gametag
-
-	err = json.Unmarshal(bytes, &gametags)
-	if err != nil {
-		return nil, err
-	}
-
-	return gametags, nil
-
 }
