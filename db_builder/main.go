@@ -11,48 +11,76 @@ import (
 
 func main() {
 	// Open the database
-	db, err := sql.Open("sqlite3", "./steam_api.db")
+
+	// db, err := sql.Open("sqlite3", "./steam_api.db")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// defer db.Close()
+
+	// // Game verdicts from JSON
+	// verdicts, err := gameVerdicts()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// count := 0
+	// // Each game in verdicts, search in database
+	// for _, verdict := range verdicts {
+	// 	match, err := searchInCardTable(db, verdict.Name)
+	// 	if err != nil {
+	// 		// log.Printf("Error searching for %s: %v\n", verdict.Name, err)
+	// 		continue
+	// 	}
+
+	// 	if match != "" {
+	// 		count += 1
+	// 		fmt.Printf("%s matched with %s\n", verdict.Name, match)
+	// 	}
+
+	// }
+	// fmt.Printf("matches found %v\n", count)
+
+	db, err := sql.Open("sqlite3", "./example.db")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Sql Error: ", err)
 	}
 	defer db.Close()
+	db.Exec("PRAGMA foreign_keys = ON;")
 
-	// Get all game verdicts from JSON
-	verdicts, err := gameVerdicts()
+	createIGNTable(db)
+	add_match(db, 1, 22223)
+
+}
+
+func add_match(db *sql.DB, gameName, appid int) error {
+	tx, err := db.Begin()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
-	count := 0
-	// For each game in verdicts, search in database
-	for _, verdict := range verdicts {
-		match, err := searchInCardTable(db, verdict.Name)
-		if err != nil {
-			// log.Printf("Error searching for %s: %v\n", verdict.Name, err)
-			continue
-		}
+	_, err = tx.Exec(` 
+	INSERT INTO ign_tags(game_id, steam_appid)
+	VALUES(?,?)`, gameName, appid)
 
-		if match != "" {
-			count += 1
-			fmt.Printf("%s matched with %s\n", verdict.Name, match)
-		} else {
-			fmt.Printf("%s no match\n", verdict.Name)
-		}
+	if err != nil {
+		tx.Rollback() // Rollback
+		return err
 	}
-	fmt.Printf("matches found %v\n", count)
+
+	return tx.Commit()
 }
 
 func createIGNTable(db *sql.DB) {
+	// for now all this will do is create a temp table
 	ignKey := `
-	CREATE TABLE IF NOT EXIST ign_tags( 
-	game_id INTERGER PRIMARY KEY AUTOINCREMENT, 
-	steam_appid INTERGER NOT NULL; 
-
-	)
+	CREATE TABLE IF NOT EXISTS ign_tags( 
+	game_id INTEGER PRIMARY KEY AUTOINCREMENT, 
+	steam_appid INTEGER NOT NULL UNIQUE 
+	);
 	`
 	_, err := db.Exec(ignKey)
 
 	if err != nil {
-		log.Fatal("ERROR %v", err)
+		log.Fatal("ERROR: ", err)
 	}
 
 }
