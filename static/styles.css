@@ -353,3 +353,50 @@ button:hover {
     background-color: #32a0f2;
     box-shadow: 0 0 14px rgba(102, 192, 244, 0.6);
 }
+
+/* Subtitle */
+.container p {
+    font-size: 14px;
+    color: #bfc9d4;
+    margin-bottom: 25px;
+    font-style: italic;
+    letter-spacing: 0.5px;
+}
+
+/* Background image and dark overlay for index.html */
+body.index-dark {
+    background: url("../static/background.png") no-repeat center center fixed;
+    background-size: cover;
+    position: relative;
+    font-family: 'Segoe UI', sans-serif;
+    color: #c7d5e0;
+    margin: 0;
+    padding: 0;
+}
+
+body.index-dark .overlay {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-color: rgba(15, 26, 37, 0.95); /* strong dark overlay */
+    z-index: 0;
+}
+
+.container {
+    position: relative;
+    z-index: 1;
+}
+
+/* Header row with logo */
+.header-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 10px;
+}
+
+.logo-image {
+    height: 50px;
+    width: auto;
+}
