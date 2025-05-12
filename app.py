@@ -1,5 +1,3 @@
-
-# File: app.py
 from flask import Flask, render_template, request
 
 app = Flask(__name__)
@@ -39,6 +37,7 @@ def index():
 
 @app.route('/search', methods=['POST'])
 def search():
+    # For now, just return all games
     return render_template('results.html', games=GAMES)
 
 if __name__ == '__main__':

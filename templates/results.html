@@ -3,47 +3,101 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Results - Steam Game Recommender</title>
+    <title>Search Results</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
-<body>
-    <div class="container">
-        <h1>Search Results</h1>
-        <div class="results-grid">
+<body class="dark-theme">
+    <div class="top-banner">
+        <div class="app-logo">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Steam Classic Game Finder">
+        </div>
+        <div class="app-header">
+            <h1>Steam Classic Game Finder</h1>
+            <a href="{{ url_for('index') }}" class="home-button"> Home</a>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="user-profile">
+            <div class="user-title">
+                <h2>Games like <span class="highlight">Battlefield 2042</span> based on your tag profile:</h2>
+            </div>
+            <div class="tag-bars user-bar">
+                <div class="tag-bar">
+                    <span class="tag-label">fps</span>
+                    <div class="bar"><div class="bar-fill" style="width: 60%"></div></div>
+                    <span class="tag-percent">60%</span>
+                </div>
+                <div class="tag-bar">
+                    <span class="tag-label">action</span>
+                    <div class="bar"><div class="bar-fill" style="width: 30%"></div></div>
+                    <span class="tag-percent">30%</span>
+                </div>
+                <div class="tag-bar">
+                    <span class="tag-label">rpg</span>
+                    <div class="bar"><div class="bar-fill" style="width: 10%"></div></div>
+                    <span class="tag-percent">10%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="results-container">
             {% for game in games %}
             <div class="game-card">
-                <img src="{{ game.header_image }}" alt="{{ game.name }} Header">
-                <div class="game-details">
-                    <h2>{{ game.name }}</h2>
-                    <p>{{ game.description }}</p>
-                    <div class="game-info">
-                        <span class="genre">{{ game.main_genre }}</span>
-                        <span class="price">
-                            {% if game.discount %}
-                            <span class="original-price">${{ game.pricing.split('$')[1] }}</span>
-                            <span class="discounted-price">{{ game.final_price }}</span>
-                            <span class="discount-tag">{{ game.discount }} OFF</span>
-                            {% else %}
-                            {{ game.pricing }}
-                            {% endif %}
-                        </span>
+                <div class="game-thumb">
+                    <img src="{{ game.header_image }}" alt="{{ game.name }}">
+                </div>
+
+                <div class="game-info">
+                    <div class="card-header">
+                        <h2>{{ game.name }}</h2>
+                        <div class="unique-tags">
+                            {% for tag in game.unique_tags %}
+                                <span class="unique-tag">{{ tag }}</span>
+                            {% endfor %}
+                        </div>
                     </div>
-                    <div class="game-tags">
-                        {% for tag in game.unique_tags %}
-                        <span class="tag">{{ tag }}</span>
+
+                    <div class="tag-bars">
+                        {% for tag, percent in game.tag_ratios.items() %}
+                        <div class="tag-bar">
+                            <span class="tag-label">{{ tag }}</span>
+                            <div class="bar">
+                                <div class="bar-fill" style="width: {{ percent }}%"></div>
+                            </div>
+                            <span class="tag-percent">{{ percent }}%</span>
+                        </div>
                         {% endfor %}
                     </div>
-                    <div class="game-reviews">
-                        <span>Score: {{ game.score }}</span>
-                        <span>Reviews: {{ game.overall_review }}</span>
+
+                    <div class="game-meta">
+                        <span class="meta-item"> {{ game.release_date }}</span>
+                        <span class="meta-item"> {{ game.main_genre }}</span>
+                        <span class="meta-item"> <a href="{{ game.steam_url }}" target="_blank">Steam Page</a></span>
                     </div>
-                    <a href="{{ game.steam_url }}" target="_blank" class="steam-link">View on Steam</a>
+                </div>
+
+                <div class="game-actions">
+                    <div class="review-bar">
+                        <div class="review-positive" style="width: {{ (game.positive_reviews / game.overall_review) * 100 }}%"></div>
+                        <div class="review-negative" style="width: {{ (game.negative_reviews / game.overall_review) * 100 }}%"></div>
+                    </div>
+                    <div class="review-label">
+                        {{ game.positive_reviews }} / {{ game.negative_reviews }}
+                    </div>
+
+                    {% if game.discount %}
+                        <div class="discount-tag">-{{ game.discount }}</div>
+                        <div class="price-discounted">{{ game.final_price }}</div>
+                        <div class="price-original"><s>{{ game.pricing }}</s></div>
+                    {% else %}
+                        <div class="price-full">{{ game.pricing }}</div>
+                    {% endif %}
+                    <button class="add-to-cart">Add to Cart</button>
                 </div>
             </div>
             {% endfor %}
         </div>
-        <a href="{{ url_for('index') }}" class="back-button">Back to Search</a>
     </div>
 </body>
 </html>
