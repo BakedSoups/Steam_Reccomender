@@ -72,10 +72,10 @@ func add_match(db *sql.DB, appid int, verdict Gametag) error {
 func createIGNTable(db *sql.DB) {
 	// for now all this will do is create a temp table
 	ignKey := `
-	CREATE TABLE IF NOT EXISTS ign_scores( 
-	game_id INTEGER PRIMARY KEY AUTOINCREMENT, 
-	steam_appid INTEGER NOT NULL UNIQUE 
-	score REAL NOT NULL
+	CREATE TABLE IF NOT EXISTS ign_scores ( 
+		game_id INTEGER PRIMARY KEY AUTOINCREMENT, 
+		steam_appid INTEGER NOT NULL UNIQUE, 
+		score REAL NOT NULL
 	);
 	`
 	_, err := db.Exec(ignKey)
@@ -83,9 +83,16 @@ func createIGNTable(db *sql.DB) {
 	if err != nil {
 		log.Fatal("ERROR: ", err)
 	}
-	// tagTable := `
+	tagTable := `
+	CREATE TABLE IF NOT EXISTS ign_tags(
+		game_tags INTERGER 
+	);
+	`
+	_, err = db.Exec(tagTable)
 
-	// `
+	if err != nil {
+		log.Fatal("ERROR: ", err)
+	}
 
 }
 
