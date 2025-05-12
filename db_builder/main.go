@@ -10,20 +10,14 @@ import (
 )
 
 func main() {
-	dbo, err := sql.Open("sqlite3", "./example.db")
-	if err != nil {
-		log.Fatal("Sql Error: ", err)
-	}
-	defer dbo.Close()
-	dbo.Exec("PRAGMA foreign_keys = ON;")
-
-	createIGNTable(dbo)
 
 	db, err := sql.Open("sqlite3", "./steam_api.db")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
+	db.Exec("PRAGMA foreign_keys = ON;")
+	createIGNTable(db)
 
 	// Game verdicts from JSON
 	verdicts, err := gameVerdicts()
@@ -42,17 +36,17 @@ func main() {
 			count += 1
 			// fmt.Printf("%s matched with %s this is the appid%d\n", verdict.Name, match, appid)
 			// GREAT we found a match we know the appid to insert now
-			transactIgnScores(dbo, appid, verdict)
+			transactIgnScores(db, appid, verdict)
 			for tag, ratio := range verdict.Ratio {
 				fmt.Printf("Inserted %v , %v, %v, %v\n", match, appid, tag, ratio)
-				transactIgbtag(dbo, appid, tag, ratio)
+				transactIgbtag(db, appid, tag, ratio)
 			}
 			for _, tag := range verdict.SubjectiveTag {
-				transactSubjectivetag(dbo, appid, tag)
+				transactSubjectivetag(db, appid, tag)
 			}
 
 			for _, tag := range verdict.UniqueTag {
-				transactUniquetag(dbo, appid, tag)
+				transactUniquetag(db, appid, tag)
 			}
 		}
 
@@ -70,7 +64,7 @@ func transactIgnScores(db *sql.DB, appid int, verdict Gametag) error {
 
 	_, err = tx.Exec(` 
 	INSERT INTO ign_scores(steam_appid, score, genre)
-	VALUES(?,?)
+	VALUES(?,?,?)
 	`, appid, verdict.Score, verdict.MainGenre)
 
 	if err != nil {
@@ -143,7 +137,7 @@ func createIGNTable(db *sql.DB) {
 	ignKey := `
 	CREATE TABLE IF NOT EXISTS ign_scores ( 
 		game_id INTEGER PRIMARY KEY AUTOINCREMENT, 
-		steam_appid INTEGER NOT NULL UNIQUE, 
+		steam_appid INTEGER NOT NULL, 
 		score REAL NOT NULL,
 		genre TEXT
 	);
@@ -156,7 +150,7 @@ func createIGNTable(db *sql.DB) {
 	tag_tag_table := `
 	CREATE TABLE IF NOT EXISTS ign_tags(
 		game_id INTEGER PRIMARY KEY AUTOINCREMENT,
-		steam_appid INTERGER NOT NULL UNIQUE,
+		steam_appid INTERGER NOT NULL,
 		tag TEXT NOT NULL,
 		ratio INTERGER NOT NULL
 	);
@@ -169,7 +163,7 @@ func createIGNTable(db *sql.DB) {
 	unique_tag_table := `
 	CREATE TABLE IF NOT EXISTS ign_unique_tags(
 		game_id INTEGER PRIMARY KEY AUTOINCREMENT,
-		steam_appid INTERGER NOT NULL UNIQUE,
+		steam_appid INTERGER NOT NULL,
 		unique_tag TEXT NOT NULL
 	);
 	`
@@ -181,7 +175,7 @@ func createIGNTable(db *sql.DB) {
 	subjective_tags_table := `
 	CREATE TABLE IF NOT EXISTS ign_subjective_tags(
 		game_id INTEGER PRIMARY KEY AUTOINCREMENT,
-		steam_appid INTERGER NOT NULL UNIQUE,
+		steam_appid INTERGER NOT NULL,
 		subjective_tag TEXT NOT NULL
 	);
 	`
