@@ -83,6 +83,9 @@ func createIGNTable(db *sql.DB) {
 	if err != nil {
 		log.Fatal("ERROR: ", err)
 	}
+	// tagTable := `
+
+	// `
 
 }
 

@@ -1,83 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Dictionary Search</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 2rem;
-      background: #f9f9f9;
-    }
-    #container {
-      max-width: 400px;
-      margin: auto;
-      padding: 1rem;
-      background: white;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
-    input {
-      width: 100%;
-      padding: 0.5rem;
-      margin-bottom: 1rem;
-      font-size: 1rem;
-    }
-    .result {
-      font-size: 1.1rem;
-      color: #333;
-    }
-    ul {
-      padding-left: 1rem;
-    }
-    li {
-      margin-bottom: 0.5rem;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steam Game Recommender</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/htmx/1.9.9/htmx.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-  <div id="container">
-    <h2>Dictionary Search</h2>
-    <input type="text" id="searchBox" placeholder="Enter a word..." />
-    <div class="result" id="result"></div>
-  </div>
+    <header>
+        <h1>Steam Game Recommender</h1>
+    </header>
 
-  <script>
-    const dictionary = {
-      banana: "$0.50",
-      bananas: "$0.60",
-      bananad: "$0.55",
-      bananao: "$0.52",
-      apple: "$0.80",
-      apples: "$0.90",
-      carrot: "$0.30",
-      carrots: "$0.35",
-      pineapple: "$1.50"
-    };
+    <div class="container">
+        <div class="search-container">
+            <input type="text" class="search-box" placeholder="Enter a game you enjoy..."
+                   hx-post="{{ url_for('search') }}"
+                   hx-trigger="keyup changed delay:500ms, search, load"
+                   hx-target="#results"
+                   hx-indicator=".loading">
+            <div class="search-icon"><i class="fas fa-search"></i></div>
+        </div>
 
-    const searchBox = document.getElementById('searchBox');
-    const resultDiv = document.getElementById('result');
+        <div class="main-content">
+            <div class="sort-options">
+                <div class="sort-option active">Sort by</div>
+                <div class="sort-option">Match %</div>
+                <div class="sort-option">Name</div>
+                <div class="sort-option">Price</div>
+                <div class="sort-option">Review Score</div>
+                <div class="sort-option">Release Date</div>
+            </div>
 
-    searchBox.addEventListener('input', () => {
-      const query = searchBox.value.trim().toLowerCase();
-      resultDiv.innerHTML = "";
+            <div class="loading" style="display:none">
+                <i class="fas fa-spinner fa-2x"></i>
+                <p>Finding games you'll love...</p>
+            </div>
+            
+            <div id="results">
+                <!-- Results will be loaded here by HTMX -->
+                <div class="results-message">
+                    Enter a game you enjoy to get personalized recommendations
+                </div>
+            </div>
+        </div>
+    </div>
 
-      if (query === "") return;
-
-      const matches = Object.keys(dictionary).filter(item => item.includes(query));
-
-      if (matches.length > 0) {
-        const ul = document.createElement('ul');
-        matches.forEach(item => {
-          const li = document.createElement('li');
-          li.textContent = `${item}: ${dictionary[item]}`;
-          ul.appendChild(li);
+    <!-- Scripts -->
+    <script>
+        // Document ready handler
+        document.addEventListener('DOMContentLoaded', function() {
+            // Make sort options interactive
+            const sortOptions = document.querySelectorAll('.sort-option');
+            sortOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    sortOptions.forEach(o => o.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
         });
-        resultDiv.appendChild(ul);
-      } else {
-        resultDiv.textContent = "No result found.";
-      }
-    });
-  </script>
+    </script>
 </body>
 </html>

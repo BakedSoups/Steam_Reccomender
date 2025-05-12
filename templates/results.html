@@ -1,0 +1,49 @@
+<!-- File: templates/results.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results - Steam Game Recommender</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Search Results</h1>
+        <div class="results-grid">
+            {% for game in games %}
+            <div class="game-card">
+                <img src="{{ game.header_image }}" alt="{{ game.name }} Header">
+                <div class="game-details">
+                    <h2>{{ game.name }}</h2>
+                    <p>{{ game.description }}</p>
+                    <div class="game-info">
+                        <span class="genre">{{ game.main_genre }}</span>
+                        <span class="price">
+                            {% if game.discount %}
+                            <span class="original-price">${{ game.pricing.split('$')[1] }}</span>
+                            <span class="discounted-price">{{ game.final_price }}</span>
+                            <span class="discount-tag">{{ game.discount }} OFF</span>
+                            {% else %}
+                            {{ game.pricing }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="game-tags">
+                        {% for tag in game.unique_tags %}
+                        <span class="tag">{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="game-reviews">
+                        <span>Score: {{ game.score }}</span>
+                        <span>Reviews: {{ game.overall_review }}</span>
+                    </div>
+                    <a href="{{ game.steam_url }}" target="_blank" class="steam-link">View on Steam</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <a href="{{ url_for('index') }}" class="back-button">Back to Search</a>
+    </div>
+</body>
+</html>

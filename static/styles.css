@@ -1,0 +1,177 @@
+/* File: static/styles.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1b2838;
+    color: #c7d5e0;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #fff;
+}
+
+form {
+    display: flex;
+    max-width: 500px;
+    margin: 20px auto;
+}
+
+input[type="text"] {
+    flex-grow: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #4a4a4a;
+    background-color: #2a475e;
+    color: #c7d5e0;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #66c0f4;
+    color: #000;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #32a0f2;
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.game-card {
+    background-color: #2a475e;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.game-card:hover {
+    transform: scale(1.05);
+}
+
+.game-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.game-details {
+    padding: 15px;
+}
+
+.game-details h2 {
+    margin-top: 0;
+    color: #fff;
+    font-size: 1.2em;
+}
+
+.game-info {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+
+.genre {
+    background-color: #66c0f4;
+    color: #000;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+}
+
+.price {
+    display: flex;
+    align-items: center;
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: #8f98a0;
+    margin-right: 10px;
+}
+
+.discounted-price {
+    color: #8bc53f;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.discount-tag {
+    background-color: #8bc53f;
+    color: #000;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+}
+
+.game-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin: 10px 0;
+}
+
+.tag {
+    background-color: #4a4a4a;
+    color: #c7d5e0;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.7em;
+}
+
+.game-reviews {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+    font-size: 0.9em;
+}
+
+.steam-link {
+    display: block;
+    text-align: center;
+    background-color: #66c0f4;
+    color: #000;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.steam-link:hover {
+    background-color: #32a0f2;
+}
+
+.back-button {
+    display: block;
+    width: 200px;
+    margin: 20px auto;
+    text-align: center;
+    background-color: #66c0f4;
+    color: #000;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+    background-color: #32a0f2;
+}

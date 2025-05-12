@@ -1,0 +1,19 @@
+<!-- File: templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steam Game Recommender</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Steam Game Recommender</h1>
+        <form action="{{ url_for('search') }}" method="post">
+            <input type="text" name="search_query" placeholder="Search for games...">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+</body>
+</html>
