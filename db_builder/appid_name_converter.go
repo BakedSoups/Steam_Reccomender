@@ -6,8 +6,6 @@ import (
 	"os"
 	"regexp"
 	"strings"
-
-	_ "github.com/mattn/go-sqlite3"
 )
 
 // working with simpler json file
