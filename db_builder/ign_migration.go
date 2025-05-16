@@ -43,8 +43,8 @@ func migrateIGN(db *sql.DB) {
 
 	}
 	fmt.Printf("matches found %v\n", count)
-
 }
+
 func transactIgnScores(db *sql.DB, appid int, verdict Gametag) error {
 	fmt.Println(verdict)
 	tx, err := db.Begin()
