@@ -615,19 +615,19 @@ body.index-dark .overlay {
 
 /* Top Match Tag */
 .top-match-tag {
-    display: inline-block;
-    margin-left: 12px;
+    display: block;
+    margin-top: 5px;
     background-color: #ffcc00;
     color: #000;
     padding: 3px 8px;
     font-size: 13px;
     font-weight: bold;
     border-radius: 4px;
-    vertical-align: middle;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     border: 1px solid #d4a900;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    width: fit-content;
 }
 
 
