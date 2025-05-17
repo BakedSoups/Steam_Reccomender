@@ -638,6 +638,21 @@ body.index-dark .overlay {
 }
 
 /* Responsive adjustments */
+@media (max-width: 1024px) {
+    .page-wrapper {
+        padding: 0 15px;
+        margin: 20px auto 40px auto;
+    }
+    
+    .card-header {
+        flex-direction: column;
+    }
+    
+    .unique-tags {
+        margin-top: 8px;
+    }
+}
+
 @media (max-width: 768px) {
     .game-card {
         flex-direction: column;
@@ -654,5 +669,86 @@ body.index-dark .overlay {
         width: 100%;
         border-left: none;
         border-top: 1px solid rgba(0, 0, 0, 0.2);
+    }
+    
+    .top-banner {
+        padding: 12px 15px;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .app-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .user-profile {
+        padding: 15px;
+    }
+    
+    .tag-label {
+        width: 80px;
+    }
+    
+    .container {
+        margin: 40px auto;
+        padding: 30px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .card-header h2 {
+        font-size: 20px;
+    }
+    
+    .tag-label {
+        width: 70px;
+        font-size: 12px;
+    }
+    
+    .tag-percent {
+        font-size: 12px;
+    }
+    
+    .game-meta {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .meta-item:not(:last-child)::after {
+        display: none;
+    }
+    
+    .user-title h2 {
+        font-size: 18px;
+    }
+    
+    .game-info {
+        padding: 12px;
+    }
+    
+    .game-actions {
+        padding: 12px;
+    }
+    
+    .app-header h1 {
+        font-size: 22px;
+    }
+    
+    .app-logo img {
+        height: 42px;
+    }
+    
+    .unique-tag {
+        font-size: 12px;
+    }
+    
+    .container h1 {
+        font-size: 28px;
+    }
+    
+    input[type="text"] {
+        font-size: 18px;
+        padding: 12px;
     }
 }
