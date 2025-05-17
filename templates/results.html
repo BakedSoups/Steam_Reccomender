@@ -8,35 +8,29 @@
 <body class="dark-theme">
     <div class="top-banner">
         <div class="app-logo">
-            <img src="{{ url_for('static', filename='logo.png') }}" alt="Steam Classic Game Finder">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Steam Game Recommender">
         </div>
         <div class="app-header">
-            <h1>Steam Classic Game Finder</h1>
-            <a href="{{ url_for('index') }}" class="home-button"> Home</a>
+            <h1>Steam Game Recommender</h1>
+            <a href="{{ url_for('index') }}" class="home-button">Home</a>
         </div>
     </div>
 
     <div class="page-wrapper">
         <div class="user-profile">
             <div class="user-title">
-                <h2>Games like <span class="highlight">Battlefield 2042</span> based on your tag profile:</h2>
+                <h2>Games like <span class="highlight">{{ reference_game.name }}</span> with focus on <span class="highlight">{{ preferred_tag|title }}</span>:</h2>
             </div>
             <div class="tag-bars user-bar">
-                <div class="tag-bar">
-                    <span class="tag-label">fps</span>
-                    <div class="bar"><div class="bar-fill" style="width: 60%"></div></div>
-                    <span class="tag-percent">60%</span>
-                </div>
-                <div class="tag-bar">
-                    <span class="tag-label">action</span>
-                    <div class="bar"><div class="bar-fill" style="width: 30%"></div></div>
-                    <span class="tag-percent">30%</span>
-                </div>
-                <div class="tag-bar">
-                    <span class="tag-label">rpg</span>
-                    <div class="bar"><div class="bar-fill" style="width: 10%"></div></div>
-                    <span class="tag-percent">10%</span>
-                </div>
+                {% for tag, ratio in reference_game.tag_ratios.items() %}
+                    <div class="tag-bar">
+                        <span class="tag-label">{{ tag }}</span>
+                        <div class="bar">
+                            <div class="bar-fill" style="width: {{ ratio }}%"></div>
+                        </div>
+                        <span class="tag-percent">{{ ratio }}%</span>
+                    </div>
+                {% endfor %}
             </div>
         </div>
 
@@ -44,7 +38,7 @@
             {% for game in games %}
             <div class="game-card">
                 <div class="game-thumb">
-                    <img src="{{ game.header_image }}" alt="{{ game.name }}">
+                    <img src="{{ game.header_image if game.header_image else url_for('static', filename='logo.png') }}" alt="{{ game.name }}">
                 </div>
 
                 <div class="game-info">
@@ -70,16 +64,21 @@
                     </div>
 
                     <div class="game-meta">
-                        <span class="meta-item"> {{ game.release_date }}</span>
-                        <span class="meta-item"> {{ game.main_genre }}</span>
-                        <span class="meta-item"> <a href="{{ game.steam_url }}" target="_blank">Steam Page</a></span>
+                        <span class="meta-item">{{ game.release_date }}</span>
+                        <span class="meta-item">{{ game.main_genre }}</span>
+                        <span class="meta-item"><a href="{{ game.steam_url }}" target="_blank">Steam Page</a></span>
                     </div>
                 </div>
 
                 <div class="game-actions">
                     <div class="review-bar">
-                        <div class="review-positive" style="width: {{ (game.positive_reviews / game.overall_review) * 100 }}%"></div>
-                        <div class="review-negative" style="width: {{ (game.negative_reviews / game.overall_review) * 100 }}%"></div>
+                        {% if game.overall_review > 0 %}
+                            <div class="review-positive" style="width: {{ (game.positive_reviews / game.overall_review) * 100 }}%"></div>
+                            <div class="review-negative" style="width: {{ (game.negative_reviews / game.overall_review) * 100 }}%"></div>
+                        {% else %}
+                            <div class="review-positive" style="width: 0%"></div>
+                            <div class="review-negative" style="width: 0%"></div>
+                        {% endif %}
                     </div>
                     <div class="review-label">
                         {{ game.positive_reviews }} / {{ game.negative_reviews }}

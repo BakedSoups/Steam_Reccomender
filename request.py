@@ -3,9 +3,9 @@ import os
 from typing import List, Dict, Any
 
 # Configure these variables to change the default behavior
-DEFAULT_SEARCH_TERM = "Battlefield"  # Change this to search for different games
+DEFAULT_SEARCH_TERM = "ori and the "  # Change this to search for different games
 DATABASE_PATH = "./steam_api.db"     # Path to your database file
-RESULT_LIMIT = None                  # Set to a number to limit results, or None for all
+RESULT_LIMIT = 5                  # Set to a number to limit results, or None for all
 
 class GameSearcher:
     def __init__(self, db_path: str = DATABASE_PATH):
@@ -25,16 +25,6 @@ class GameSearcher:
             print("\nUpdate the DATABASE_PATH variable to use one of these files.")
     
     def search_games(self, search_term: str, limit: int = None) -> List[Dict[str, Any]]:
-        """
-        Search for games and combine data from all relevant tables.
-        
-        Args:
-            search_term: The game name to search for (partial matching supported)
-            limit: Optional limit on number of results
-            
-        Returns:
-            A list of dictionaries containing game information, sorted by review count
-        """
         if not os.path.exists(self.db_path):
             return []
             

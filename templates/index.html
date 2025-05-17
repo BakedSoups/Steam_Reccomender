@@ -16,8 +16,155 @@
         <p>Find your new favorite video game</p>
         <form action="{{ url_for('search') }}" method="post">
             <input type="text" name="search_query" placeholder="Search for games...">
-            <button type="submit">Search</button>
         </form>
     </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.querySelector('input[name="search_query"]');
+    const formContainer = document.querySelector('form');
+    
+    // Create results container
+    const resultsContainer = document.createElement('div');
+    resultsContainer.className = 'search-results';
+    formContainer.appendChild(resultsContainer);
+    
+    let debounceTimer;
+    let currentResults = [];
+    let previousResults = [];
+    
+    // Handle form submission on Enter
+    searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            // If dropdown is visible and has items, select the first one
+            if (resultsContainer.style.display === 'block' && resultsContainer.children.length > 0) {
+                e.preventDefault();
+                resultsContainer.firstChild.click();
+            }
+            // Otherwise, the normal form submission will occur
+        }
+    });
+    
+    searchInput.addEventListener('input', function() {
+        clearTimeout(debounceTimer);
+        
+        const query = this.value.trim();
+        if (query.length < 2) {
+            hideResults();
+            return;
+        }
+        
+        debounceTimer = setTimeout(function() {
+            fetch(`/api/search?q=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Save previous results before updating
+                    previousResults = [...currentResults];
+                    currentResults = data;
+                    updateResultsDisplay();
+                })
+                .catch(error => {
+                    console.error('Error fetching search results:', error);
+                });
+        }, 300); // 300ms debounce
+    });
+    
+    function resultsHaveChanged() {
+        // Check if the results are different (length or content)
+        if (previousResults.length !== currentResults.length) return true;
+        
+        // Compare IDs to see if any results changed
+        const prevIds = previousResults.map(g => g.id);
+        const currentIds = currentResults.map(g => g.id);
+        
+        return !prevIds.every((id, index) => id === currentIds[index]);
+    }
+    
+    function updateResultsDisplay() {
+        const hasChanged = resultsHaveChanged();
+        
+        // If no results, hide the container
+        if (currentResults.length === 0) {
+            hideResults();
+            return;
+        }
+        
+        // Show container if it's hidden
+        if (resultsContainer.style.display !== 'block') {
+            resultsContainer.style.display = 'block';
+            // Trigger reflow to ensure transitions work
+            void resultsContainer.offsetWidth;
+            resultsContainer.style.opacity = '1';
+            resultsContainer.style.transform = 'translateY(0)';
+        }
+        
+        // If results haven't changed substantially, just keep them
+        if (!hasChanged) {
+            return;
+        }
+        
+        // Mark existing items for removal if results changed
+        Array.from(resultsContainer.children).forEach(item => {
+            item.classList.add('removing');
+        });
+        
+        // Add new items with animation
+        currentResults.forEach((game, index) => {
+            const gameElement = document.createElement('div');
+            gameElement.className = 'search-result-item new-item';
+            gameElement.innerHTML = `
+                <img src="${game.image}" alt="${game.name}">
+                <div class="search-result-details">
+                    <div class="search-result-name">${game.name}</div>
+                </div>
+            `;
+            
+            gameElement.addEventListener('click', function() {
+                searchInput.value = game.name;
+                hideResults();
+                
+                // Submit the form with the selected game
+                document.querySelector('form').submit();
+            });
+            
+            // Delay adding each item slightly for cascade effect
+            setTimeout(() => {
+                resultsContainer.appendChild(gameElement);
+                // Trigger animation after a tiny delay
+                setTimeout(() => {
+                    gameElement.classList.remove('new-item');
+                }, 10);
+            }, index * 30);
+        });
+        
+        // Fade out old items only after new ones start appearing
+        setTimeout(() => {
+            document.querySelectorAll('.removing').forEach(item => {
+                item.classList.add('fade-out');
+                // Remove from DOM after animation completes
+                setTimeout(() => item.remove(), 300);
+            });
+        }, 100);
+    }
+    
+    function hideResults() {
+        resultsContainer.style.opacity = '0';
+        resultsContainer.style.transform = 'translateY(-10px)';
+        
+        // Hide container after transition completes
+        setTimeout(() => {
+            resultsContainer.style.display = 'none';
+            resultsContainer.innerHTML = ''; // Clear all items
+        }, 200);
+    }
+    
+    // Hide results when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!resultsContainer.contains(event.target) && event.target !== searchInput) {
+            hideResults();
+        }
+    });
+});
+</script>
 </body>
 </html>
