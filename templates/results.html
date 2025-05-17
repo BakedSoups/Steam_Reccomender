@@ -43,7 +43,12 @@
 
                 <div class="game-info">
                     <div class="card-header">
-                        <h2>{{ game.name }}</h2>
+                        <h2>
+                            {{ game.name }}
+                            {% if loop.index <= 3 %}
+                            <span class="top-match-tag">Top {{ loop.index }} Match</span>
+                            {% endif %}
+                        </h2>
                         <div class="unique-tags">
                             {% for tag in game.unique_tags %}
                                 <span class="unique-tag">{{ tag }}</span>
@@ -91,7 +96,8 @@
                     {% else %}
                         <div class="price-full">{{ game.pricing }}</div>
                     {% endif %}
-                    <button class="add-to-cart">Add to Cart</button>
+                    
+                    <a href="{{ game.steam_url }}" target="_blank" class="check-steam">Check it out on Steam!</a>
                 </div>
             </div>
             {% endfor %}

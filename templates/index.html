@@ -13,9 +13,11 @@
             <h1>Steam Game Recommender</h1>
             <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo-image">
         </div>
-        <p>Find your new favorite video game</p>
+        <p>Did you like a game so much that wish you can play something like it? will this is our attempt at fixing this problem</p>
+        <p>Search for a game that you like: </p>
+
         <form action="{{ url_for('search') }}" method="post">
-            <input type="text" name="search_query" placeholder="Search for games...">
+            <input type="text" name="search_query" placeholder="Search for games..." autocomplete="off">
         </form>
     </div>
 
@@ -69,20 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 300); // 300ms debounce
     });
     
-    function resultsHaveChanged() {
-        // Check if the results are different (length or content)
-        if (previousResults.length !== currentResults.length) return true;
-        
-        // Compare IDs to see if any results changed
-        const prevIds = previousResults.map(g => g.id);
-        const currentIds = currentResults.map(g => g.id);
-        
-        return !prevIds.every((id, index) => id === currentIds[index]);
-    }
-    
     function updateResultsDisplay() {
-        const hasChanged = resultsHaveChanged();
-        
         // If no results, hide the container
         if (currentResults.length === 0) {
             hideResults();
@@ -98,53 +87,63 @@ document.addEventListener('DOMContentLoaded', function() {
             resultsContainer.style.transform = 'translateY(0)';
         }
         
-        // If results haven't changed substantially, just keep them
-        if (!hasChanged) {
-            return;
-        }
-        
-        // Mark existing items for removal if results changed
+        // Create a map of existing items by their game id/name
+        const existingItems = new Map();
         Array.from(resultsContainer.children).forEach(item => {
-            item.classList.add('removing');
+            // Get the game name from the element
+            const gameName = item.querySelector('.search-result-name').textContent;
+            existingItems.set(gameName, item);
         });
         
-        // Add new items with animation
+        // Find items to keep, remove or add
+        const itemsToKeep = new Set();
+        
+        // Process current results
         currentResults.forEach((game, index) => {
-            const gameElement = document.createElement('div');
-            gameElement.className = 'search-result-item new-item';
-            gameElement.innerHTML = `
-                <img src="${game.image}" alt="${game.name}">
-                <div class="search-result-details">
-                    <div class="search-result-name">${game.name}</div>
-                </div>
-            `;
+            const gameName = game.name;
+            const existingItem = existingItems.get(gameName);
             
-            gameElement.addEventListener('click', function() {
-                searchInput.value = game.name;
-                hideResults();
+            if (existingItem) {
+                // Item already exists and should be kept
+                itemsToKeep.add(gameName);
+                // Ensure it doesn't have animation classes
+                existingItem.classList.remove('new-item', 'removing', 'fade-out');
+            } else {
+                // This is a new item to add
+                const gameElement = document.createElement('div');
+                gameElement.className = 'search-result-item new-item';
+                gameElement.innerHTML = `
+                    <img src="${game.image}" alt="${game.name}">
+                    <div class="search-result-details">
+                        <div class="search-result-name">${game.name}</div>
+                    </div>
+                `;
                 
-                // Submit the form with the selected game
-                document.querySelector('form').submit();
-            });
-            
-            // Delay adding each item slightly for cascade effect
-            setTimeout(() => {
-                resultsContainer.appendChild(gameElement);
-                // Trigger animation after a tiny delay
+                gameElement.addEventListener('click', function() {
+                    searchInput.value = game.name;
+                    hideResults();
+                    document.querySelector('form').submit();
+                });
+                
+                // Delay adding each new item slightly for cascade effect
                 setTimeout(() => {
-                    gameElement.classList.remove('new-item');
-                }, 10);
-            }, index * 30);
+                    resultsContainer.appendChild(gameElement);
+                    // Trigger animation after a tiny delay
+                    setTimeout(() => {
+                        gameElement.classList.remove('new-item');
+                    }, 10);
+                }, index * 30);
+            }
         });
         
-        // Fade out old items only after new ones start appearing
-        setTimeout(() => {
-            document.querySelectorAll('.removing').forEach(item => {
-                item.classList.add('fade-out');
+        // Mark items for removal if they're not in new results
+        existingItems.forEach((item, gameName) => {
+            if (!itemsToKeep.has(gameName)) {
+                item.classList.add('removing', 'fade-out');
                 // Remove from DOM after animation completes
                 setTimeout(() => item.remove(), 300);
-            });
-        }, 100);
+            }
+        });
     }
     
     function hideResults() {
