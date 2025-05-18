@@ -5,6 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Steam Game Recommender</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .github-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            color: #c7d5e0;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+            z-index: 100;
+        }
+        
+        .github-link:hover {
+            color: #66c0f4;
+        }
+        
+        .github-icon {
+            width: 32px;
+            height: 32px;
+            margin-right: 8px;
+        }
+    </style>
 </head>
 <body class="index-dark">
     <div class="overlay"></div>
@@ -19,6 +43,16 @@
         <form action="{{ url_for('search') }}" method="post">
             <input type="text" name="search_query" placeholder="Search for games..." autocomplete="off">
         </form>
+        
+        <!-- Form content here -->
+        
+        <!-- GitHub Link - Now as a regular block element instead of absolute positioning -->
+        <a href="https://github.com/BakedSoups/Steam_Reccomender" class="github-link" target="_blank">
+            <svg class="github-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+            </svg>
+            Check out our GitHub!
+        </a>
     </div>
 
 <script>
