@@ -44,9 +44,7 @@
             <input type="text" name="search_query" placeholder="Search for games..." autocomplete="off">
         </form>
         
-        <!-- Form content here -->
         
-        <!-- GitHub Link - Now as a regular block element instead of absolute positioning -->
         <a href="https://github.com/BakedSoups/Steam_Reccomender" class="github-link" target="_blank">
             <svg class="github-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
@@ -60,7 +58,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.querySelector('input[name="search_query"]');
     const formContainer = document.querySelector('form');
     
-    // Create results container
     const resultsContainer = document.createElement('div');
     resultsContainer.className = 'search-results';
     formContainer.appendChild(resultsContainer);
@@ -69,15 +66,12 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentResults = [];
     let previousResults = [];
     
-    // Handle form submission on Enter
     searchInput.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
-            // If dropdown is visible and has items, select the first one
             if (resultsContainer.style.display === 'block' && resultsContainer.children.length > 0) {
                 e.preventDefault();
                 resultsContainer.firstChild.click();
             }
-            // Otherwise, the normal form submission will occur
         }
     });
     
@@ -106,44 +100,34 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     function updateResultsDisplay() {
-        // If no results, hide the container
         if (currentResults.length === 0) {
             hideResults();
             return;
         }
         
-        // Show container if it's hidden
         if (resultsContainer.style.display !== 'block') {
             resultsContainer.style.display = 'block';
-            // Trigger reflow to ensure transitions work
             void resultsContainer.offsetWidth;
             resultsContainer.style.opacity = '1';
             resultsContainer.style.transform = 'translateY(0)';
         }
         
-        // Create a map of existing items by their game id/name
         const existingItems = new Map();
         Array.from(resultsContainer.children).forEach(item => {
-            // Get the game name from the element
             const gameName = item.querySelector('.search-result-name').textContent;
             existingItems.set(gameName, item);
         });
         
-        // Find items to keep, remove or add
         const itemsToKeep = new Set();
         
-        // Process current results
         currentResults.forEach((game, index) => {
             const gameName = game.name;
             const existingItem = existingItems.get(gameName);
             
             if (existingItem) {
-                // Item already exists and should be kept
                 itemsToKeep.add(gameName);
-                // Ensure it doesn't have animation classes
                 existingItem.classList.remove('new-item', 'removing', 'fade-out');
             } else {
-                // This is a new item to add
                 const gameElement = document.createElement('div');
                 gameElement.className = 'search-result-item new-item';
                 gameElement.innerHTML = `
@@ -159,10 +143,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.querySelector('form').submit();
                 });
                 
-                // Delay adding each new item slightly for cascade effect
                 setTimeout(() => {
                     resultsContainer.appendChild(gameElement);
-                    // Trigger animation after a tiny delay
                     setTimeout(() => {
                         gameElement.classList.remove('new-item');
                     }, 10);
@@ -170,7 +152,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Mark items for removal if they're not in new results
         existingItems.forEach((item, gameName) => {
             if (!itemsToKeep.has(gameName)) {
                 item.classList.add('removing', 'fade-out');
@@ -184,14 +165,12 @@ document.addEventListener('DOMContentLoaded', function() {
         resultsContainer.style.opacity = '0';
         resultsContainer.style.transform = 'translateY(-10px)';
         
-        // Hide container after transition completes
         setTimeout(() => {
             resultsContainer.style.display = 'none';
             resultsContainer.innerHTML = ''; // Clear all items
         }, 200);
     }
     
-    // Hide results when clicking outside
     document.addEventListener('click', function(event) {
         if (!resultsContainer.contains(event.target) && event.target !== searchInput) {
             hideResults();
