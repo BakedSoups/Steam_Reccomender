@@ -9,7 +9,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func migrateIGN(db *sql.DB) {
+func migrateGameRanx(db *sql.DB) {
 	// Game verdicts from JSON
 	verdicts, err := gameVerdicts()
 	if err != nil {
@@ -27,7 +27,7 @@ func migrateIGN(db *sql.DB) {
 			count += 1
 			// fmt.Printf("%s matched with %s this is the appid%d\n", verdict.Name, match, appid)
 			// GREAT we found a match we know the appid to insert now
-			transactIgnScores(db, appid, verdict)
+			transactGameRanxScores(db, appid, verdict)
 			for tag, ratio := range verdict.Ratio {
 				fmt.Printf("Inserted %v , %v, %v, %v\n", match, appid, tag, ratio)
 				transactIgbtag(db, appid, tag, ratio)
@@ -45,7 +45,7 @@ func migrateIGN(db *sql.DB) {
 	fmt.Printf("matches found %v\n", count)
 }
 
-func transactIgnScores(db *sql.DB, appid int, verdict Gametag) error {
+func transactGameRanxScores(db *sql.DB, appid int, verdict Gametag) error {
 	fmt.Println(verdict)
 	tx, err := db.Begin()
 	if err != nil {
@@ -53,7 +53,7 @@ func transactIgnScores(db *sql.DB, appid int, verdict Gametag) error {
 	}
 
 	_, err = tx.Exec(` 
-	INSERT INTO ign_scores(steam_appid, score, genre)
+	INSERT INTO GameRanx_scores(steam_appid, score, genre)
 	VALUES(?,?,?)
 	`, appid, verdict.Score, verdict.MainGenre)
 
@@ -72,7 +72,7 @@ func transactIgbtag(db *sql.DB, appid int, tag string, ratio int) error {
 	}
 
 	_, err = tx.Exec(` 
-	INSERT INTO ign_tags(steam_appid, tag, ratio)
+	INSERT INTO GameRanx_tags(steam_appid, tag, ratio)
 	VALUES(?,?,?)
 	`, appid, tag, ratio)
 
@@ -91,7 +91,7 @@ func transactUniquetag(db *sql.DB, appid int, tag string) error {
 	}
 
 	_, err = tx.Exec(` 
-	INSERT INTO ign_unique_tags(steam_appid, unique_tag)
+	INSERT INTO GameRanx_unique_tags(steam_appid, unique_tag)
 	VALUES(?,?)
 	`, appid, tag)
 
@@ -110,7 +110,7 @@ func transactSubjectivetag(db *sql.DB, appid int, tag string) error {
 	}
 
 	_, err = tx.Exec(` 
-	INSERT INTO ign_subjective_tags(steam_appid, subjective_tag)
+	INSERT INTO GameRanx_subjective_tags(steam_appid, subjective_tag)
 	VALUES(?,?)
 	`, appid, tag)
 
@@ -122,23 +122,23 @@ func transactSubjectivetag(db *sql.DB, appid int, tag string) error {
 	return tx.Commit()
 }
 
-func createIGNTable(db *sql.DB) {
+func createGameRanxTable(db *sql.DB) {
 	// for now all this will do is create a temp table
-	ignKey := `
-	CREATE TABLE IF NOT EXISTS ign_scores ( 
+	GameRanxKey := `
+	CREATE TABLE IF NOT EXISTS GameRanx_scores ( 
 		game_id INTEGER PRIMARY KEY AUTOINCREMENT, 
 		steam_appid INTEGER NOT NULL, 
 		score REAL NOT NULL,
 		genre TEXT
 	);
 	`
-	_, err := db.Exec(ignKey)
+	_, err := db.Exec(GameRanxKey)
 
 	if err != nil {
 		log.Fatal("ERROR: ", err)
 	}
 	tag_tag_table := `
-	CREATE TABLE IF NOT EXISTS ign_tags(
+	CREATE TABLE IF NOT EXISTS GameRanx_tags(
 		game_id INTEGER PRIMARY KEY AUTOINCREMENT,
 		steam_appid INTERGER NOT NULL,
 		tag TEXT NOT NULL,
@@ -151,7 +151,7 @@ func createIGNTable(db *sql.DB) {
 		log.Fatal("ERROR: ", err)
 	}
 	unique_tag_table := `
-	CREATE TABLE IF NOT EXISTS ign_unique_tags(
+	CREATE TABLE IF NOT EXISTS GameRanx_unique_tags(
 		game_id INTEGER PRIMARY KEY AUTOINCREMENT,
 		steam_appid INTERGER NOT NULL,
 		unique_tag TEXT NOT NULL
@@ -163,7 +163,7 @@ func createIGNTable(db *sql.DB) {
 		log.Fatal("ERROR: ", err)
 	}
 	subjective_tags_table := `
-	CREATE TABLE IF NOT EXISTS ign_subjective_tags(
+	CREATE TABLE IF NOT EXISTS GameRanx_subjective_tags(
 		game_id INTEGER PRIMARY KEY AUTOINCREMENT,
 		steam_appid INTERGER NOT NULL,
 		subjective_tag TEXT NOT NULL

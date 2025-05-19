@@ -20,7 +20,7 @@ type Gametag struct {
 
 // this extracts the output json and gives me what I need for matching
 func gameVerdicts() ([]Gametag, error) {
-	file, err := os.Open("./tag_builder/game_verdicts_with_ratio_tags.json")
+	file, err := os.Open("./tag_builder/gameranx_ratio_tags.json")
 
 	if err != nil {
 		return nil, err
