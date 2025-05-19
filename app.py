@@ -361,7 +361,7 @@ def api_search():
         return jsonify([])
     
     searcher = GameSearcher()
-    games = searcher.search_games(search_query, limit=5)
+    games = searcher.search_games(search_query, limit=10)
     
     results = []
     for game in games:
