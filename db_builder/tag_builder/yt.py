@@ -37,8 +37,8 @@ def dump_json(servicer: object, videos_response: dict) -> None:
             json.dump(ver_dict, fobject)
         
 def main():
-    load_dotenv()
-    servicer: object = build('youtube', 'v3', developerKey=os.getenv('api_key'))
+    api_key = os.getenv("YT_API_KEY")
+    servicer: object = build('youtube', 'v3', developerKey=api_key)
     channel_id: str = request_channel_id(servicer=servicer)
     video_response: dict = request_videos(servicer=servicer, channel_id=channel_id, video_count=5)
     dump_json(servicer=servicer, videos_response=video_response)
