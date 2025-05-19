@@ -17,25 +17,41 @@ def request_videos(servicer: object, channel_id: str, video_count: int) -> dict:
         order = 'date').execute()
         
 def dump_json(servicer: object, videos_response: dict) -> None:
-    URL_TEMPLATE = "https://www.youtube.com/watch?v="  
-    videos: dict[str, list[str]] = {item['id']['videoId']: [item['snippet']['title'], URL_TEMPLATE + item['id']['videoId']] for item in videos_response['items']}
+    URL_TEMPLATE = "https://www.youtube.com/watch?v="
+    videos = {item['id']['videoId']: [item['snippet']['title'], URL_TEMPLATE + item['id']['videoId']] 
+              for item in videos_response['items']}
+    
+    all_verdicts = []
     ytt_api = YouTubeTranscriptApi()
+    
     for vid, info in videos.items():
-        # Ask api for info:
         video_response = servicer.videos().list(part = 'topicDetails,snippet', id = vid).execute()
-        tags: list[str] = video_response['items'][0]['snippet']['tags']
-        topics = {url.split('/')[-1]: url for url in video_response['items'][0]['topicDetails']['topicCategories']}
+        
+        tags = video_response['items'][0]['snippet'].get('tags', [])
+        
+        if 'topicDetails' in video_response['items'][0] and 'topicCategories' in video_response['items'][0]['topicDetails']:
+            topics = {url.split('/')[-1]: url for url in video_response['items'][0]['topicDetails']['topicCategories']}
+        else:
+            topics = {}
+            
+        try:
+            transcript = "".join(line['text'] for line in ytt_api.get_transcript(vid))
+        except Exception:
+            transcript = ""
+            
         ver_dict = {
             "name": info[0],
             "score": 0,
             "url": info[1],
             "tags": tags,
             "topics": topics,
-            "transcript": "".join(line['text'] for line in ytt_api.get_transcript(vid))
+            "transcript": transcript
         }
-        with open(f"game_verdicts_complete.json", "a", encoding="utf-8") as fobject:
-            json.dump(ver_dict, fobject)
         
+        all_verdicts.append(ver_dict)
+    
+    with open("game_verdicts_yt_complete.json", "w", encoding="utf-8") as fobject:
+        json.dump(all_verdicts, fobject, indent=2)
 def main():
     api_key = os.getenv("YT_API_KEY")
     servicer: object = build('youtube', 'v3', developerKey=api_key)
