@@ -549,44 +549,21 @@ input[type="text"]:focus {
   font-weight: 500;
 }
 
-.unique-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.unique-tag {
-  background-color: var(--steam-blue);
-  color: var(--steam-blue-dark);
-  padding: 6px 12px;
-  font-size: 14px;
-  font-weight: bold;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(102, 192, 244, 0.4);
-  transition: var(--transition-standard);
-}
-
-.unique-tag:hover {
-  background-color: #32a0f2;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 192, 244, 0.6);
-}
-
 /* -------- RESULTS PAGE STYLES -------- */
 /* Page wrapper */
 .page-wrapper {
-  max-width: 1000px; /* Reduced from 1200px */
-  margin: 40px auto 60px auto;
-  padding: 0 30px;
+  max-width: 950px; /* Reduced from 1200px */
+  margin: 35px auto 55px auto;
+  padding: 0 25px;
   background-color: transparent;
 }
 
 /* User reference section */
 .user-profile {
   background-color: rgba(42, 71, 94, 0.9);
-  padding: 25px;
+  padding: 20px;
   border-radius: 10px;
-  margin-bottom: 35px;
+  margin-bottom: 25px;
   box-shadow: var(--shadow-medium);
   animation: fadeIn 0.5s ease-out;
   backdrop-filter: blur(5px);
@@ -599,9 +576,9 @@ input[type="text"]:focus {
 }
 
 .user-title h2 {
-  margin: 0 0 20px;
+  margin: 0 0 15px;
   color: #e2eef7;
-  font-size: 22px;
+  font-size: 20px;
   line-height: 1.4;
 }
 
@@ -612,25 +589,25 @@ input[type="text"]:focus {
 }
 
 .user-bar .tag-bar {
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 /* Results container */
 .results-container {
   display: flex;
   flex-direction: column;
-  gap: 20px; /* Reduced from 30px for more compact layout */
-  padding: 10px 0;
+  gap: 15px; /* Reduced from 30px */
+  padding: 5px 0;
 }
 
-/* Game Card - thinner and less tall */
+/* Game Card - smaller overall */
 .game-card {
   display: flex;
   background-color: rgba(42, 71, 94, 0.9);
-  border-radius: 10px;
+  border-radius: 8px;
   overflow: hidden;
   box-shadow: var(--shadow-medium);
-  min-height: 140px; /* Significantly reduced from 180px */
+  min-height: 115px; /* Further reduced height */
   transition: var(--transition-standard);
   position: relative;
   backdrop-filter: blur(5px);
@@ -644,11 +621,11 @@ input[type="text"]:focus {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(102, 192, 244, 0.3);
 }
 
-/* Thumbnail - smaller and optimized for better image display */
+/* Thumbnail - wider to better fit game covers */
 .game-thumb {
-  min-width: 220px; /* Reduced from 280px */
-  max-width: 220px; /* Reduced from 280px */
-  height: 140px; /* Adjusted to match card height */
+  min-width: 230px;
+  max-width: 230px;
+  height: 115px;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -660,95 +637,144 @@ input[type="text"]:focus {
   transition: transform 0.3s ease;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Changed from 'contain' to fill the space completely */
-  object-position: center;
+  object-fit: cover;
+  object-position: center top; /* Focus on the top part of the image where logos usually are */
 }
 
 .game-card:hover .game-thumb img {
   transform: scale(1.05);
 }
 
-/* Game info section - reduced padding */
+/* Game info section */
 .game-info {
   flex: 1;
-  padding: 12px 16px; /* Reduced from 20px */
+  padding: 8px 12px 6px; /* Reduced bottom padding */
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 
-/* Card header - smaller text and reduced spacing */
+/* Card header - move main tag to top right */
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  position: relative; /* For positioning elements */
 }
 
 .card-header h2 {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-  font-size: 18px; /* Reduced from 22px */
-  margin: 0 0 6px 0; /* Reduced from 10px */
+  font-size: 16px;
+  margin: 0 0 4px 0;
   color: #ffffff;
-  display: flex;
-  flex-direction: column;
-  gap: 5px; /* Reduced from 8px */
+  max-width: 85%; /* Leave space for top-right tag */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Top match tag - more compact */
+/* Preferred tag indicator in top right */
+.preferred-tag-indicator {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: var(--steam-blue);
+  color: var(--steam-blue-dark);
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: bold;
+  border-radius: 3px;
+  text-transform: uppercase;
+  box-shadow: 0 0 10px rgba(102, 192, 244, 0.6);
+  border: 1px solid #32a0f2;
+}
+
+/* Tag container for all tags */
+.tag-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 2px;
+  margin-bottom: 8px; /* Increased margin to compensate for removed genre bar */
+}
+
+/* Top match tag styling */
 .top-match-tag {
   display: inline-block;
   background-color: #ffcc00;
   color: #000;
-  padding: 2px 8px; /* Reduced from 4px 10px */
-  font-size: 11px; /* Reduced from 13px */
+  padding: 2px 6px;
+  font-size: 10px;
   font-weight: bold;
-  border-radius: 4px;
+  border-radius: 3px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   border: 1px solid #d4a900;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-  width: fit-content;
   animation: shine 3s infinite;
+  margin-right: 2px;
 }
 
-/* More compact unique tags */
-.unique-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px; /* Reduced from 10px */
+@keyframes shine {
+  0% { box-shadow: 0 0 6px rgba(255, 215, 0, 0.5); }
+  50% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.8); }
+  100% { box-shadow: 0 0 6px rgba(255, 215, 0, 0.5); }
 }
 
+/* Genre tag styling */
+.genre-tag {
+  background-color: #3a5976; /* Slightly different from unique tags */
+  color: var(--steam-blue-light);
+  padding: 2px 6px;
+  font-size: 11px;
+  font-weight: bold;
+  border-radius: 3px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transition: var(--transition-standard);
+}
+
+/* Unique tags styling */
 .unique-tag {
   background-color: var(--steam-blue);
   color: var(--steam-blue-dark);
-  padding: 3px 8px; /* Reduced from 6px 12px */
-  font-size: 12px; /* Reduced from 14px */
+  padding: 2px 6px;
+  font-size: 11px;
   font-weight: bold;
-  border-radius: 4px;
+  border-radius: 3px;
   box-shadow: 0 2px 6px rgba(102, 192, 244, 0.3);
   transition: var(--transition-standard);
 }
 
-/* Tag bars - thinner and more compact */
+.unique-tag:hover {
+  background-color: #32a0f2;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 192, 244, 0.6);
+}
+
+/* Remove the Unknown/genre line at bottom of card */
+.game-card .unknown-genre-bar {
+  display: none; /* Hide this element completely */
+}
+
+/* Tag bars styling */
 .tag-bars {
-  margin: 3px 0; /* Add compact spacing */
+  margin: 2px 0;
 }
 
 .tag-bar {
   display: flex;
   align-items: center;
-  margin: 3px 0; /* Reduced spacing between bars */
+  margin: 2px 0;
 }
 
 .bar {
-  height: 10px; /* Reduced height for more compact appearance */
-  border-radius: 4px;
+  height: 8px;
+  border-radius: 3px;
   flex: 1;
   background-color: rgba(62, 78, 90, 0.5);
   overflow: hidden;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
-  margin: 0 8px; /* Reduced from 15px */
+  margin: 0 6px;
 }
 
 .bar-fill {
@@ -759,28 +785,28 @@ input[type="text"]:focus {
 }
 
 .tag-label {
-  min-width: 100px; /* Adjusted width for balance */
+  min-width: 90px;
   text-align: left;
-  font-size: 12px; /* Reduced from original size */
+  font-size: 11px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .tag-percent {
-  min-width: 40px; /* Reduced from 50px */
+  min-width: 35px;
   text-align: right;
-  font-size: 12px; /* Reduced from original size */
+  font-size: 11px;
 }
 
-/* Game metadata - more compact */
+/* Game metadata */
 .game-meta {
-  margin-top: 8px; /* Reduced from 15px */
-  font-size: 13px; /* Reduced from 15px */
+  margin-top: 6px;
+  font-size: 12px;
   color: #bfc9d4;
   display: flex;
   flex-wrap: wrap;
-  gap: 10px; /* Reduced from 15px */
+  gap: 8px;
 }
 
 .meta-item {
@@ -790,7 +816,7 @@ input[type="text"]:focus {
 .meta-item:not(:last-child)::after {
   content: "•";
   position: absolute;
-  right: -12px;
+  right: -9px;
   opacity: 0.5;
 }
 
@@ -805,10 +831,10 @@ input[type="text"]:focus {
   text-decoration: underline;
 }
 
-/* Game actions panel - narrower and less padding */
+/* Game actions panel */
 .game-actions {
-  padding: 10px; /* Reduced from 20px */
-  min-width: 180px; /* Reduced from 220px */
+  padding: 8px;
+  min-width: 160px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -817,27 +843,27 @@ input[type="text"]:focus {
   border-left: 1px solid rgba(0, 0, 0, 0.2);
 }
 
-/* Reviews section - more compact */
+/* Reviews section */
 .reviews-section {
-  margin-bottom: 8px; /* Reduced from 20px */
+  margin-bottom: 6px;
 }
 
 .review-header {
-  font-size: 14px; /* Reduced from 16px */
+  font-size: 13px;
   font-weight: 500;
   color: #ffffff;
-  margin-bottom: 5px; /* Reduced from 8px */
+  margin-bottom: 4px;
   text-align: center;
 }
 
 .review-bar {
   width: 100%;
-  height: 8px; /* Reduced from 12px */
+  height: 7px;
   background-color: #3e3e3e;
-  border-radius: 4px;
+  border-radius: 3px;
   overflow: hidden;
   display: flex;
-  margin-bottom: 5px; /* Reduced from 8px */
+  margin-bottom: 4px;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
   position: relative;
 }
@@ -855,27 +881,27 @@ input[type="text"]:focus {
   transition: width 0.5s ease;
 }
 
-/* Review indicators - made smaller */
+/* Review indicators */
 .review-bar::before {
   content: "👍";
   position: absolute;
-  left: -18px;
+  left: -16px;
   top: -4px;
-  font-size: 12px; /* Reduced from 14px */
+  font-size: 11px;
 }
 
 .review-bar::after {
   content: "👎";
   position: absolute;
-  right: -18px;
+  right: -16px;
   top: -4px;
-  font-size: 12px; /* Reduced from 14px */
+  font-size: 11px;
 }
 
 .review-label {
-  font-size: 12px; /* Reduced from 14px */
+  font-size: 11px;
   color: var(--steam-blue-light);
-  margin-bottom: 5px; /* Reduced from 10px */
+  margin-bottom: 4px;
   text-align: center;
 }
 
@@ -889,24 +915,24 @@ input[type="text"]:focus {
   font-weight: 500;
 }
 
-/* Pricing section - more compact */
+/* Pricing section */
 .price-section {
-  margin-bottom: 8px; /* Reduced from 15px */
+  margin-bottom: 6px;
   text-align: center;
 }
 
 .price-discounted {
   color: #a4f3a4;
   font-weight: bold;
-  font-size: 18px; /* Reduced from 22px */
+  font-size: 16px;
   text-shadow: 0 0 10px rgba(164, 243, 164, 0.4);
   text-align: center;
 }
 
 .price-original {
   color: #8f98a0;
-  font-size: 13px; /* Reduced from 15px */
-  margin-bottom: 5px; /* Reduced from 10px */
+  font-size: 12px;
+  margin-bottom: 4px;
   text-align: center;
 }
 
@@ -914,10 +940,10 @@ input[type="text"]:focus {
   background-color: #3dcf50;
   color: #1b2838;
   font-weight: bold;
-  padding: 3px 8px; /* Reduced from 5px 10px */
-  border-radius: 4px;
-  margin-bottom: 3px; /* Reduced from 5px */
-  font-size: 13px; /* Added size reduction */
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-bottom: 2px;
+  font-size: 12px;
   animation: pulse 2s infinite;
   text-align: center;
   display: inline-block;
@@ -933,27 +959,27 @@ input[type="text"]:focus {
 
 .price-full {
   color: #ffffff;
-  font-size: 18px; /* Reduced from 22px */
+  font-size: 16px;
   font-weight: bold;
-  margin-bottom: 8px; /* Reduced from 15px */
+  margin-bottom: 6px;
   text-align: center;
 }
 
-/* Steam button - more compact */
+/* Steam button */
 .check-steam {
   background-color: rgba(23, 26, 33, 0.7);
   border: 1px solid rgba(102, 192, 244, 0.6);
   color: var(--steam-blue-light);
-  padding: 8px 12px; /* Reduced from 12px 15px */
-  border-radius: 5px;
+  padding: 6px 10px;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 13px; /* Reduced from 15px */
+  font-size: 12px;
   font-weight: 500;
   transition: var(--transition-standard);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   width: 90%;
   letter-spacing: 0.5px;
-  margin: 8px auto 0 auto; /* Reduced from 15px */
+  margin: 6px auto 0 auto;
   text-align: center;
   text-decoration: none;
   display: block;
@@ -995,7 +1021,7 @@ input[type="text"]:focus {
   .game-thumb {
     width: 100%;
     max-width: 100%;
-    height: 120px; /* Reduced from 180px */
+    height: 120px;
   }
   
   .game-actions {
@@ -1084,4 +1110,36 @@ input[type="text"]:focus {
     font-size: 16px;
     padding: 12px;
   }
+}
+/* Additional CSS to ensure 'Unknown · Action-RPG' is hidden */
+
+/* Hide any potential unknown-genre display at bottom of game info */
+.game-info .unknown-genre-display,
+.game-info .game-genre-display,
+.game-info > .text-sm:last-child,  /* Common pattern for smaller text at bottom */
+.game-info > div:last-child:not(.game-meta):not(.tag-bars):not(.tag-container):not(.card-header) {
+  display: none !important;
+}
+
+/* Hide the specific Unknown · Action-RPG line */
+.game-info:after {
+  display: none !important;
+}
+
+/* For the specific "Unknown" text that might be directly in the DOM */
+.game-info > .text-unknown,
+.game-info > span:contains("Unknown"),
+.game-info > small:contains("Unknown") {
+  display: none !important;
+}
+
+/* Just in case it's using flexbox to create that line */
+.game-info {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Make sure no extra space is left at bottom */
+.game-info {
+  padding-bottom: 6px;
 }

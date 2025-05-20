@@ -37,50 +37,74 @@
 
         <div class="results-container">
             {% for game in games %}
-            <div class="game-card hover:translate-y-[-3px] transition-all duration-300">
-                <div class="game-thumb flex items-center justify-center bg-steam-blue-darker/50">
-                    <img src="{{ game.header_image if game.header_image else url_for('static', filename='logo.png') }}" alt="{{ game.name }}" class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105">
+            <div class="game-card">
+                <div class="game-thumb">
+                    <img src="{{ game.header_image if game.header_image else url_for('static', filename='logo.png') }}" alt="{{ game.name }}">
                 </div>
 
                 <div class="game-info">
                     <div class="card-header">
-                        <h2>
-                            {{ game.name }}
-                            {% if loop.index <= 3 %}
-                            <span class="top-match-tag {% if loop.index == 1 %}bg-yellow-400 animate-pulse{% endif %}">
-                                {% if loop.index == 1 %}Best Match{% else %}Top {{ loop.index }} Match{% endif %}
+                        <h2>{{ game.name }}</h2>
+                        {% if preferred_tag in game.tag_ratios %}
+                            <span class="preferred-tag-indicator">{{ preferred_tag|title }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="tag-container">
+                        {% if loop.index <= 3 %}
+                            <span class="top-match-tag">
+                                {% if loop.index == 1 %}Best Match{% else %}Top {{ loop.index }}{% endif %}
                             </span>
-                            {% endif %}
-                        </h2>
+                        {% endif %}
+                        
+                        {# Add genre/category tags if available #}
+                        {% if game.genre %}
+                            <span class="genre-tag">{{ game.genre }}</span>
+                        {% endif %}
+                        
+                        {% if game.category %}
+                            <span class="genre-tag">{{ game.category }}</span>
+                        {% endif %}
+                        
+                        {# If genre not available but main_genre is available, use that #}
+                        {% if not game.genre and game.main_genre %}
+                            <span class="genre-tag">{{ game.main_genre }}</span>
+                        {% endif %}
+                        
                         {% if game.unique_tags %}
-                        <div class="unique-tags">
                             {% for tag in game.unique_tags %}
-                                <span class="unique-tag hover:scale-105 transition-transform duration-200">{{ tag }}</span>
+                                <span class="unique-tag">{{ tag }}</span>
                             {% endfor %}
-                        </div>
                         {% endif %}
                     </div>
 
                     <div class="tag-bars">
                         {% for tag, percent in game.tag_ratios.items() %}
-                        <div class="tag-bar flex items-center my-1">
-                            <span class="tag-label text-left min-w-[120px] mr-2 whitespace-nowrap overflow-hidden text-ellipsis">{{ tag }}</span>
-                            <div class="bar flex-1 {% if tag == preferred_tag %}preferred-tag{% endif %}">
-                                <div class="bar-fill" style="width: {{ percent }}%"></div>
+                            <div class="tag-bar">
+                                <span class="tag-label">{{ tag }}</span>
+                                <div class="bar {% if tag == preferred_tag %}preferred-tag{% endif %}">
+                                    <div class="bar-fill" style="width: {{ percent }}%"></div>
+                                </div>
+                                <span class="tag-percent">{{ percent }}%</span>
                             </div>
-                            <span class="tag-percent ml-2 min-w-[50px] text-right">{{ percent }}%</span>
-                        </div>
                         {% endfor %}
                     </div>
 
                     <div class="game-meta">
                         {% if game.release_date %}
-                        <span class="meta-item">{{ game.release_date }}</span>
+                            <span class="meta-item">{{ game.release_date }}</span>
                         {% endif %}
-                        {% if game.main_genre %}
-                        <span class="meta-item">{{ game.main_genre }}</span>
+                        
+                        {# Only include main_genre in meta if not already shown as a tag #}
+                        {% if game.main_genre and not game.genre %}
+                            <span class="meta-item">{{ game.main_genre }}</span>
                         {% endif %}
                     </div>
+                    
+                    {# Remove this line completely - do not render any "Unknown" or genre information here #}
+                    {# {% if game.unknown or game.action_rpg %}
+                       Unknown · Action-RPG
+                    {% endif %} #}
                 </div>
 
                 <div class="game-actions">
@@ -112,7 +136,7 @@
                     </div>
                     
                     {% if game.steam_url %}
-                    <a href="{{ game.steam_url }}" target="_blank" class="check-steam hover:bg-steam-blue hover:text-steam-blue-dark hover:-translate-y-1 transition-all">View on Steam</a>
+                        <a href="{{ game.steam_url }}" target="_blank" class="check-steam">View on Steam</a>
                     {% endif %}
                 </div>
             </div>
