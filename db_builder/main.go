@@ -34,11 +34,10 @@ func main() {
 	}
 	defer db.Close()
 	db.Exec("PRAGMA foreign_keys = ON;")
-
 	// creates ign table
-	createGameRanxTable(db)
+	createACGTable(db)
 	// migrate data from json into table
-	migrateGameRanx(db)
+	migrateACG(db)
 }
 
 // func warning() bool {

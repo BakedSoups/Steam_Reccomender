@@ -52,48 +52,10 @@ class GameSearcher:
                 cursor.execute("SELECT COUNT(*) FROM GameRanx_tags WHERE steam_appid = ?", (appid,))
                 gameranx_tag_count = cursor.fetchone()[0]
                 
-                # If no GameRanx tags, check for IGN tags
-                if gameranx_tag_count == 0:
-                    cursor.execute("SELECT COUNT(*) FROM ign_tags WHERE steam_appid = ?", (appid,))
-                    ign_tag_count = cursor.fetchone()[0]
-                    if ign_tag_count == 0:
-                        print(f"Game {game_info.get('name')} doesn't have tags in either database")
-                        return {}  # Return empty if no tags, this will redirect to index
-                    
-                    # Use IGN data
-                    game_info['data_source'] = 'ign'
-                    
-                    # Get tags and ratios from IGN
-                    cursor.execute("SELECT tag, ratio FROM ign_tags WHERE steam_appid = ?", (appid,))
-                    tags = cursor.fetchall()
-                    if tags:
-                        game_info['tag_ratios'] = {tag[0]: tag[1] for tag in tags}
-                        print(f"RESULT: Found {len(game_info['tag_ratios'])} IGN tags for {game_info['name']}")
-                    else:
-                        print(f"RESULT: {game_info['name']} doesn't have IGN tags")
-                        game_info['tag_ratios'] = {}
-
-                    # Get unique tags from IGN
-                    cursor.execute("SELECT unique_tag FROM ign_unique_tags WHERE steam_appid = ?", (appid,))
-                    unique_tags = cursor.fetchall()
-                    if unique_tags:
-                        game_info['unique_tags'] = [tag[0] for tag in unique_tags]
-                    else:
-                        game_info['unique_tags'] = []
-                    
-                    # Get genre from IGN scores
-                    cursor.execute("SELECT score, genre FROM ign_scores WHERE steam_appid = ?", (appid,))
-                    ign_score = cursor.fetchone()
-                    if ign_score:
-                        game_info['score'] = ign_score[0]
-                        game_info['main_genre'] = ign_score[1]
-                    else:
-                        game_info['main_genre'] = ""
-                else:
+                if gameranx_tag_count > 0:
                     # Use GameRanx data
                     game_info['data_source'] = 'gameranx'
                     
-                    # Get tags and ratios from GameRanx
                     cursor.execute("SELECT tag, ratio FROM GameRanx_tags WHERE steam_appid = ?", (appid,))
                     tags = cursor.fetchall()
                     if tags:
@@ -103,7 +65,6 @@ class GameSearcher:
                         print(f"RESULT: {game_info['name']} doesn't have GameRanx tags")
                         game_info['tag_ratios'] = {}
 
-                    # Get unique tags from GameRanx
                     cursor.execute("SELECT unique_tag FROM GameRanx_unique_tags WHERE steam_appid = ?", (appid,))
                     unique_tags = cursor.fetchall()
                     if unique_tags:
@@ -111,7 +72,6 @@ class GameSearcher:
                     else:
                         game_info['unique_tags'] = []
                     
-                    # Get genre from GameRanx scores
                     cursor.execute("SELECT score, genre FROM GameRanx_scores WHERE steam_appid = ?", (appid,))
                     gameranx_score = cursor.fetchone()
                     if gameranx_score:
@@ -119,6 +79,79 @@ class GameSearcher:
                         game_info['main_genre'] = gameranx_score[1]
                     else:
                         game_info['main_genre'] = ""
+                else:
+                    # Second, check if game has ACG tags
+                    cursor.execute("SELECT COUNT(*) FROM ACG_tags WHERE steam_appid = ?", (appid,))
+                    acg_tag_count = cursor.fetchone()[0]
+                    
+                    if acg_tag_count > 0:
+                        # Use ACG data
+                        game_info['data_source'] = 'acg'
+                        
+                        # Get tags and ratios from ACG
+                        cursor.execute("SELECT tag, ratio FROM ACG_tags WHERE steam_appid = ?", (appid,))
+                        tags = cursor.fetchall()
+                        if tags:
+                            game_info['tag_ratios'] = {tag[0]: tag[1] for tag in tags}
+                            print(f"RESULT: Found {len(game_info['tag_ratios'])} ACG tags for {game_info['name']}")
+                        else:
+                            print(f"RESULT: {game_info['name']} doesn't have ACG tags")
+                            game_info['tag_ratios'] = {}
+
+                        # Get unique tags from ACG
+                        cursor.execute("SELECT unique_tag FROM ACG_unique_tags WHERE steam_appid = ?", (appid,))
+                        unique_tags = cursor.fetchall()
+                        if unique_tags:
+                            game_info['unique_tags'] = [tag[0] for tag in unique_tags]
+                        else:
+                            game_info['unique_tags'] = []
+                        
+                        # Get genre from ACG scores
+                        cursor.execute("SELECT score, genre FROM ACG_scores WHERE steam_appid = ?", (appid,))
+                        acg_score = cursor.fetchone()
+                        if acg_score:
+                            game_info['score'] = acg_score[0]
+                            game_info['main_genre'] = acg_score[1]
+                        else:
+                            game_info['main_genre'] = ""
+                    else:
+                        # Lastly, check for IGN tags
+                        cursor.execute("SELECT COUNT(*) FROM ign_tags WHERE steam_appid = ?", (appid,))
+                        ign_tag_count = cursor.fetchone()[0]
+                        
+                        if ign_tag_count == 0:
+                            print(f"Game {game_info.get('name')} doesn't have tags in any database")
+                            return {}  # Return empty if no tags, this will redirect to index
+                        
+                        # Use IGN data
+                        game_info['data_source'] = 'ign'
+                        
+                        # Get tags and ratios from IGN
+                        cursor.execute("SELECT tag, ratio FROM ign_tags WHERE steam_appid = ?", (appid,))
+                        tags = cursor.fetchall()
+                        if tags:
+                            game_info['tag_ratios'] = {tag[0]: tag[1] for tag in tags}
+                            print(f"RESULT: Found {len(game_info['tag_ratios'])} IGN tags for {game_info['name']}")
+                        else:
+                            print(f"RESULT: {game_info['name']} doesn't have IGN tags")
+                            game_info['tag_ratios'] = {}
+
+                        # Get unique tags from IGN
+                        cursor.execute("SELECT unique_tag FROM ign_unique_tags WHERE steam_appid = ?", (appid,))
+                        unique_tags = cursor.fetchall()
+                        if unique_tags:
+                            game_info['unique_tags'] = [tag[0] for tag in unique_tags]
+                        else:
+                            game_info['unique_tags'] = []
+                        
+                        # Get genre from IGN scores
+                        cursor.execute("SELECT score, genre FROM ign_scores WHERE steam_appid = ?", (appid,))
+                        ign_score = cursor.fetchone()
+                        if ign_score:
+                            game_info['score'] = ign_score[0]
+                            game_info['main_genre'] = ign_score[1]
+                        else:
+                            game_info['main_genre'] = ""
                 
                 # Calculate review percentages
                 positive = int(game_info.get('positive_reviews', 0) or 0)
@@ -159,31 +192,27 @@ class GameSearcher:
         search_pattern = f"%{search_term}%"
         
         try:
-            query = """
-            SELECT m.game_name as name, m.steam_appid, 
-                a.header_image
+            # First try to get games with GameRanx tags
+            gameranx_query = """
+            SELECT m.game_name as name, m.steam_appid, a.header_image
             FROM main_game m
-            LEFT JOIN steam_spy s ON m.steam_appid = s.steam_appid
             LEFT JOIN steam_api a ON m.steam_appid = a.steam_appid
+            INNER JOIN GameRanx_tags gt ON m.steam_appid = gt.steam_appid
             WHERE LOWER(m.game_name) LIKE LOWER(?)
-            ORDER BY (IFNULL(s.positive_reviews, 0) + IFNULL(s.negative_reviews, 0)) DESC
+            GROUP BY m.steam_appid
+            ORDER BY COUNT(gt.tag) DESC
+            LIMIT ?
             """
-            cursor.execute(query, (search_pattern,))
             
-            games = []
-            count = 0
-            
-            for row in cursor.fetchall():
-                game_info = dict(row)
-                appid = game_info.get('steam_appid')
+            try:
+                cursor.execute(gameranx_query, (search_pattern, limit))
+                gameranx_games = []
                 
-                if appid:
-                    # Check for GameRanx tags first
-                    cursor.execute("SELECT COUNT(*) FROM GameRanx_tags WHERE steam_appid = ?", (appid,))
-                    gameranx_tag_count = cursor.fetchone()[0]
+                for row in cursor.fetchall():
+                    game_info = dict(row)
+                    appid = game_info.get('steam_appid')
                     
-                    if gameranx_tag_count > 0:
-                        # Game has GameRanx tags
+                    if appid:
                         game_info['data_source'] = 'gameranx'
                         
                         # Get genre from GameRanx
@@ -194,15 +223,100 @@ class GameSearcher:
                         else:
                             game_info['genre'] = "Game"
                             
-                    else:
-                        # Check for IGN tags
-                        cursor.execute("SELECT COUNT(*) FROM ign_tags WHERE steam_appid = ?", (appid,))
-                        ign_tag_count = cursor.fetchone()[0]
+                        if 'header_image' not in game_info or not game_info['header_image']:
+                            game_info['header_image'] = "/static/logo.png"
                         
-                        if ign_tag_count == 0:
-                            # Skip games without tags in either database
-                            continue
+                        gameranx_games.append(game_info)
+                
+                print(f"Found {len(gameranx_games)} games with GameRanx tags for '{search_term}'")
+                
+                # If we have enough GameRanx games, return them
+                if len(gameranx_games) >= limit:
+                    return gameranx_games
+                
+                # Otherwise, we'll add ACG games to fill up to the limit
+                remaining_limit = limit - len(gameranx_games)
+            except Exception as e:
+                print(f"Error querying GameRanx tags: {str(e)}")
+                gameranx_games = []
+                remaining_limit = limit
+            
+            # Get ACG tagged games that aren't already in gameranx_games
+            acg_query = """
+            SELECT m.game_name as name, m.steam_appid, a.header_image
+            FROM main_game m
+            LEFT JOIN steam_api a ON m.steam_appid = a.steam_appid
+            INNER JOIN ACG_tags at ON m.steam_appid = at.steam_appid
+            WHERE LOWER(m.game_name) LIKE LOWER(?)
+            GROUP BY m.steam_appid
+            ORDER BY COUNT(at.tag) DESC
+            LIMIT ?
+            """
+            
+            existing_appids = [game.get('steam_appid') for game in gameranx_games]
+            
+            try:
+                cursor.execute(acg_query, (search_pattern, remaining_limit * 3))  # Get more than needed to filter duplicates
+                
+                acg_games = []
+                for row in cursor.fetchall():
+                    game_info = dict(row)
+                    appid = game_info.get('steam_appid')
+                    
+                    if appid and appid not in existing_appids:
+                        game_info['data_source'] = 'acg'
                         
+                        # Get genre from ACG
+                        cursor.execute("SELECT genre FROM ACG_scores WHERE steam_appid = ?", (appid,))
+                        score = cursor.fetchone()
+                        if score:
+                            game_info['genre'] = score[0]
+                        else:
+                            game_info['genre'] = "Game"
+                            
+                        if 'header_image' not in game_info or not game_info['header_image']:
+                            game_info['header_image'] = "/static/logo.png"
+                        
+                        acg_games.append(game_info)
+                        existing_appids.append(appid)
+                        
+                        if len(acg_games) >= remaining_limit:
+                            break
+                
+                print(f"Found {len(acg_games)} games with ACG tags for '{search_term}'")
+                
+                # If we have enough games with GameRanx + ACG, return them
+                if len(gameranx_games) + len(acg_games) >= limit:
+                    return gameranx_games + acg_games
+                
+                # Otherwise, we'll add IGN games to fill up to the limit
+                remaining_limit = limit - len(gameranx_games) - len(acg_games)
+            except Exception as e:
+                print(f"Error querying ACG tags: {str(e)}")
+                acg_games = []
+                remaining_limit = limit - len(gameranx_games)
+            
+            # Get IGN tagged games that aren't already in gameranx_games or acg_games
+            ign_query = """
+            SELECT m.game_name as name, m.steam_appid, a.header_image
+            FROM main_game m
+            LEFT JOIN steam_api a ON m.steam_appid = a.steam_appid
+            INNER JOIN ign_tags it ON m.steam_appid = it.steam_appid
+            WHERE LOWER(m.game_name) LIKE LOWER(?)
+            GROUP BY m.steam_appid
+            ORDER BY COUNT(it.tag) DESC
+            LIMIT ?
+            """
+            
+            try:
+                cursor.execute(ign_query, (search_pattern, remaining_limit * 3))  # Get more than needed to filter duplicates
+                
+                ign_games = []
+                for row in cursor.fetchall():
+                    game_info = dict(row)
+                    appid = game_info.get('steam_appid')
+                    
+                    if appid and appid not in existing_appids:
                         game_info['data_source'] = 'ign'
                         
                         # Get genre from IGN
@@ -212,18 +326,30 @@ class GameSearcher:
                             game_info['genre'] = score[0]
                         else:
                             game_info['genre'] = "Game"
-
-                    if 'header_image' not in game_info or not game_info['header_image']:
-                        game_info['header_image'] = "/static/logo.png"
-                    
-                    games.append(game_info)
-                    count += 1
-                    
-                    if count >= limit:
-                        break
+                            
+                        if 'header_image' not in game_info or not game_info['header_image']:
+                            game_info['header_image'] = "/static/logo.png"
+                        
+                        ign_games.append(game_info)
+                        
+                        if len(ign_games) >= remaining_limit:
+                            break
+                
+                print(f"Found {len(ign_games)} games with IGN tags for '{search_term}'")
+            except Exception as e:
+                print(f"Error querying IGN tags: {str(e)}")
+                ign_games = []
             
-            return games
+            # Combine the results, prioritizing GameRanx > ACG > IGN
+            combined_games = gameranx_games + acg_games + ign_games
+            print(f"Returning {len(combined_games)} total games for search '{search_term}'")
             
+            return combined_games
+            
+        except Exception as e:
+            print(f"Error in search_games: {str(e)}")
+            traceback.print_exc()
+            return []
         finally:
             conn.close()
     
@@ -241,7 +367,6 @@ class GameSearcher:
         cursor = conn.cursor()
         
         try:
-            # Get all games with basic info
             query = """
             SELECT m.game_name as name, m.steam_appid, 
                    s.positive_reviews, s.negative_reviews, s.owners,
@@ -258,9 +383,18 @@ class GameSearcher:
             reference_appid = session.get('reference_game', {}).get('steam_appid')
             
             # Determine which tag tables to use based on data_source
-            tags_table = "GameRanx_tags" if data_source == 'gameranx' else "ign_tags"
-            scores_table = "GameRanx_scores" if data_source == 'gameranx' else "ign_scores"
-            unique_tags_table = "GameRanx_unique_tags" if data_source == 'gameranx' else "ign_unique_tags"
+            if data_source == 'gameranx':
+                tags_table = "GameRanx_tags"
+                scores_table = "GameRanx_scores"
+                unique_tags_table = "GameRanx_unique_tags"
+            elif data_source == 'acg':
+                tags_table = "ACG_tags"
+                scores_table = "ACG_scores"
+                unique_tags_table = "ACG_unique_tags"
+            else:  # default to 'ign'
+                tags_table = "ign_tags"
+                scores_table = "ign_scores"
+                unique_tags_table = "ign_unique_tags"
             
             for row in cursor.fetchall():
                 game_info = dict(row)
@@ -437,20 +571,27 @@ def api_search():
     if len(search_query) < 2:
         return jsonify([])
     
-    searcher = GameSearcher()
-    games = searcher.search_games(search_query, limit=10)
-    
-    results = []
-    for game in games:
-        results.append({
-            'id': game.get('steam_appid'),
-            'name': game.get('name', ''),
-            'image': game.get('header_image', '/static/logo.png'),
-            'genre': game.get('genre', ''),
-            'data_source': game.get('data_source', 'ign')  # Include data source in results
-        })
-    
-    return jsonify(results)
+    try:
+        searcher = GameSearcher()
+        games = searcher.search_games(search_query, limit=10)
+        
+        results = []
+        for game in games:
+            results.append({
+                'id': game.get('steam_appid'),
+                'name': game.get('name', ''),
+                'image': game.get('header_image', '/static/logo.png'),
+                'genre': game.get('genre', ''),
+                'data_source': game.get('data_source', 'ign')  # Include data source in results
+            })
+        
+        print(f"API search for '{search_query}' found {len(results)} results")
+        
+        return jsonify(results)
+    except Exception as e:
+        print(f"Error in API search: {str(e)}")
+        traceback.print_exc()
+        return jsonify([])
 
 if __name__ == '__main__':
     app.run(debug=True)
