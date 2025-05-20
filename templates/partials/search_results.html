@@ -1,0 +1,16 @@
+{% if games %}
+    {% for game in games %}
+        <div class="search-result-item group hover:bg-steam-blue-medium transition-all" data-game-name="{{ game.name }}">
+            <img src="{{ game.header_image if game.header_image else '/static/logo.png' }}" alt="{{ game.name }}" class="rounded shadow group-hover:scale-105 transition-transform">
+            <div class="search-result-details">
+                <div class="search-result-name">{{ game.name }}</div>
+                <div style="flex-grow: 1;"></div>
+                {% if game.genre %}
+                <div class="search-result-genre text-xs text-steam-blue opacity-80 mt-auto">{{ game.genre }}</div>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="search-no-results p-3 text-center text-steam-blue-light opacity-80">No games found</div>
+{% endif %}

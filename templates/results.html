@@ -1,14 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Search Results</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body class="dark-theme">
+{% extends 'base.html' %}
+
+{% block title %}Game Recommendations - Steam Game Recommender{% endblock %}
+
+{% block body_class %}dark-theme{% endblock %}
+
+{% block content %}
     <div class="top-banner">
         <div class="app-logo">
-            <img src="{{ url_for('static', filename='logo.png') }}" alt="Steam Game Recommender">
+            <a href="{{ url_for('index') }}">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Steam Game Recommender">
+            </a>
         </div>
         <div class="app-header">
             <h1>Steam Game Recommender</h1>
@@ -19,14 +20,14 @@
     <div class="page-wrapper">
         <div class="user-profile">
             <div class="user-title">
-                <h2>Games like <span class="highlight">{{ reference_game.name }}</span> with focus on <span class="highlight">{{ preferred_tag|title }}</span>:</h2>
+                <h2>Games like <span class="highlight">{{ reference_game.name }}</span> with focus on <span class="highlight">{{ preferred_tag|title }}</span></h2>
             </div>
             <div class="tag-bars user-bar">
                 {% for tag, ratio in reference_game.tag_ratios.items() %}
                     <div class="tag-bar">
                         <span class="tag-label">{{ tag }}</span>
-                        <div class="bar">
-                            <div class="bar-fill" style="width: {{ ratio }}%"></div>
+                        <div class="bar {% if tag == preferred_tag %}bg-steam-blue-dark ring-2 ring-steam-blue{% endif %}">
+                            <div class="bar-fill {% if tag == preferred_tag %}bg-steam-blue shadow-lg{% endif %}" style="width: {{ ratio }}%"></div>
                         </div>
                         <span class="tag-percent">{{ ratio }}%</span>
                     </div>
@@ -36,9 +37,9 @@
 
         <div class="results-container">
             {% for game in games %}
-            <div class="game-card">
-                <div class="game-thumb">
-                    <img src="{{ game.header_image if game.header_image else url_for('static', filename='logo.png') }}" alt="{{ game.name }}">
+            <div class="game-card hover:translate-y-[-3px] transition-all duration-300">
+                <div class="game-thumb flex items-center justify-center bg-steam-blue-darker/50">
+                    <img src="{{ game.header_image if game.header_image else url_for('static', filename='logo.png') }}" alt="{{ game.name }}" class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105">
                 </div>
 
                 <div class="game-info">
@@ -46,62 +47,76 @@
                         <h2>
                             {{ game.name }}
                             {% if loop.index <= 3 %}
-                            <span class="top-match-tag">Top {{ loop.index }} Match</span>
+                            <span class="top-match-tag {% if loop.index == 1 %}bg-yellow-400 animate-pulse{% endif %}">
+                                {% if loop.index == 1 %}Best Match{% else %}Top {{ loop.index }} Match{% endif %}
+                            </span>
                             {% endif %}
                         </h2>
+                        {% if game.unique_tags %}
                         <div class="unique-tags">
                             {% for tag in game.unique_tags %}
-                                <span class="unique-tag">{{ tag }}</span>
+                                <span class="unique-tag hover:scale-105 transition-transform duration-200">{{ tag }}</span>
                             {% endfor %}
                         </div>
+                        {% endif %}
                     </div>
 
                     <div class="tag-bars">
                         {% for tag, percent in game.tag_ratios.items() %}
-                        <div class="tag-bar">
-                            <span class="tag-label">{{ tag }}</span>
-                            <div class="bar">
+                        <div class="tag-bar flex items-center my-1">
+                            <span class="tag-label text-left min-w-[120px] mr-2 whitespace-nowrap overflow-hidden text-ellipsis">{{ tag }}</span>
+                            <div class="bar flex-1 {% if tag == preferred_tag %}preferred-tag{% endif %}">
                                 <div class="bar-fill" style="width: {{ percent }}%"></div>
                             </div>
-                            <span class="tag-percent">{{ percent }}%</span>
+                            <span class="tag-percent ml-2 min-w-[50px] text-right">{{ percent }}%</span>
                         </div>
                         {% endfor %}
                     </div>
 
                     <div class="game-meta">
+                        {% if game.release_date %}
                         <span class="meta-item">{{ game.release_date }}</span>
+                        {% endif %}
+                        {% if game.main_genre %}
                         <span class="meta-item">{{ game.main_genre }}</span>
-                        <span class="meta-item"><a href="{{ game.steam_url }}" target="_blank">Steam Page</a></span>
+                        {% endif %}
                     </div>
                 </div>
 
                 <div class="game-actions">
-                    <div class="review-bar">
-                        {% if game.overall_review > 0 %}
-                            <div class="review-positive" style="width: {{ (game.positive_reviews / game.overall_review) * 100 }}%"></div>
-                            <div class="review-negative" style="width: {{ (game.negative_reviews / game.overall_review) * 100 }}%"></div>
-                        {% else %}
-                            <div class="review-positive" style="width: 0%"></div>
-                            <div class="review-negative" style="width: 0%"></div>
-                        {% endif %}
-                    </div>
-                    <div class="review-label">
-                        {{ game.positive_reviews }} / {{ game.negative_reviews }}
+                    <div class="reviews-section">
+                        <div class="review-header">User Reviews</div>
+                        <div class="review-bar">
+                            {% if game.overall_review > 0 %}
+                                <div class="review-positive" style="width: {{ (game.positive_reviews / game.overall_review) * 100 }}%"></div>
+                                <div class="review-negative" style="width: {{ (game.negative_reviews / game.overall_review) * 100 }}%"></div>
+                            {% else %}
+                                <div class="review-positive" style="width: 0%"></div>
+                                <div class="review-negative" style="width: 0%"></div>
+                            {% endif %}
+                        </div>
+                        <div class="review-label">
+                            <span class="positive-count">{{ game.positive_reviews }}</span> positive / 
+                            <span class="negative-count">{{ game.negative_reviews }}</span> negative
+                        </div>
                     </div>
 
-                    {% if game.discount %}
-                        <div class="discount-tag">-{{ game.discount }}</div>
-                        <div class="price-discounted">{{ game.final_price }}</div>
-                        <div class="price-original"><s>{{ game.pricing }}</s></div>
-                    {% else %}
-                        <div class="price-full">{{ game.pricing }}</div>
-                    {% endif %}
+                    <div class="price-section">
+                        {% if game.discount %}
+                            <div class="discount-tag">-{{ game.discount }}</div>
+                            <div class="price-discounted">{{ game.final_price }}</div>
+                            <div class="price-original"><s>{{ game.pricing }}</s></div>
+                        {% else %}
+                            <div class="price-full">{{ game.pricing }}</div>
+                        {% endif %}
+                    </div>
                     
-                    <a href="{{ game.steam_url }}" target="_blank" class="check-steam">Check it out on Steam!</a>
+                    {% if game.steam_url %}
+                    <a href="{{ game.steam_url }}" target="_blank" class="check-steam hover:bg-steam-blue hover:text-steam-blue-dark hover:-translate-y-1 transition-all">View on Steam</a>
+                    {% endif %}
                 </div>
             </div>
             {% endfor %}
         </div>
     </div>
-</body>
-</html>
+{% endblock %}

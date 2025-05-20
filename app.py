@@ -543,15 +543,28 @@ def recommend():
 
 @app.route('/api/search', methods=['GET'])
 def api_search():
-    search_query = request.args.get('q', '')
+    # Check both parameter names that might be used
+    search_query = request.args.get('search_query', request.args.get('q', ''))
+    print(f"Search query received: '{search_query}' - Args: {request.args}")
     
     if len(search_query) < 2:
+        if request.headers.get('HX-Request'):
+            return render_template('partials/search_results.html', games=[])
         return jsonify([])
     
     try:
         searcher = GameSearcher()
         games = searcher.search_games(search_query, limit=10)
         
+        # For debugging
+        print(f"Game search results: {len(games)} - sample: {games[0] if games else 'No games found'}")
+        
+        # Check if this is an HTMX request
+        if request.headers.get('HX-Request') or 'text/html' in request.headers.get('Accept', ''):
+            print(f"HTMX search for '{search_query}' found {len(games)} results")
+            return render_template('partials/search_results.html', games=games)
+        
+        # If not an HTMX request, return JSON (for backward compatibility)
         results = []
         for game in games:
             results.append({
@@ -559,7 +572,7 @@ def api_search():
                 'name': game.get('name', ''),
                 'image': game.get('header_image', '/static/logo.png'),
                 'genre': game.get('genre', ''),
-                'data_source': game.get('data_source', 'ign')  # Include data source in results
+                'data_source': game.get('data_source', 'ign')
             })
         
         print(f"API search for '{search_query}' found {len(results)} results")
@@ -568,6 +581,8 @@ def api_search():
     except Exception as e:
         print(f"Error in API search: {str(e)}")
         traceback.print_exc()
+        if request.headers.get('HX-Request'):
+            return render_template('partials/search_results.html', games=[])
         return jsonify([])
 
 if __name__ == '__main__':

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Steam Game Recommender{% endblock %}</title>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'steam-blue': '#66c0f4',
+                        'steam-blue-dark': '#1b2838',
+                        'steam-blue-darker': '#0f1a25',
+                        'steam-blue-medium': '#2a475e',
+                        'steam-blue-light': '#c7d5e0',
+                        'steam-positive': '#4fa94d',
+                        'steam-negative': '#d9534f',
+                    },
+                    boxShadow: {
+                        'steam-small': '0 2px 8px rgba(0, 0, 0, 0.2)',
+                        'steam-medium': '0 4px 16px rgba(0, 0, 0, 0.4)',
+                        'steam-large': '0 6px 24px rgba(0, 0, 0, 0.6)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    
+    {% block head %}{% endblock %}
+</head>
+<body class="{% block body_class %}dark-theme{% endblock %}">
+    {% block content %}{% endblock %}
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

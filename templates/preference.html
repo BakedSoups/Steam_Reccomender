@@ -1,171 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Select Your Preferences</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <style>
-        /* Styles compatible with your existing Steam theme */
-        .preference-container {
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 30px;
-            background-color: #2a475e;
-            border-radius: 12px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
-        }
-        
-        .reference-game {
-            display: flex;
-            margin-bottom: 30px;
-            background-color: #1b2838;
-            border-radius: 8px;
-            overflow: hidden;
-            padding: 15px;
-        }
-        
-        .game-image {
-            width: 200px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 4px;
-            margin-right: 20px;
-        }
-        
-        .game-info h2 {
-            color: #66c0f4;
-            margin-top: 0;
-            margin-bottom: 10px;
-        }
-        
-        .game-info p {
-            margin: 5px 0;
-            color: #c7d5e0;
-        }
-        
-        .preference-title {
-            color: #66c0f4;
-            margin: 30px 0 15px;
-            text-align: center;
-        }
-        
-        .tag-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 30px;
-        }
-        
-        .tag-item {
-            display: flex;
-            align-items: center;
-            background-color: #1b2838;
-            padding: 10px 15px;
-            border-radius: 6px;
-            transition: background-color 0.2s;
-            cursor: pointer;
-        }
-        
-        .tag-item:hover {
-            background-color: #3a5a7a;
-        }
-        
-        .tag-item.selected {
-            background-color: #3a5a7a;
-            border: 1px solid #66c0f4;
-            box-shadow: 0 0 10px rgba(102, 192, 244, 0.4);
-        }
-        
-        .tag-name {
-            flex: 1;
-            font-weight: bold;
-            color: #c7d5e0;
-        }
-        
-        .tag-ratio {
-            width: 60px;
-            text-align: right;
-            color: #66c0f4;
-            font-weight: bold;
-        }
-        
-        .tag-bar {
-            flex: 1;
-            background-color: #3e4e5a;
-            height: 10px;
-            border-radius: 3px;
-            margin: 0 15px;
-            overflow: hidden;
-        }
-        
-        .bar-fill {
-            background-color: #66c0f4;
-            height: 100%;
-        }
-        
-        .button-container {
-            text-align: center;
-            margin-top: 30px;
-        }
-        
-        .continue-button {
-            padding: 12px 30px;
-            font-size: 16px;
-            background-color: #66c0f4;
-            color: #1b2838;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.2s, box-shadow 0.3s;
-            box-shadow: 0 0 10px rgba(102, 192, 244, 0.3);
-        }
-        
-        .continue-button:hover {
-            background-color: #32a0f2;
-            box-shadow: 0 0 14px rgba(102, 192, 244, 0.6);
-        }
-        
-        .unique-tags-container {
-            margin-top: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .unique-tags-title {
-            color: #c7d5e0;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-        
-        .unique-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .unique-tag {
-            background-color: #66c0f4;
-            color: #1b2838;
-            padding: 6px 12px;
-            font-size: 14px;
-            font-weight: bold;
-            border-radius: 4px;
-            box-shadow: 0 0 8px rgba(102, 192, 244, 0.4);
-        }
-        
-        .info-text {
-            text-align: center;
-            color: #8ea4b5;
-            margin-bottom: 20px;
-            font-style: italic;
-        }
-    </style>
-</head>
-<body class="dark-theme">
+{% extends 'base.html' %}
+
+{% block title %}Select Your Game Preferences{% endblock %}
+
+{% block body_class %}dark-theme{% endblock %}
+
+{% block content %}
     <div class="top-banner">
         <div class="app-logo">
-            <img src="{{ url_for('static', filename='logo.png') }}" alt="Steam Game Recommender">
+            <a href="{{ url_for('index') }}">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Steam Game Recommender">
+            </a>
         </div>
         <div class="app-header">
             <h1>Steam Game Recommender</h1>
@@ -173,46 +17,48 @@
         </div>
     </div>
 
-    <div class="preference-container">
-        <div class="reference-game">
+    <div class="preference-container backdrop-blur-sm">
+        <div class="reference-game hover:shadow-lg transition-all duration-300">
             <img src="{{ reference_game.header_image if reference_game.header_image else url_for('static', filename='logo.png') }}" alt="{{ reference_game.name }}" class="game-image">
             <div class="game-info">
-                <h2>{{ reference_game.name }}</h2>
+                <h2 class="text-steam-blue">{{ reference_game.name }}</h2>
                 <p>{{ reference_game.main_genre }}</p>
                 {% if reference_game.description %}
-                    <p>{{ reference_game.description[:100] }}{% if reference_game.description|length > 100 %}...{% endif %}</p>
+                    <p>{{ reference_game.description[:150] }}{% if reference_game.description|length > 150 %}...{% endif %}</p>
                 {% endif %}
             </div>
         </div>
 
-        <h2 class="preference-title">What aspect of this game matters most to you?</h2>
-        <p class="info-text">Select the game element that you want to see in your recommendations</p>
+        <h2 class="preference-title">What aspects of this game matter most to you?</h2>
+        <p class="info-text">Select a gameplay element that you want to see in your recommendations</p>
 
         <form action="{{ url_for('recommend') }}" method="post" id="preferenceForm">
             <div class="tag-list">
                 {% for tag, ratio in tag_ratios.items() %}
-                    <div class="tag-item" data-tag="{{ tag }}">
+                    <div class="tag-item group hover:-translate-y-1 hover:shadow-lg transition-all duration-300" data-tag="{{ tag }}">
                         <input type="radio" name="preferred_tag" value="{{ tag }}" id="tag_{{ tag }}" style="display: none;" required>
-                        <span class="tag-name">{{ tag|title }}</span>
+                        <span class="tag-name whitespace-nowrap overflow-hidden text-ellipsis min-w-0">{{ tag|title }}</span>
                         <div class="tag-bar">
-                            <div class="bar-fill" style="width: {{ ratio }}%"></div>
+                            <div class="bar-fill group-hover:shadow-steam-blue/50" style="width: {{ ratio }}%"></div>
                         </div>
-                        <span class="tag-ratio">{{ ratio }}%</span>
+                        <span class="tag-ratio whitespace-nowrap">{{ ratio }}%</span>
                     </div>
                 {% endfor %}
             </div>
 
-            <div class="unique-tags-container">
-                <div class="unique-tags-title">Unique features of this game:</div>
+            {% if unique_tags %}
+            <div class="unique-tags-container bg-steam-blue-dark/40 backdrop-blur-sm">
+                <div class="unique-tags-title text-steam-blue-light font-medium">Unique features of this game:</div>
                 <div class="unique-tags">
                     {% for tag in unique_tags %}
-                        <span class="unique-tag">{{ tag }}</span>
+                        <span class="unique-tag hover:-translate-y-1 hover:bg-steam-blue transition-all duration-300">{{ tag }}</span>
                     {% endfor %}
                 </div>
             </div>
+            {% endif %}
 
             <div class="button-container">
-                <button type="submit" class="continue-button">Find Similar Games</button>
+                <button type="submit" class="continue-button hover:bg-sky-500 hover:-translate-y-1 transition-all duration-300">Find Similar Games</button>
             </div>
         </form>
     </div>
@@ -243,5 +89,4 @@
             }
         });
     </script>
-</body>
-</html>
+{% endblock %}
