@@ -979,7 +979,7 @@ input[type="text"]:focus {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   width: 90%;
   letter-spacing: 0.5px;
-  margin: 6px auto 0 auto;
+  margin: 1px auto 0 auto;
   text-align: center;
   text-decoration: none;
   display: block;
@@ -1143,3 +1143,13 @@ input[type="text"]:focus {
 .game-info {
   padding-bottom: 6px;
 }
+.game-info::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Prevent any text directly in game-info that's not in a container */
+.game-info > :not(.card-header):not(.tag-container):not(.tag-bars):not(.game-meta) {
+  display: none !important;
+}
+1

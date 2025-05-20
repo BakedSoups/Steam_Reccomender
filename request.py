@@ -4,6 +4,7 @@ from typing import List, Dict, Any
 
 
 # A simple version of app.py (just a test to see how to query the db)
+
 DATABASE_PATH = "./steam_api.db"
 
 class GameSearcher:

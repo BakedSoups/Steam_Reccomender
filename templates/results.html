@@ -4,6 +4,16 @@
 
 {% block body_class %}dark-theme{% endblock %}
 
+{% block head %}
+<style>
+/* Override styles to hide the Unknown text */
+.game-info::before, .game-info::after {
+  display: none !important;
+  content: none !important;
+}
+</style>
+{% endblock %}
+
 {% block content %}
     <div class="top-banner">
         <div class="app-logo">
@@ -42,7 +52,7 @@
                     <img src="{{ game.header_image if game.header_image else url_for('static', filename='logo.png') }}" alt="{{ game.name }}">
                 </div>
 
-                <div class="game-info">
+                <div class="game-info" data-nocategory="true">
                     <div class="card-header">
                         <h2>{{ game.name }}</h2>
                         {% if preferred_tag in game.tag_ratios %}
@@ -90,26 +100,18 @@
                         {% endfor %}
                     </div>
 
-                    <div class="game-meta">
-                        {% if game.release_date %}
-                            <span class="meta-item">{{ game.release_date }}</span>
-                        {% endif %}
-                        
-                        {# Only include main_genre in meta if not already shown as a tag #}
-                        {% if game.main_genre and not game.genre %}
-                            <span class="meta-item">{{ game.main_genre }}</span>
-                        {% endif %}
-                    </div>
                     
-                    {# Remove this line completely - do not render any "Unknown" or genre information here #}
-                    {# {% if game.unknown or game.action_rpg %}
-                       Unknown · Action-RPG
-                    {% endif %} #}
+                    <!-- Force closing div to ensure no space for unwanted text -->
+                    </div><div style="display:none">
+                    
+                    {# This will never be rendered due to the closing div above #}
+                    Unknown · Action-RPG
+                    
                 </div>
 
                 <div class="game-actions">
                     <div class="reviews-section">
-                        <div class="review-header">User Reviews</div>
+                        <div class="review-header">Steam Reviews</div>
                         <div class="review-bar">
                             {% if game.overall_review > 0 %}
                                 <div class="review-positive" style="width: {{ (game.positive_reviews / game.overall_review) * 100 }}%"></div>

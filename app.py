@@ -329,7 +329,7 @@ class GameSearcher:
             return []
         finally:
             conn.close()
-    
+    # returns SOME things
     def find_similar_games(self, tag_ratios: Dict[str, int], preferred_tag: str, 
                            unique_tags: List[str], main_genre: str, data_source: str = 'ign', limit: int = 5) -> List[Dict[str, Any]]:
         if not tag_ratios:
@@ -526,7 +526,7 @@ def recommend():
             unique_tags=unique_tags,
             main_genre=main_genre,
             data_source=data_source,  # Pass the data source
-            limit=5
+            limit=40
         )
         
         return render_template('results.html', 
