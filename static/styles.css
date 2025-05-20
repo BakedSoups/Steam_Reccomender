@@ -575,7 +575,7 @@ input[type="text"]:focus {
 /* -------- RESULTS PAGE STYLES -------- */
 /* Page wrapper */
 .page-wrapper {
-  max-width: 1200px;
+  max-width: 1000px; /* Reduced from 1200px */
   margin: 40px auto 60px auto;
   padding: 0 30px;
   background-color: transparent;
@@ -619,22 +619,23 @@ input[type="text"]:focus {
 .results-container {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 20px; /* Reduced from 30px for more compact layout */
   padding: 10px 0;
 }
 
-/* Game Card */
+/* Game Card - thinner and less tall */
 .game-card {
   display: flex;
   background-color: rgba(42, 71, 94, 0.9);
   border-radius: 10px;
   overflow: hidden;
   box-shadow: var(--shadow-medium);
-  min-height: 180px;
+  min-height: 140px; /* Significantly reduced from 180px */
   transition: var(--transition-standard);
   position: relative;
   backdrop-filter: blur(5px);
   border: 1px solid rgba(102, 192, 244, 0.1);
+  max-width: 100%;
 }
 
 .game-card:hover {
@@ -643,11 +644,11 @@ input[type="text"]:focus {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(102, 192, 244, 0.3);
 }
 
-/* Thumbnail */
+/* Thumbnail - smaller and optimized for better image display */
 .game-thumb {
-  min-width: 280px;
-  max-width: 280px;
-  height: 180px;
+  min-width: 220px; /* Reduced from 280px */
+  max-width: 220px; /* Reduced from 280px */
+  height: 140px; /* Adjusted to match card height */
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -659,7 +660,7 @@ input[type="text"]:focus {
   transition: transform 0.3s ease;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover; /* Changed from 'contain' to fill the space completely */
   object-position: center;
 }
 
@@ -667,17 +668,17 @@ input[type="text"]:focus {
   transform: scale(1.05);
 }
 
-/* Game info section */
+/* Game info section - reduced padding */
 .game-info {
   flex: 1;
-  padding: 20px;
+  padding: 12px 16px; /* Reduced from 20px */
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-/* Card header */
+/* Card header - smaller text and reduced spacing */
 .card-header {
   display: flex;
   justify-content: space-between;
@@ -686,21 +687,21 @@ input[type="text"]:focus {
 
 .card-header h2 {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-  font-size: 22px;
-  margin: 0 0 10px 0;
+  font-size: 18px; /* Reduced from 22px */
+  margin: 0 0 6px 0; /* Reduced from 10px */
   color: #ffffff;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 5px; /* Reduced from 8px */
 }
 
-/* Top match tag */
+/* Top match tag - more compact */
 .top-match-tag {
   display: inline-block;
   background-color: #ffcc00;
   color: #000;
-  padding: 4px 10px;
-  font-size: 13px;
+  padding: 2px 8px; /* Reduced from 4px 10px */
+  font-size: 11px; /* Reduced from 13px */
   font-weight: bold;
   border-radius: 4px;
   text-transform: uppercase;
@@ -711,20 +712,75 @@ input[type="text"]:focus {
   animation: shine 3s infinite;
 }
 
-@keyframes shine {
-  0% { box-shadow: 0 0 6px rgba(255, 215, 0, 0.5); }
-  50% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.8); }
-  100% { box-shadow: 0 0 6px rgba(255, 215, 0, 0.5); }
+/* More compact unique tags */
+.unique-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px; /* Reduced from 10px */
 }
 
-/* Game metadata */
+.unique-tag {
+  background-color: var(--steam-blue);
+  color: var(--steam-blue-dark);
+  padding: 3px 8px; /* Reduced from 6px 12px */
+  font-size: 12px; /* Reduced from 14px */
+  font-weight: bold;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(102, 192, 244, 0.3);
+  transition: var(--transition-standard);
+}
+
+/* Tag bars - thinner and more compact */
+.tag-bars {
+  margin: 3px 0; /* Add compact spacing */
+}
+
+.tag-bar {
+  display: flex;
+  align-items: center;
+  margin: 3px 0; /* Reduced spacing between bars */
+}
+
+.bar {
+  height: 10px; /* Reduced height for more compact appearance */
+  border-radius: 4px;
+  flex: 1;
+  background-color: rgba(62, 78, 90, 0.5);
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+  margin: 0 8px; /* Reduced from 15px */
+}
+
+.bar-fill {
+  background-color: var(--steam-blue);
+  height: 100%;
+  transition: width 0.5s ease-out;
+  box-shadow: 0 0 8px rgba(102, 192, 244, 0.4);
+}
+
+.tag-label {
+  min-width: 100px; /* Adjusted width for balance */
+  text-align: left;
+  font-size: 12px; /* Reduced from original size */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tag-percent {
+  min-width: 40px; /* Reduced from 50px */
+  text-align: right;
+  font-size: 12px; /* Reduced from original size */
+}
+
+/* Game metadata - more compact */
 .game-meta {
-  margin-top: 15px;
-  font-size: 15px;
+  margin-top: 8px; /* Reduced from 15px */
+  font-size: 13px; /* Reduced from 15px */
   color: #bfc9d4;
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 10px; /* Reduced from 15px */
 }
 
 .meta-item {
@@ -749,10 +805,10 @@ input[type="text"]:focus {
   text-decoration: underline;
 }
 
-/* Game actions panel */
+/* Game actions panel - narrower and less padding */
 .game-actions {
-  padding: 20px;
-  min-width: 220px;
+  padding: 10px; /* Reduced from 20px */
+  min-width: 180px; /* Reduced from 220px */
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -761,27 +817,27 @@ input[type="text"]:focus {
   border-left: 1px solid rgba(0, 0, 0, 0.2);
 }
 
-/* Reviews section */
+/* Reviews section - more compact */
 .reviews-section {
-  margin-bottom: 20px;
+  margin-bottom: 8px; /* Reduced from 20px */
 }
 
 .review-header {
-  font-size: 16px;
+  font-size: 14px; /* Reduced from 16px */
   font-weight: 500;
   color: #ffffff;
-  margin-bottom: 8px;
+  margin-bottom: 5px; /* Reduced from 8px */
   text-align: center;
 }
 
 .review-bar {
   width: 100%;
-  height: 12px;
+  height: 8px; /* Reduced from 12px */
   background-color: #3e3e3e;
-  border-radius: 6px;
+  border-radius: 4px;
   overflow: hidden;
   display: flex;
-  margin-bottom: 8px;
+  margin-bottom: 5px; /* Reduced from 8px */
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
   position: relative;
 }
@@ -799,27 +855,27 @@ input[type="text"]:focus {
   transition: width 0.5s ease;
 }
 
-/* Add info labels to the review bar */
+/* Review indicators - made smaller */
 .review-bar::before {
   content: "👍";
   position: absolute;
-  left: -20px;
-  top: -2px;
-  font-size: 14px;
+  left: -18px;
+  top: -4px;
+  font-size: 12px; /* Reduced from 14px */
 }
 
 .review-bar::after {
   content: "👎";
   position: absolute;
-  right: -20px;
-  top: -2px;
-  font-size: 14px;
+  right: -18px;
+  top: -4px;
+  font-size: 12px; /* Reduced from 14px */
 }
 
 .review-label {
-  font-size: 14px;
+  font-size: 12px; /* Reduced from 14px */
   color: var(--steam-blue-light);
-  margin-bottom: 10px;
+  margin-bottom: 5px; /* Reduced from 10px */
   text-align: center;
 }
 
@@ -833,24 +889,24 @@ input[type="text"]:focus {
   font-weight: 500;
 }
 
-/* Pricing section */
+/* Pricing section - more compact */
 .price-section {
-  margin-bottom: 15px;
+  margin-bottom: 8px; /* Reduced from 15px */
   text-align: center;
 }
 
 .price-discounted {
   color: #a4f3a4;
   font-weight: bold;
-  font-size: 22px;
+  font-size: 18px; /* Reduced from 22px */
   text-shadow: 0 0 10px rgba(164, 243, 164, 0.4);
   text-align: center;
 }
 
 .price-original {
   color: #8f98a0;
-  font-size: 15px;
-  margin-bottom: 10px;
+  font-size: 13px; /* Reduced from 15px */
+  margin-bottom: 5px; /* Reduced from 10px */
   text-align: center;
 }
 
@@ -858,9 +914,10 @@ input[type="text"]:focus {
   background-color: #3dcf50;
   color: #1b2838;
   font-weight: bold;
-  padding: 5px 10px;
-  border-radius: 5px;
-  margin-bottom: 5px;
+  padding: 3px 8px; /* Reduced from 5px 10px */
+  border-radius: 4px;
+  margin-bottom: 3px; /* Reduced from 5px */
+  font-size: 13px; /* Added size reduction */
   animation: pulse 2s infinite;
   text-align: center;
   display: inline-block;
@@ -876,27 +933,27 @@ input[type="text"]:focus {
 
 .price-full {
   color: #ffffff;
-  font-size: 22px;
+  font-size: 18px; /* Reduced from 22px */
   font-weight: bold;
-  margin-bottom: 15px;
+  margin-bottom: 8px; /* Reduced from 15px */
   text-align: center;
 }
 
-/* Steam button */
+/* Steam button - more compact */
 .check-steam {
   background-color: rgba(23, 26, 33, 0.7);
   border: 1px solid rgba(102, 192, 244, 0.6);
   color: var(--steam-blue-light);
-  padding: 12px 15px;
+  padding: 8px 12px; /* Reduced from 12px 15px */
   border-radius: 5px;
   cursor: pointer;
-  font-size: 15px;
+  font-size: 13px; /* Reduced from 15px */
   font-weight: 500;
   transition: var(--transition-standard);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   width: 90%;
   letter-spacing: 0.5px;
-  margin: 15px auto 0 auto;
+  margin: 8px auto 0 auto; /* Reduced from 15px */
   text-align: center;
   text-decoration: none;
   display: block;
@@ -938,7 +995,7 @@ input[type="text"]:focus {
   .game-thumb {
     width: 100%;
     max-width: 100%;
-    height: 180px;
+    height: 120px; /* Reduced from 180px */
   }
   
   .game-actions {
