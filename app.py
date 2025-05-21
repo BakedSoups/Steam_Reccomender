@@ -453,8 +453,8 @@ class GameSearcher:
                 if main_genre and game_info['main_genre'] and game_info['main_genre'].lower() != main_genre.lower():
                     genre_multiplier = 0.5
                 
-                tag_weight = 0.8
-                unique_weight = 0.2
+                tag_weight = 0.9
+                unique_weight = 0.1
                 
                 final_score = (tag_similarity_score * tag_weight + 
                               unique_tags_score * unique_weight) * genre_multiplier
