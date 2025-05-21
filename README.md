@@ -1,7 +1,28 @@
 # Steam Recommender 
 Have you ever finished a game and wanted to play one like it? 
-If so, use this tool and you can find your next favorite game.
+If so, use this tool and you can find your next favorite game. 
 
+## How this works
+Steam Reccomender creates tags from 3 endpoints, 1 website and video reviews and apply weights to each tag
+from this we also add a "unique" tag, this is what seperates this game from its others in its genre
+then I upload it all into a sqlite database so when the user is searching for something its quick
+
+## Comparisons
+Using estimations from the ratios we form from the tags we compare the game the user input to other games in the database
+applying:
+ 80% descriptive tags 
+ 20% unique in its genre tag
+
+## Plans:
+Currently only has around 350 games in the database, looking into scraping more ingo
+going to implement chroma db and use vector simularitys as another "layer" to the simularity search
+Ideally this fixes semantic differences
+
+### Limitations
+because the data pipeline is based of endpoints creating the db takes 3 days due to rate limiting because of this the data
+will typically be 3 months old
+
+### TLDR
 Basically, we gather as much info on a game that we can, create tags, apply weights to the tags, and using that the user can find new games.
 
 ![image](https://github.com/user-attachments/assets/2aff4217-270c-4ca3-befa-715a3fc5b0a1)
@@ -13,56 +34,15 @@ Basically, we gather as much info on a game that we can, create tags, apply weig
 ### Our glorious tech stack
 ![image](https://github.com/user-attachments/assets/2266a005-ea0d-4081-9836-69bc965eac51)
 
-## Setup and Installation
+## Todo
+- we should be able to have context of previous games if the review is mentioning it and build tags from that 
+- Convert the MVP flask ap to fast api (starting to get limited)
+- Implement Chroma db 
+- humble bundle affiliates
 
-1. Clone the repository:
-```
-git clone <repository_url>
-cd Steam_Reccomender
-```
+## IMPORTANT Notice
+if any of the reviewing companies I pulled data from would like to be removed from this program let me know
+this is a silly data science project
 
-2. Create and activate a virtual environment (recommended):
-```
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-3. Install the required packages:
-```
-pip install -r requirements.txt
-```
-
-4. Run the application:
-```
-python app.py
-```
-
-5. Access the web application at http://localhost:5000
-
-## Usage
-
-- Enter a game name in the search box to get recommendations
-- Try searching for "Battlefield" or "Elden Ring" for demo results
-- Click on a game to view its details
-- Sort options are available to organize the results
-
-## API Endpoints
-
-- `/search` - POST endpoint for searching games
-- `/game/<game_id>` - GET endpoint for viewing game details
-- `/recommend/<game_name>` - GET endpoint for recommendations based on a specific game
-- `/api/recommend?game=<game_name>` - GET endpoint for recommendations in JSON format
-
-## Features
-
-- Steam-like UI with game recommendations
-- Game details view with information about each game
-- Interactive UI elements (Add to Cart, Wishlist)
-- Responsive design for different screen sizes
-
-## Demo Data
-
-The application includes demo data for:
-- Battlefield series games
-- Elden Ring
+I do have ads cause Im a broke college student, I just want to make it break even for internet traffic
 

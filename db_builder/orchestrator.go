@@ -27,7 +27,10 @@ func main() {
 	// creates tables for steam powered end points
 	// poppulates tables
 	initDB()
+	migrate()
+}
 
+func migrate() {
 	db, err := sql.Open("sqlite3", "./steam_api.db")
 	if err != nil {
 		log.Fatal(err)
@@ -38,6 +41,7 @@ func main() {
 	createACGTable(db)
 	// migrate data from json into table
 	migrateACG(db)
+
 }
 
 func warning() bool {
