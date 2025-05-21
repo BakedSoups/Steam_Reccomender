@@ -1,7 +1,7 @@
 # Steam Recommender 
 Have you ever finished a game and wanted to play one like it? 
 If so, use this tool and you can find your next favorite game. 
-
+CHECK IT OUT https://nextsteamgame.com/ 
 ## How this works
 Steam Reccomender creates tags from 3 endpoints, 1 website and video reviews and apply weights to each tag
 from this we also add a "unique" tag, this is what seperates this game from its others in its genre
