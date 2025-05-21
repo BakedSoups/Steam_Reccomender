@@ -25,12 +25,10 @@ will typically be 3 months old
 ### TLDR
 Basically, we gather as much info on a game that we can, create tags, apply weights to the tags, and using that the user can find new games.
 ### Preview of the website 
+![image](https://github.com/user-attachments/assets/3d99ff7f-d75b-48f4-a5c9-cf9a1c59a0fc)
 
-![image](https://github.com/user-attachments/assets/ad59bb2a-da42-45f0-a657-fcb82dd2153d)
+![image](https://github.com/user-attachments/assets/5f2c0604-38f6-497f-ab21-1363ce99a627)
 
-![image](https://github.com/user-attachments/assets/6b750dea-792b-44ad-9422-80be9167ac69)
-
-![image](https://github.com/user-attachments/assets/e577c4bd-9dd4-409d-963a-a59f56936abe)
 
 ### Our glorious tech stack
 ![image](https://github.com/user-attachments/assets/2266a005-ea0d-4081-9836-69bc965eac51)
