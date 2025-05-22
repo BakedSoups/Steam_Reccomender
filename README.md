@@ -1,11 +1,15 @@
 # Steam Recommender 
-Have you ever finished a game and wanted to play one like it? 
-If so, use this tool and you can find your next favorite game. 
+Find your new favorite game through game simularity, this algorithm attepts to reward video games that can't afford advertising
+
+## Why does the Results page only have a steam review filter?
+Ideally this is a oneshot app that gives you exactly what you were looking for first try!
+if it isn't then we have done something wrong 
 this app is in https://nextsteamgame.com/ 
 ## How this works
 Steam Reccomender creates tags from 3 endpoints, 1 website and video reviews and apply weights to each tag
 from this we also add a "unique" tag, this is what seperates this game from its others in its genre
 then I upload it all into a sqlite database so when the user is searching for something its quick
+
 
 ## Comparisons
 Using estimations from the ratios we form from the tags we compare the game the user input to other games in the database
