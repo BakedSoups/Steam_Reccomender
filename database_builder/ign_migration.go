@@ -2,215 +2,205 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
-
+	"io/ioutil"
 	"log"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func migrateACG(db *sql.DB) {
-	// Game verdicts from JSON
-	verdicts, err := gameVerdicts()
+type Gametag struct {
+	Name          string         `json:"Name"`
+	SteamAppid    int            `json:"SteamAppid"`
+	Score         float64        `json:"Score"`
+	MainGenre     string         `json:"MainGenre"`
+	Ratio         map[string]int `json:"Ratio"`
+	UniqueTag     []string       `json:"UniqueTag"`
+	SubjectiveTag []string       `json:"SubjectiveTag"`
+}
+
+func steamReviewVerdicts() ([]Gametag, error) {
+	data, err := ioutil.ReadFile("steam_verdicts.json")
+	if err != nil {
+		return nil, err
+	}
+
+	var verdicts []Gametag
+	err = json.Unmarshal(data, &verdicts)
+	if err != nil {
+		return nil, err
+	}
+
+	return verdicts, nil
+}
+
+func migrateSteamReview(db *sql.DB) {
+	verdicts, err := steamReviewVerdicts()
 	if err != nil {
 		log.Fatal(err)
 	}
 	count := 0
-	// Each game in verdicts, search in database
+
 	for _, verdict := range verdicts {
-		match, appid, err := searchInCardTable(db, verdict.Name)
-		if err != nil {
+		appid := verdict.SteamAppid
+
+		// check if this appid exists in main_game table
+		var exists bool
+		err := db.QueryRow("SELECT EXISTS(SELECT 1 FROM main_game WHERE steam_appid = ?)", appid).Scan(&exists)
+		if err != nil || !exists {
+			fmt.Printf("steam_appid %d not found in main_game table, skipping %s\n", appid, verdict.Name)
 			continue
 		}
 
-		if match != "" {
-			count += 1
-			// fmt.Printf("%s matched with %s this is the appid%d\n", verdict.Name, match, appid)
-			// GREAT we found a match we know the appid to insert now
-			transactACGScores(db, appid, verdict)
-			for tag, ratio := range verdict.Ratio {
-				fmt.Printf("Inserted %v , %v, %v, %v\n", match, appid, tag, ratio)
-				transactIgbtag(db, appid, tag, ratio)
-			}
-			for _, tag := range verdict.SubjectiveTag {
-				transactSubjectivetag(db, appid, tag)
-			}
+		count++
+		fmt.Printf("processing %s (appid: %d)\n", verdict.Name, appid)
 
-			for _, tag := range verdict.UniqueTag {
-				transactUniquetag(db, appid, tag)
-			}
+		transactSteamReviewScores(db, appid, verdict)
+
+		for tag, ratio := range verdict.Ratio {
+			fmt.Printf("inserted %s, %d, %s, %d\n", verdict.Name, appid, tag, ratio)
+			transactSteamReviewTag(db, appid, tag, ratio)
 		}
 
+		for _, tag := range verdict.SubjectiveTag {
+			transactSteamReviewSubjectiveTag(db, appid, tag)
+		}
+
+		for _, tag := range verdict.UniqueTag {
+			transactSteamReviewUniqueTag(db, appid, tag)
+		}
 	}
-	fmt.Printf("matches found %v\n", count)
+	fmt.Printf("steam review matches processed: %d\n", count)
 }
 
-func transactACGScores(db *sql.DB, appid int, verdict Gametag) error {
+func transactSteamReviewScores(db *sql.DB, appid int, verdict Gametag) error {
 	fmt.Println(verdict)
 	tx, err := db.Begin()
 	if err != nil {
 		return err
 	}
 
-	_, err = tx.Exec(` 
-	INSERT INTO ACG_scores(steam_appid, score, genre)
+	_, err = tx.Exec(`
+	INSERT INTO SteamReview_scores(steam_appid, score, genre)
 	VALUES(?,?,?)
 	`, appid, verdict.Score, verdict.MainGenre)
 
 	if err != nil {
-		tx.Rollback() // Rollback
+		tx.Rollback()
 		return err
 	}
 
 	return tx.Commit()
 }
 
-func transactIgbtag(db *sql.DB, appid int, tag string, ratio int) error {
+func transactSteamReviewTag(db *sql.DB, appid int, tag string, ratio int) error {
 	tx, err := db.Begin()
 	if err != nil {
 		return err
 	}
 
-	_, err = tx.Exec(` 
-	INSERT INTO ACG_tags(steam_appid, tag, ratio)
+	_, err = tx.Exec(`
+	INSERT INTO SteamReview_tags(steam_appid, tag, ratio)
 	VALUES(?,?,?)
 	`, appid, tag, ratio)
 
 	if err != nil {
-		tx.Rollback() // Rollback
+		tx.Rollback()
 		return err
 	}
 
 	return tx.Commit()
 }
 
-func transactUniquetag(db *sql.DB, appid int, tag string) error {
+func transactSteamReviewUniqueTag(db *sql.DB, appid int, tag string) error {
 	tx, err := db.Begin()
 	if err != nil {
 		return err
 	}
 
-	_, err = tx.Exec(` 
-	INSERT INTO ACG_unique_tags(steam_appid, unique_tag)
+	_, err = tx.Exec(`
+	INSERT INTO SteamReview_unique_tags(steam_appid, unique_tag)
 	VALUES(?,?)
 	`, appid, tag)
 
 	if err != nil {
-		tx.Rollback() // Rollback
+		tx.Rollback()
 		return err
 	}
 
 	return tx.Commit()
 }
 
-func transactSubjectivetag(db *sql.DB, appid int, tag string) error {
+func transactSteamReviewSubjectiveTag(db *sql.DB, appid int, tag string) error {
 	tx, err := db.Begin()
 	if err != nil {
 		return err
 	}
 
-	_, err = tx.Exec(` 
-	INSERT INTO ACG_subjective_tags(steam_appid, subjective_tag)
+	_, err = tx.Exec(`
+	INSERT INTO SteamReview_subjective_tags(steam_appid, subjective_tag)
 	VALUES(?,?)
 	`, appid, tag)
 
 	if err != nil {
-		tx.Rollback() // Rollback
+		tx.Rollback()
 		return err
 	}
 
 	return tx.Commit()
 }
 
-func createACGTable(db *sql.DB) {
-	// for now all this will do is create a temp table
-	ACGKey := `
-	CREATE TABLE IF NOT EXISTS ACG_scores ( 
+func createSteamReviewTable(db *sql.DB) {
+	steamReviewKey := `
+	CREATE TABLE IF NOT EXISTS SteamReview_scores ( 
 		game_id INTEGER PRIMARY KEY AUTOINCREMENT, 
 		steam_appid INTEGER NOT NULL, 
 		score REAL NOT NULL,
 		genre TEXT
 	);
 	`
-	_, err := db.Exec(ACGKey)
-
+	_, err := db.Exec(steamReviewKey)
 	if err != nil {
 		log.Fatal("ERROR: ", err)
 	}
-	tag_tag_table := `
-	CREATE TABLE IF NOT EXISTS ACG_tags(
+
+	tagTable := `
+	CREATE TABLE IF NOT EXISTS SteamReview_tags(
 		game_id INTEGER PRIMARY KEY AUTOINCREMENT,
-		steam_appid INTERGER NOT NULL,
+		steam_appid INTEGER NOT NULL,
 		tag TEXT NOT NULL,
-		ratio INTERGER NOT NULL
+		ratio INTEGER NOT NULL
 	);
 	`
-	_, err = db.Exec(tag_tag_table)
-
+	_, err = db.Exec(tagTable)
 	if err != nil {
 		log.Fatal("ERROR: ", err)
 	}
-	unique_tag_table := `
-	CREATE TABLE IF NOT EXISTS ACG_unique_tags(
+
+	uniqueTagTable := `
+	CREATE TABLE IF NOT EXISTS SteamReview_unique_tags(
 		game_id INTEGER PRIMARY KEY AUTOINCREMENT,
-		steam_appid INTERGER NOT NULL,
+		steam_appid INTEGER NOT NULL,
 		unique_tag TEXT NOT NULL
 	);
 	`
-	_, err = db.Exec(unique_tag_table)
-
+	_, err = db.Exec(uniqueTagTable)
 	if err != nil {
 		log.Fatal("ERROR: ", err)
 	}
-	subjective_tags_table := `
-	CREATE TABLE IF NOT EXISTS ACG_subjective_tags(
+
+	subjectiveTagsTable := `
+	CREATE TABLE IF NOT EXISTS SteamReview_subjective_tags(
 		game_id INTEGER PRIMARY KEY AUTOINCREMENT,
-		steam_appid INTERGER NOT NULL,
+		steam_appid INTEGER NOT NULL,
 		subjective_tag TEXT NOT NULL
 	);
 	`
-	_, err = db.Exec(subjective_tags_table)
-
+	_, err = db.Exec(subjectiveTagsTable)
 	if err != nil {
 		log.Fatal("ERROR: ", err)
 	}
 
-}
-
-func searchInCardTable(db *sql.DB, searchName string) (string, int, error) {
-	offset := 0
-	batchSize := 50
-
-	for {
-		query := "SELECT game_name, steam_appid FROM main_game LIMIT ? OFFSET ?"
-		rows, err := db.Query(query, batchSize, offset)
-		if err != nil {
-			return "", 0, err
-		}
-
-		hasRows := false
-
-		for rows.Next() {
-			hasRows = true
-			var name string
-			var appid int
-
-			if err := rows.Scan(&name, &appid); err != nil {
-				rows.Close()
-				return "", 0, err
-			}
-			if match, found := Match(name, searchName); found {
-				rows.Close()
-				// returns match that is IN the database
-				return match, appid, nil
-			}
-		}
-		rows.Close()
-
-		if !hasRows {
-			return "", 0, fmt.Errorf("no match found for '%s'", searchName)
-		}
-		// Move to next batch
-		offset += batchSize
-	}
+	fmt.Println("steam review tables created successfully")
 }

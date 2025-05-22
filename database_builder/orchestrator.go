@@ -14,19 +14,19 @@ import (
 )
 
 func main() {
-	// FIRST RUN tag_builder scrape.py then extract_verdicts.py this program needs game_verdicts_with_ratio_tags.json to run
-	if warning() {
-		fmt.Println("Proceeding...")
-	} else {
-		fmt.Println("Operation canceled.")
-	}
+	// // FIRST RUN tag_builder scrape.py then extract_verdicts.py this program needs game_verdicts_with_ratio_tags.json to run
+	// if warning() {
+	// 	fmt.Println("Proceeding...")
+	// } else {
+	// 	fmt.Println("Operation canceled.")
+	// }
 
-	// creates steamspy (this gives us the appids we need)
-	createSteamSpy()
+	// // creates steamspy (this gives us the appids we need)
+	// createSteamSpy()
 
-	// creates tables for steam powered end points
-	// poppulates tables
-	initDB()
+	// // creates tables for steam powered end points
+	// // poppulates tables
+	// initDB()
 	migrate()
 }
 
@@ -38,9 +38,9 @@ func migrate() {
 	defer db.Close()
 	db.Exec("PRAGMA foreign_keys = ON;")
 	// creates ign table
-	createACGTable(db)
+	createSteamReviewTable(db)
 	// migrate data from json into table
-	migrateACG(db)
+	migrateSteamReview(db)
 
 }
 
