@@ -36,7 +36,7 @@ Basically, we gather as much info on a game that we can, create tags, apply weig
 ![image](https://github.com/user-attachments/assets/ae475912-1b9e-4f3d-a29f-35788156a07f)
 ![image](https://github.com/user-attachments/assets/de22a2ae-622b-45ab-8ea2-a14de4357bb1)
 ### Our glorious tech stack
-![image](https://github.com/user-attachments/assets/2266a005-ea0d-4081-9836-69bc965eac51)
+![image](https://github.com/user-attachments/assets/287e19f2-49c8-4ba8-ba3c-fc06ca2ef8b1)
 
 ## Todo
 - we should be able to have context of previous games if the review is mentioning it and build tags from that
