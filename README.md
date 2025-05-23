@@ -32,6 +32,8 @@ Basically, we gather as much info on a game that we can, create tags, apply weig
 ![image](https://github.com/user-attachments/assets/3d99ff7f-d75b-48f4-a5c9-cf9a1c59a0fc)
 
 ![image](https://github.com/user-attachments/assets/5f2c0604-38f6-497f-ab21-1363ce99a627)
+### the pipeline (this all automatically happens if you simply run ochestrator.go)
+![image](https://github.com/user-attachments/assets/ae475912-1b9e-4f3d-a29f-35788156a07f)
 
 
 ### Our glorious tech stack
