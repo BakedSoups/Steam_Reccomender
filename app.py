@@ -13,6 +13,10 @@ DATABASE_PATH = "./steam_api.db"
 class GameSearcher:
     def __init__(self, db_path: str = DATABASE_PATH):
         self.db_path = db_path
+    
+    def _generate_steam_url(self, steam_appid: int) -> str:
+        """Generate Steam store URL from appid"""
+        return f"https://store.steampowered.com/app/{steam_appid}/"
         
     def search_game_by_name(self, search_term: str) -> Dict[str, Any]:
         if not os.path.exists(self.db_path):
@@ -49,7 +53,12 @@ class GameSearcher:
             game_info = dict(row)
             appid = game_info.get('steam_appid')
             
+            # Generate steam_url if missing
             if appid:
+                if not game_info.get('steam_url'):
+                    game_info['steam_url'] = self._generate_steam_url(appid)
+                    print(f"Generated steam_url for {game_info['name']}: {game_info['steam_url']}")
+                
                 cursor.execute("SELECT COUNT(*) FROM GameRanx_tags WHERE steam_appid = ?", (appid,))
                 gameranx_tag_count = cursor.fetchone()[0]
                 
@@ -434,7 +443,7 @@ class GameSearcher:
             fast_query = f"""
             SELECT DISTINCT t.steam_appid, m.game_name, 
                    s.positive_reviews, s.negative_reviews,
-                   a.header_image, a.pricing,
+                   a.header_image, a.pricing, a.steam_url,
                    sc.genre
             FROM {tags_table} t
             INNER JOIN main_game m ON t.steam_appid = m.steam_appid
@@ -532,6 +541,12 @@ class GameSearcher:
             if similarity_score < 30:  # Adjust threshold as needed
                 continue
             
+            # Generate steam_url if missing - THIS WAS THE MISSING PIECE!
+            steam_url = game_dict.get('steam_url')
+            if not steam_url and appid:
+                steam_url = self._generate_steam_url(appid)
+                print(f"Generated steam_url for {game_dict['game_name']}: {steam_url}")
+            
             game_info = {
                 'steam_appid': appid,
                 'name': game_dict['game_name'],
@@ -541,7 +556,8 @@ class GameSearcher:
                 'similarity_score': similarity_score,
                 'data_source': data_source,
                 'header_image': game_dict.get('header_image') or "/static/logo.png",
-                'release_date': "Unknown"
+                'release_date': "Unknown",
+                'steam_url': steam_url  # Add the steam_url here!
             }
             
             positive = int(game_dict.get('positive_reviews', 0) or 0)
@@ -557,9 +573,11 @@ class GameSearcher:
             
             if game_dict.get('pricing'):
                 game_info['final_price'] = game_dict['pricing']
+                game_info['pricing'] = game_dict['pricing']  # Also include pricing for template
                 game_info['discount'] = None
             else:
                 game_info['final_price'] = "Unknown"
+                game_info['pricing'] = "Unknown"
                 game_info['discount'] = None
             
             good_games.append(game_info)
@@ -667,6 +685,13 @@ def recommend():
         
         total_time = time.time() - start_time
         print(f"Recommendation completed in {total_time:.2f}s - found {len(similar_games)} games")
+        
+        # Debug: Check if steam_url is present
+        for game in similar_games:
+            if game.get('steam_url'):
+                print(f"✓ {game['name']} has steam_url: {game['steam_url']}")
+            else:
+                print(f"✗ {game['name']} missing steam_url!")
         
         return render_template('results.html', 
                           games=similar_games, 
