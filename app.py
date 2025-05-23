@@ -6,14 +6,20 @@ from typing import List, Dict, Any
 from concurrent.futures import ThreadPoolExecutor
 import time
 
+
+
+import smtplib
+from email.message import EmailMessage
+
 app = Flask(__name__)
 app.secret_key = "steam_game_recommender_secret_key"
 DATABASE_PATH = "./steam_api.db"
 
+
 class GameSearcher:
     def __init__(self, db_path: str = DATABASE_PATH):
         self.db_path = db_path
-    
+
     def _generate_steam_url(self, steam_appid: int) -> str:
         """Generate Steam store URL from appid"""
         return f"https://store.steampowered.com/app/{steam_appid}/"
@@ -704,6 +710,37 @@ def recommend():
                           games=[],
                           reference_game=reference_game,
                           preferred_tag=preferred_tag)
+
+
+#FEEDBACK FORM --------------------------------
+def send_feedback_email(thumb, comments):
+    msg = EmailMessage()
+    msg['Subject'] = 'New Steam Game Feedback'
+    msg['From'] = EMAIL_SENDER
+    msg['To'] = EMAIL_RECEIVER
+
+    content = f"""
+    New feedback submitted:
+
+    Thumb: {'👍' if thumb == 'up' else '👎'}
+    Comments: {comments or 'No additional comments'}
+    """
+    msg.set_content(content)
+
+    with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+        server.starttls()
+        server.login(EMAIL_SENDER, EMAIL_PASSWORD)
+        server.send_message(msg)
+
+@app.route('/submit_feedback', methods=['POST'])
+def submit_feedback():
+    thumb = request.form.get('thumb')
+    comments = request.form.get('comments')
+
+    send_feedback_email(thumb, comments)
+
+    return redirect(url_for('index'))
+
 
 @app.route('/api/search', methods=['GET'])
 def api_search():

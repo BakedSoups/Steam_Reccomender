@@ -6,10 +6,13 @@
 
 {% block head %}
 <style>
-/* Override styles to hide the Unknown text */
 .game-info::before, .game-info::after {
   display: none !important;
   content: none !important;
+}
+
+.home-button + .home-button {
+  margin-left: 10px;
 }
 </style>
 {% endblock %}
@@ -23,126 +26,153 @@
         </div>
         <div class="app-header">
             <h1>Steam Game Recommender</h1>
+            <button id="feedbackBtn" class="home-button">Feedback</button>
             <a href="{{ url_for('index') }}" class="home-button">Home</a>
         </div>
     </div>
 
-    <div class="page-wrapper">
-        <div class="user-profile">
-            <div class="user-title">
-                <h2>Games like <span class="highlight">{{ reference_game.name }}</span> with focus on <span class="highlight">{{ preferred_tag|title }}</span></h2>
-            </div>
-            <div class="tag-bars user-bar">
-                {% for tag, ratio in reference_game.tag_ratios.items() %}
-                    <div class="tag-bar">
-                        <span class="tag-label">{{ tag }}</span>
-                        <div class="bar {% if tag == preferred_tag %}bg-steam-blue-dark ring-2 ring-steam-blue{% endif %}">
-                            <div class="bar-fill {% if tag == preferred_tag %}bg-steam-blue shadow-lg{% endif %}" style="width: {{ ratio }}%"></div>
-                        </div>
-                        <span class="tag-percent">{{ ratio }}%</span>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <div class="results-container">
-            {% for game in games %}
-            <div class="game-card">
-                <div class="game-thumb">
-                    <img src="{{ game.header_image if game.header_image else url_for('static', filename='logo.png') }}" alt="{{ game.name }}">
-                </div>
-
-                <div class="game-info" data-nocategory="true">
-                    <div class="card-header">
-                        <h2>{{ game.name }}</h2>
-                        {% if preferred_tag in game.tag_ratios %}
-                            <span class="preferred-tag-indicator">{{ preferred_tag|title }}</span>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="tag-container">
-                        {% if loop.index <= 3 %}
-                            <span class="top-match-tag">
-                                {% if loop.index == 1 %}Best Match{% else %}Top {{ loop.index }}{% endif %}
-                            </span>
-                        {% endif %}
-                        
-                        {# Add genre/category tags if available #}
-                        {% if game.genre %}
-                            <span class="genre-tag">{{ game.genre }}</span>
-                        {% endif %}
-                        
-                        {% if game.category %}
-                            <span class="genre-tag">{{ game.category }}</span>
-                        {% endif %}
-                        
-                        {# If genre not available but main_genre is available, use that #}
-                        {% if not game.genre and game.main_genre %}
-                            <span class="genre-tag">{{ game.main_genre }}</span>
-                        {% endif %}
-                        
-                        {% if game.unique_tags %}
-                            {% for tag in game.unique_tags %}
-                                <span class="unique-tag">{{ tag }}</span>
-                            {% endfor %}
-                        {% endif %}
-                    </div>
-
-                    <div class="tag-bars">
-                        {% for tag, percent in game.tag_ratios.items() %}
-                            <div class="tag-bar">
-                                <span class="tag-label">{{ tag }}</span>
-                                <div class="bar {% if tag == preferred_tag %}preferred-tag{% endif %}">
-                                    <div class="bar-fill" style="width: {{ percent }}%"></div>
-                                </div>
-                                <span class="tag-percent">{{ percent }}%</span>
-                            </div>
-                        {% endfor %}
-                    </div>
-
-                    
-                    <!-- Force closing div to ensure no space for unwanted text -->
-                    </div><div style="display:none">
-                    
-                    {# This will never be rendered due to the closing div above #}
-                    Unknown · Action-RPG
-                    
-                </div>
-
-                <div class="game-actions">
-                    <div class="reviews-section">
-                        <div class="review-header">Steam Reviews</div>
-                        <div class="review-bar">
-                            {% if game.overall_review > 0 %}
-                                <div class="review-positive" style="width: {{ (game.positive_reviews / game.overall_review) * 100 }}%"></div>
-                                <div class="review-negative" style="width: {{ (game.negative_reviews / game.overall_review) * 100 }}%"></div>
-                            {% else %}
-                                <div class="review-positive" style="width: 0%"></div>
-                                <div class="review-negative" style="width: 0%"></div>
-                            {% endif %}
-                        </div>
-                        <div class="review-label">
-                            <span class="positive-count">{{ game.positive_reviews }}</span> positive / 
-                            <span class="negative-count">{{ game.negative_reviews }}</span> negative
-                        </div>
-                    </div>
-
-                    <div class="price-section">
-                        {% if game.discount %}
-                            <div class="discount-tag">-{{ game.discount }}</div>
-                            <div class="price-discounted">{{ game.final_price }}</div>
-                            <div class="price-original"><s>{{ game.pricing }}</s></div>
-                        {% else %}
-                            <div class="price-full">{{ game.pricing }}</div>
-                        {% endif %}
-                    </div>
-                    
-                    {% if game.steam_url %}
-                        <a href="{{ game.steam_url }}" target="_blank" class="check-steam">View on Steam</a>
-                    {% endif %}
-                </div>
-            </div>
-            {% endfor %}
-        </div>
+    <div id="feedbackModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Leave Your Feedback</h3>
+        <form id="feedbackForm" method="POST" action="{{ url_for('submit_feedback') }}">
+          <div class="thumbs">
+            <label><input type="radio" name="thumb" value="up" required> 👍</label>
+            <label><input type="radio" name="thumb" value="down" required> 👎</label>
+          </div>
+          <textarea name="comments" placeholder="Tell us more (game searched, were the results to your satisfaction?)" rows="4" cols="40"></textarea>
+          <button type="submit">Submit</button>
+        </form>
+      </div>
     </div>
+    <script>
+    document.getElementById("feedbackBtn").onclick = function() {
+      document.getElementById("feedbackModal").style.display = "block";
+    }
+
+    document.querySelector(".close").onclick = function() {
+      document.getElementById("feedbackModal").style.display = "none";
+    }
+
+    window.onclick = function(event) {
+      if (event.target == document.getElementById("feedbackModal")) {
+        document.getElementById("feedbackModal").style.display = "none";
+      }
+    }
+    </script>
+
+    <div class="page-wrapper">
+      <div class="user-profile">
+          <div class="user-title">
+              <h2>Games like <span class="highlight">{{ reference_game.name }}</span> with focus on <span class="highlight">{{ preferred_tag|title }}</span></h2>
+          </div>
+          <div class="tag-bars user-bar">
+              {% for tag, ratio in reference_game.tag_ratios.items() %}
+                  <div class="tag-bar">
+                      <span class="tag-label">{{ tag }}</span>
+                      <div class="bar {% if tag == preferred_tag %}bg-steam-blue-dark ring-2 ring-steam-blue{% endif %}">
+                          <div class="bar-fill {% if tag == preferred_tag %}bg-steam-blue shadow-lg{% endif %}" style="width: {{ ratio }}%"></div>
+                      </div>
+                      <span class="tag-percent">{{ ratio }}%</span>
+                  </div>
+              {% endfor %}
+          </div>
+      </div>
+
+      <div class="results-container">
+          {% for game in games %}
+          <div class="game-card">
+              <div class="game-thumb">
+                  <img src="{{ game.header_image if game.header_image else url_for('static', filename='logo.png') }}" alt="{{ game.name }}">
+              </div>
+
+              <div class="game-info" data-nocategory="true">
+                  <div class="card-header">
+                      <h2>{{ game.name }}</h2>
+                      {% if preferred_tag in game.tag_ratios %}
+                          <span class="preferred-tag-indicator">{{ preferred_tag|title }}</span>
+                      {% endif %}
+                  </div>
+                  
+                  <div class="tag-container">
+                      {% if loop.index <= 3 %}
+                          <span class="top-match-tag">
+                              {% if loop.index == 1 %}Best Match{% else %}Top {{ loop.index }}{% endif %}
+                          </span>
+                      {% endif %}
+                      
+                      {% if game.genre %}
+                          <span class="genre-tag">{{ game.genre }}</span>
+                      {% endif %}
+                      
+                      {% if game.category %}
+                          <span class="genre-tag">{{ game.category }}</span>
+                      {% endif %}
+                      
+                      {% if not game.genre and game.main_genre %}
+                          <span class="genre-tag">{{ game.main_genre }}</span>
+                      {% endif %}
+                      
+                      {% if game.unique_tags %}
+                          {% for tag in game.unique_tags %}
+                              <span class="unique-tag">{{ tag }}</span>
+                          {% endfor %}
+                      {% endif %}
+                  </div>
+
+                  <div class="tag-bars">
+                      {% for tag, percent in game.tag_ratios.items() %}
+                          <div class="tag-bar">
+                              <span class="tag-label">{{ tag }}</span>
+                              <div class="bar {% if tag == preferred_tag %}preferred-tag{% endif %}">
+                                  <div class="bar-fill" style="width: {{ percent }}%"></div>
+                              </div>
+                              <span class="tag-percent">{{ percent }}%</span>
+                          </div>
+                      {% endfor %}
+                  </div>
+
+                  <!-- Force closing div to ensure no space for unwanted text -->
+                  </div><div style="display:none">
+                  {# This will never be rendered due to the closing div above #}
+                  Unknown · Action-RPG
+              </div>
+
+              <div class="game-actions">
+                  <div class="reviews-section">
+                      <div class="review-header">Steam Reviews</div>
+                      <div class="review-bar">
+                          {% if game.overall_review > 0 %}
+                              <div class="review-positive" style="width: {{ (game.positive_reviews / game.overall_review) * 100 }}%"></div>
+                              <div class="review-negative" style="width: {{ (game.negative_reviews / game.overall_review) * 100 }}%"></div>
+                          {% else %}
+                              <div class="review-positive" style="width: 0%"></div>
+                              <div class="review-negative" style="width: 0%"></div>
+                          {% endif %}
+                      </div>
+                      <div class="review-label">
+                          <span class="positive-count">{{ game.positive_reviews }}</span> positive / 
+                          <span class="negative-count">{{ game.negative_reviews }}</span> negative
+                      </div>
+                  </div>
+
+                  <div class="price-section">
+                      {% if game.discount %}
+                          <div class="discount-tag">-{{ game.discount }}</div>
+                          <div class="price-discounted">{{ game.final_price }}</div>
+                          <div class="price-original"><s>{{ game.pricing }}</s></div>
+                      {% else %}
+                          <div class="price-full">{{ game.pricing }}</div>
+                      {% endif %}
+                  </div>
+                  
+                  {% if game.steam_url %}
+                      <a href="{{ game.steam_url }}" target="_blank" class="check-steam">View on Steam</a>
+                  {% endif %}
+              </div>
+          </div>
+          {% endfor %}
+      </div>
+    </div>
+
 {% endblock %}
