@@ -402,10 +402,11 @@ class GameSearcher:
         finally:
             conn.close()
 
-    def find_similar_games(self, tag_ratios: Dict[str, int], preferred_tag: str, 
-                           unique_tags: List[str], main_genre: str, data_source: str = 'ign', limit: int = 10) -> List[Dict[str, Any]]:
-        if not tag_ratios:
-            print("No tag ratios provided for comparison")
+def find_similar_games_by_unique_tag(self, unique_tag: str, reference_unique_tags: List[str], 
+                                        main_genre: str, data_source: str = 'ign', limit: int = 10) -> List[Dict[str, Any]]:
+        """Find games that share the same unique tag"""
+        if not unique_tag:
+            print("No unique tag provided for comparison")
             return []
             
         if not os.path.exists(self.db_path):
@@ -437,152 +438,206 @@ class GameSearcher:
         
         try:
             reference_appid = session.get('reference_game', {}).get('steam_appid')
-            reference_tags = set(tag_ratios.keys())
             
-            tag_placeholders = ','.join(['?' for _ in reference_tags])
-            fast_query = f"""
-            SELECT DISTINCT t.steam_appid, m.game_name, 
+            # Find games that have the specific unique tag
+            unique_tag_query = f"""
+            SELECT DISTINCT ut.steam_appid, m.game_name, 
                    s.positive_reviews, s.negative_reviews,
                    a.header_image, a.pricing, a.steam_url,
                    sc.genre
-            FROM {tags_table} t
-            INNER JOIN main_game m ON t.steam_appid = m.steam_appid
-            LEFT JOIN steam_spy s ON t.steam_appid = s.steam_appid
-            LEFT JOIN steam_api a ON t.steam_appid = a.steam_appid
-            LEFT JOIN {scores_table} sc ON t.steam_appid = sc.steam_appid
-            WHERE t.tag IN ({tag_placeholders})
-            AND t.steam_appid != ?
+            FROM {unique_tags_table} ut
+            INNER JOIN main_game m ON ut.steam_appid = m.steam_appid
+            LEFT JOIN steam_spy s ON ut.steam_appid = s.steam_appid
+            LEFT JOIN steam_api a ON ut.steam_appid = a.steam_appid
+            LEFT JOIN {scores_table} sc ON ut.steam_appid = sc.steam_appid
+            WHERE ut.unique_tag = ?
+            AND ut.steam_appid != ?
             ORDER BY IFNULL(s.positive_reviews, 0) DESC
-            LIMIT 200
+            LIMIT ?
             """
             
-            params = list(reference_tags) + [reference_appid or 0]
-            cursor.execute(fast_query, params)
+            cursor.execute(unique_tag_query, [unique_tag, reference_appid or 0, limit * 3])
             candidate_games = cursor.fetchall()
             
-            print(f"Found {len(candidate_games)} candidate games in {time.time() - start_time:.2f}s")
+            print(f"Found {len(candidate_games)} games with unique tag '{unique_tag}' in {time.time() - start_time:.2f}s")
             
             if not candidate_games:
                 return []
             
-            chunk_size = 50
-            good_games = []
-            processed = 0
-            
-            for i in range(0, len(candidate_games), chunk_size):
-                chunk = candidate_games[i:i + chunk_size]
-                chunk_results = self._process_game_chunk(chunk, tag_ratios, preferred_tag, 
-                                                       unique_tags, main_genre, data_source, 
-                                                       tags_table, unique_tags_table, cursor)
-                good_games.extend(chunk_results)
-                processed += len(chunk)
+            # Get additional data for each game
+            result_games = []
+            for game_row in candidate_games:
+                game_dict = dict(game_row)
+                appid = game_dict['steam_appid']
                 
-                if len(good_games) >= limit * 2:  # Get a bit more for better sorting
-                    print(f"Early termination: found {len(good_games)} games after processing {processed}/{len(candidate_games)}")
-                    break
+                # Get all unique tags for this game
+                cursor.execute(f"SELECT unique_tag FROM {unique_tags_table} WHERE steam_appid = ?", (appid,))
+                game_unique_tags = [row[0] for row in cursor.fetchall()]
+                
+                # Get regular tags for this game
+                cursor.execute(f"SELECT tag, ratio FROM {tags_table} WHERE steam_appid = ?", (appid,))
+                game_tags = {row[0]: row[1] for row in cursor.fetchall()}
+                
+                # Calculate similarity based on unique tag overlap
+                reference_unique_set = set(reference_unique_tags)
+                game_unique_set = set(game_unique_tags)
+                overlap_count = len(reference_unique_set.intersection(game_unique_set))
+                
+                # Score based on unique tag overlap (higher score = more overlapping unique tags)
+                similarity_score = overlap_count * 25  # Base score for each overlapping unique tag
+                
+                # Bonus if the specific unique tag matches
+                if unique_tag in game_unique_tags:
+                    similarity_score += 50
+                
+                # Genre bonus
+                if main_genre and game_dict.get('genre') and main_genre.lower() == game_dict.get('genre', '').lower():
+                    similarity_score *= 1.2
+                
+                # Generate steam_url if missing
+                steam_url = game_dict.get('steam_url')
+                if not steam_url and appid:
+                    steam_url = self._generate_steam_url(appid)
+                    print(f"Generated steam_url for {game_dict['game_name']}: {steam_url}")
+                
+                game_info = {
+                    'steam_appid': appid,
+                    'name': game_dict['game_name'],
+                    'main_genre': game_dict.get('genre', ''),
+                    'tag_ratios': game_tags,
+                    'unique_tags': game_unique_tags,
+                    'similarity_score': similarity_score,
+                    'data_source': data_source,
+                    'header_image': game_dict.get('header_image') or "/static/logo.png",
+                    'release_date': "Unknown",
+                    'steam_url': steam_url
+                }
+                
+                positive = int(game_dict.get('positive_reviews', 0) or 0)
+                negative = int(game_dict.get('negative_reviews', 0) or 0)
+                total = positive + negative
+                
+                game_info.update({
+                    'positive_reviews': positive,
+                    'negative_reviews': negative,
+                    'overall_review': total,
+                    'positive_percentage': round((positive / total) * 100) if total > 0 else 0
+                })
+                
+                if game_dict.get('pricing'):
+                    game_info['final_price'] = game_dict['pricing']
+                    game_info['pricing'] = game_dict['pricing']
+                    game_info['discount'] = None
+                else:
+                    game_info['final_price'] = "Unknown"
+                    game_info['pricing'] = "Unknown"
+                    game_info['discount'] = None
+                
+                result_games.append(game_info)
             
-            good_games.sort(key=lambda x: x.get('similarity_score', 0), reverse=True)
-            result_games = good_games[:limit]
+            # Sort by similarity score (highest first)
+            result_games.sort(key=lambda x: x.get('similarity_score', 0), reverse=True)
+            final_games = result_games[:limit]
             
             total_time = time.time() - start_time
-            print(f"Fast similarity search completed in {total_time:.2f}s - returning {len(result_games)} games")
+            print(f"Unique tag search completed in {total_time:.2f}s - returning {len(final_games)} games")
             
-            return result_games
+            return final_games
             
         finally:
             conn.close()
     
-    def _process_game_chunk(self, chunk, tag_ratios, preferred_tag, unique_tags, main_genre, 
-                           data_source, tags_table, unique_tags_table, cursor):
-        """Process a chunk of games efficiently"""
-        good_games = []
+def _process_game_chunk(self, chunk, tag_ratios, preferred_tag, unique_tags, main_genre, 
+                        data_source, tags_table, unique_tags_table, cursor):
+    """Process a chunk of games efficiently"""
+    good_games = []
+    
+    chunk_appids = [game['steam_appid'] for game in chunk]
+    appid_placeholders = ','.join(['?' for _ in chunk_appids])
+    
+    tags_query = f"SELECT steam_appid, tag, ratio FROM {tags_table} WHERE steam_appid IN ({appid_placeholders})"
+    cursor.execute(tags_query, chunk_appids)
+    all_tags = cursor.fetchall()
+    
+    unique_query = f"SELECT steam_appid, unique_tag FROM {unique_tags_table} WHERE steam_appid IN ({appid_placeholders})"
+    cursor.execute(unique_query, chunk_appids)
+    all_unique_tags = cursor.fetchall()
+    
+    tags_by_appid = {}
+    unique_tags_by_appid = {}
+    
+    for row in all_tags:
+        appid = row['steam_appid']
+        if appid not in tags_by_appid:
+            tags_by_appid[appid] = {}
+        tags_by_appid[appid][row['tag']] = row['ratio']
+    
+    for row in all_unique_tags:
+        appid = row['steam_appid']
+        if appid not in unique_tags_by_appid:
+            unique_tags_by_appid[appid] = []
+        unique_tags_by_appid[appid].append(row['unique_tag'])
+    
+    for game_row in chunk:
+        game_dict = dict(game_row)
+        appid = game_dict['steam_appid']
+        game_tags = tags_by_appid.get(appid, {})
+        game_unique_tags = unique_tags_by_appid.get(appid, [])
         
-        chunk_appids = [game['steam_appid'] for game in chunk]
-        appid_placeholders = ','.join(['?' for _ in chunk_appids])
+        common_tags = set(tag_ratios.keys()).intersection(set(game_tags.keys()))
+        if len(common_tags) < 2:
+            continue
         
-        tags_query = f"SELECT steam_appid, tag, ratio FROM {tags_table} WHERE steam_appid IN ({appid_placeholders})"
-        cursor.execute(tags_query, chunk_appids)
-        all_tags = cursor.fetchall()
+        similarity_score = self._calculate_similarity_fast(
+            tag_ratios, game_tags, preferred_tag, unique_tags, game_unique_tags, 
+            main_genre, game_dict.get('genre', '')
+        )
         
-        unique_query = f"SELECT steam_appid, unique_tag FROM {unique_tags_table} WHERE steam_appid IN ({appid_placeholders})"
-        cursor.execute(unique_query, chunk_appids)
-        all_unique_tags = cursor.fetchall()
+        if similarity_score < 30:  # Adjust threshold as needed
+            continue
         
-        tags_by_appid = {}
-        unique_tags_by_appid = {}
+        # Generate steam_url if missing - THIS WAS THE MISSING PIECE!
+        steam_url = game_dict.get('steam_url')
+        if not steam_url and appid:
+            steam_url = self._generate_steam_url(appid)
+            print(f"Generated steam_url for {game_dict['game_name']}: {steam_url}")
         
-        for row in all_tags:
-            appid = row['steam_appid']
-            if appid not in tags_by_appid:
-                tags_by_appid[appid] = {}
-            tags_by_appid[appid][row['tag']] = row['ratio']
+        game_info = {
+            'steam_appid': appid,
+            'name': game_dict['game_name'],
+            'main_genre': game_dict.get('genre', ''),
+            'tag_ratios': game_tags,
+            'unique_tags': game_unique_tags,
+            'similarity_score': similarity_score,
+            'data_source': data_source,
+            'header_image': game_dict.get('header_image') or "/static/logo.png",
+            'release_date': "Unknown",
+            'steam_url': steam_url  # Add the steam_url here!
+        }
         
-        for row in all_unique_tags:
-            appid = row['steam_appid']
-            if appid not in unique_tags_by_appid:
-                unique_tags_by_appid[appid] = []
-            unique_tags_by_appid[appid].append(row['unique_tag'])
+        positive = int(game_dict.get('positive_reviews', 0) or 0)
+        negative = int(game_dict.get('negative_reviews', 0) or 0)
+        total = positive + negative
         
-        for game_row in chunk:
-            game_dict = dict(game_row)
-            appid = game_dict['steam_appid']
-            game_tags = tags_by_appid.get(appid, {})
-            game_unique_tags = unique_tags_by_appid.get(appid, [])
-            
-            common_tags = set(tag_ratios.keys()).intersection(set(game_tags.keys()))
-            if len(common_tags) < 2:
-                continue
-            
-            similarity_score = self._calculate_similarity_fast(
-                tag_ratios, game_tags, preferred_tag, unique_tags, game_unique_tags, 
-                main_genre, game_dict.get('genre', '')
-            )
-            
-            if similarity_score < 30:  # Adjust threshold as needed
-                continue
-            
-            # Generate steam_url if missing - THIS WAS THE MISSING PIECE!
-            steam_url = game_dict.get('steam_url')
-            if not steam_url and appid:
-                steam_url = self._generate_steam_url(appid)
-                print(f"Generated steam_url for {game_dict['game_name']}: {steam_url}")
-            
-            game_info = {
-                'steam_appid': appid,
-                'name': game_dict['game_name'],
-                'main_genre': game_dict.get('genre', ''),
-                'tag_ratios': game_tags,
-                'unique_tags': game_unique_tags,
-                'similarity_score': similarity_score,
-                'data_source': data_source,
-                'header_image': game_dict.get('header_image') or "/static/logo.png",
-                'release_date': "Unknown",
-                'steam_url': steam_url  # Add the steam_url here!
-            }
-            
-            positive = int(game_dict.get('positive_reviews', 0) or 0)
-            negative = int(game_dict.get('negative_reviews', 0) or 0)
-            total = positive + negative
-            
-            game_info.update({
-                'positive_reviews': positive,
-                'negative_reviews': negative,
-                'overall_review': total,
-                'positive_percentage': round((positive / total) * 100) if total > 0 else 0
-            })
-            
-            if game_dict.get('pricing'):
-                game_info['final_price'] = game_dict['pricing']
-                game_info['pricing'] = game_dict['pricing']  # Also include pricing for template
-                game_info['discount'] = None
-            else:
-                game_info['final_price'] = "Unknown"
-                game_info['pricing'] = "Unknown"
-                game_info['discount'] = None
-            
-            good_games.append(game_info)
+        game_info.update({
+            'positive_reviews': positive,
+            'negative_reviews': negative,
+            'overall_review': total,
+            'positive_percentage': round((positive / total) * 100) if total > 0 else 0
+        })
         
-        return good_games
+        if game_dict.get('pricing'):
+            game_info['final_price'] = game_dict['pricing']
+            game_info['pricing'] = game_dict['pricing']  # Also include pricing for template
+            game_info['discount'] = None
+        else:
+            game_info['final_price'] = "Unknown"
+            game_info['pricing'] = "Unknown"
+            game_info['discount'] = None
+        
+        good_games.append(game_info)
+    
+    return good_games
     
     def _calculate_similarity_fast(self, ref_tags, game_tags, preferred_tag, ref_unique_tags, 
                                   game_unique_tags, ref_genre, game_genre):
@@ -655,6 +710,7 @@ def search():
 @app.route('/recommend', methods=['POST'])
 def recommend():
     preferred_tag = request.form.get('preferred_tag', '')
+    selection_type = request.form.get('selection_type', 'regular')
     
     tag_ratios = session.get('tag_ratios', {})
     unique_tags = session.get('unique_tags', [])
@@ -662,26 +718,45 @@ def recommend():
     data_source = session.get('data_source', 'ign')
     reference_game = session.get('reference_game', {})
     
-    if not tag_ratios:
+    if not tag_ratios and selection_type == 'regular':
         print("No tag ratios found in session")
         return render_template('results.html', 
                           games=[], 
                           reference_game=reference_game,
                           preferred_tag="No tag data available")
     
+    if not unique_tags and selection_type == 'unique':
+        print("No unique tags found in session")
+        return render_template('results.html', 
+                          games=[], 
+                          reference_game=reference_game,
+                          preferred_tag="No unique tag data available")
+    
     try:
-        print(f"Finding similar games for preferred tag: '{preferred_tag}' using {data_source} data")
+        print(f"Finding similar games for preferred {'unique tag' if selection_type == 'unique' else 'tag'}: '{preferred_tag}' using {data_source} data")
         start_time = time.time()
         
         searcher = GameSearcher()
-        similar_games = searcher.find_similar_games(
-            tag_ratios=tag_ratios,
-            preferred_tag=preferred_tag,
-            unique_tags=unique_tags,
-            main_genre=main_genre,
-            data_source=data_source,
-            limit=10  # Only get top 10 for speed
-        )
+        
+        if selection_type == 'unique':
+            # For unique tags, we'll find games that have this specific unique tag
+            similar_games = searcher.find_similar_games_by_unique_tag(
+                unique_tag=preferred_tag,
+                reference_unique_tags=unique_tags,
+                main_genre=main_genre,
+                data_source=data_source,
+                limit=10
+            )
+        else:
+            # Regular tag-based search
+            similar_games = searcher.find_similar_games(
+                tag_ratios=tag_ratios,
+                preferred_tag=preferred_tag,
+                unique_tags=unique_tags,
+                main_genre=main_genre,
+                data_source=data_source,
+                limit=10
+            )
         
         total_time = time.time() - start_time
         print(f"Recommendation completed in {total_time:.2f}s - found {len(similar_games)} games")
@@ -696,14 +771,16 @@ def recommend():
         return render_template('results.html', 
                           games=similar_games, 
                           reference_game=reference_game,
-                          preferred_tag=preferred_tag)
+                          preferred_tag=preferred_tag,
+                          selection_type=selection_type)
     except Exception as e:
         print(f"Error finding similar games: {str(e)}")
         traceback.print_exc()
         return render_template('results.html',
                           games=[],
                           reference_game=reference_game,
-                          preferred_tag=preferred_tag)
+                          preferred_tag=preferred_tag,
+                          selection_type=selection_type)
 
 @app.route('/api/search', methods=['GET'])
 def api_search():

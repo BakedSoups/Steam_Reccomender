@@ -30,12 +30,12 @@
         </div>
 
         <h2 class="preference-title">What aspects of this game matter most to you?</h2>
-        <p class="info-text">Select a gameplay element that you want to see in your recommendations</p>
+        <p class="info-text">Select a gameplay element or unique feature that you want to see in your recommendations</p>
 
         <form action="{{ url_for('recommend') }}" method="post" id="preferenceForm">
             <div class="tag-list">
                 {% for tag, ratio in tag_ratios.items() %}
-                    <div class="tag-item group hover:-translate-y-1 hover:shadow-lg transition-all duration-300" data-tag="{{ tag }}">
+                    <div class="tag-item group hover:-translate-y-1 hover:shadow-lg transition-all duration-300" data-tag="{{ tag }}" data-type="regular">
                         <input type="radio" name="preferred_tag" value="{{ tag }}" id="tag_{{ tag }}" style="display: none;" required>
                         <span class="tag-name whitespace-nowrap overflow-hidden text-ellipsis min-w-0">{{ tag|title }}</span>
                         <div class="tag-bar">
@@ -48,14 +48,20 @@
 
             {% if unique_tags %}
             <div class="unique-tags-container bg-steam-blue-dark/40 backdrop-blur-sm">
-                <div class="unique-tags-title text-steam-blue-light font-medium">Unique features of this game:</div>
+                <div class="unique-tags-title text-steam-blue-light font-medium">Unique features of this game (click to select):</div>
                 <div class="unique-tags">
                     {% for tag in unique_tags %}
-                        <span class="unique-tag hover:-translate-y-1 hover:bg-steam-blue transition-all duration-300">{{ tag }}</span>
+                        <div class="unique-tag hover:-translate-y-1 hover:bg-steam-blue transition-all duration-300 cursor-pointer" data-tag="{{ tag }}" data-type="unique">
+                            <input type="radio" name="preferred_tag" value="{{ tag }}" id="unique_tag_{{ loop.index }}" style="display: none;">
+                            {{ tag }}
+                        </div>
                     {% endfor %}
                 </div>
             </div>
             {% endif %}
+
+            <!-- Hidden input to track selection type -->
+            <input type="hidden" name="selection_type" id="selection_type" value="regular">
 
             <div class="button-container">
                 <button type="submit" class="continue-button hover:bg-sky-500 hover:-translate-y-1 transition-all duration-300">Find Similar Games</button>
@@ -64,29 +70,73 @@
     </div>
 
     <script>
-        // Make the tag items selectable
+        function selectItem(clickedItem, type) {
+            // Remove selection from all items (both regular and unique tags)
+            document.querySelectorAll('.tag-item, .unique-tag').forEach(i => {
+                i.classList.remove('selected');
+            });
+            
+            // Add selection to clicked item
+            clickedItem.classList.add('selected');
+            
+            // Set the selection type
+            document.getElementById('selection_type').value = type;
+            
+            // Check the appropriate radio button
+            if (type === 'regular') {
+                const tag = clickedItem.getAttribute('data-tag');
+                document.getElementById('tag_' + tag).checked = true;
+            } else if (type === 'unique') {
+                const tag = clickedItem.getAttribute('data-tag');
+                const radioButton = clickedItem.querySelector('input[type="radio"]');
+                if (radioButton) {
+                    radioButton.checked = true;
+                }
+            }
+        }
+
+        // Make the regular tag items selectable
         document.querySelectorAll('.tag-item').forEach(item => {
             item.addEventListener('click', function() {
-                // Remove selection from all items
-                document.querySelectorAll('.tag-item').forEach(i => {
-                    i.classList.remove('selected');
-                });
-                
-                // Add selection to clicked item
-                this.classList.add('selected');
-                
-                // Check the radio button
-                const tag = this.getAttribute('data-tag');
-                document.getElementById('tag_' + tag).checked = true;
+                selectItem(this, 'regular');
             });
         });
         
-        // Auto-select the first tag by default
+        // Make the unique tag items selectable
+        document.querySelectorAll('.unique-tag').forEach(item => {
+            item.addEventListener('click', function() {
+                selectItem(this, 'unique');
+            });
+        });
+        
+        // Auto-select the first regular tag by default
         document.addEventListener('DOMContentLoaded', function() {
             const firstTag = document.querySelector('.tag-item');
             if (firstTag) {
-                firstTag.click();
+                selectItem(firstTag, 'regular');
             }
         });
     </script>
+
+    <style>
+        .unique-tag.selected {
+            background-color: #1b2838 !important;
+            border: 2px solid #66c0f4;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 192, 244, 0.3);
+        }
+        
+        .tag-item.selected {
+            background-color: #1b2838 !important;
+            border: 2px solid #66c0f4;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 192, 244, 0.3);
+        }
+        
+        .unique-tag {
+            cursor: pointer;
+            user-select: none;
+            border: 2px solid transparent;
+        }
+    </style>
 {% endblock %}
