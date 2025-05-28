@@ -16,19 +16,12 @@ Create vectors from weighted tags (2 action, 3 story, 5 rpg)
 uses vector simularity to find close matches
 weighs if a game matches its "unique" tag in a genre
 
-## Plans:
-Rework Main genre tags
-Make the procedurally generated tags searchable
-
 ### Limitations
 because the data pipeline is based of endpoints creating the db takes 3 days due to rate limiting because of this the data
 will typically be 3 months old
 
-### TLDR
-Basically, we gather as much info on a game that we can, create tags, apply weights to the tags, and using that the user can find new games.
 ### Preview of the website
 ![image](https://github.com/user-attachments/assets/3d99ff7f-d75b-48f4-a5c9-cf9a1c59a0fc)
-
 ![image](https://github.com/user-attachments/assets/5f2c0604-38f6-497f-ab21-1363ce99a627)
 ### the pipeline (this all automatically happens if you simply run ochestrator.go)
 ![image](https://github.com/user-attachments/assets/ae475912-1b9e-4f3d-a29f-35788156a07f)
@@ -36,11 +29,9 @@ Basically, we gather as much info on a game that we can, create tags, apply weig
 ### Our glorious tech stack
 ![image](https://github.com/user-attachments/assets/287e19f2-49c8-4ba8-ba3c-fc06ca2ef8b1)
 
-## Todo
-- we should be able to have context of previous games if the review is mentioning it and build tags from that
-- Convert the MVP flask ap to fast api (starting to get limited)
-- Implement Chroma db
-- humble bundle affiliates
+## Plans:
+Rework Main genre tags
+Make the procedurally generated tags searchable
 
 ## IMPORTANT Notice
 if any of the reviewing companies I pulled data from would like to be removed from this program let me know
