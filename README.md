@@ -11,11 +11,10 @@ from this we also add a "unique" tag, this is what separates this game from its 
 then I upload it all into a sqlite database so when the user is searching for something its quick
 
 
-## Comparisons
-Using estimations from the ratios we form from the tags we compare the game the user input to other games in the database
-applying:
- 80% descriptive tags
- 20% unique in its genre tag
+#### Comparisons
+Create vectors from weighted tags (2 action, 3 story, 5 rpg)
+uses vector simularity to find close matches
+weighs if a game matches its "unique" tag in a genre
 
 ## Plans:
 Rework Main genre tags
