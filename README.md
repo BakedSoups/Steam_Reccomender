@@ -6,7 +6,7 @@ Ideally this is a oneshot app that gives you exactly what you were looking for f
 if it isn't then we have done something wrong
 this app is in https://nextsteamgame.com/
 ## How this works
-Steam Reccomender creates tags from 3 endpoints, 1 website and video reviews and apply weights to each tag
+Steam Reccomender procedurally creates tags from 3 endpoints, 1 website and video reviews( sorted by credibility ) and apply weights to each tag
 from this we also add a "unique" tag, this is what separates this game from its others in its genre
 then I upload it all into a sqlite database so when the user is searching for something its quick
 
@@ -18,9 +18,8 @@ applying:
  20% unique in its genre tag
 
 ## Plans:
-Currently only has around 350 games in the database, looking into scraping more info
-going to implement chroma db and use vector similarities as another "layer" to the similarity search
-Ideally this fixes semantic differences
+Rework Main genre tags
+Make the procedurally generated tags searchable
 
 ### Limitations
 because the data pipeline is based of endpoints creating the db takes 3 days due to rate limiting because of this the data
