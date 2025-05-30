@@ -3,12 +3,36 @@ import time
 
 
 def print_reviews(reviews_list, num_reviews = None):
+  # Handle empty list
+    if not reviews_list:
+        print("No reviews to display")
+        return
+    
+    # Handle None case (print all)
+    if num_reviews is None:
+        num_reviews = len(reviews_list)
+    
+    # Validate num_reviews
+    if num_reviews < 0:
+        print("Error: Number of reviews cannot be negative")
+        return
+    if num_reviews > len(reviews_list):
+        print(f"Requested {num_reviews} reviews, but only {len(reviews_list)} available")
+        return     
+    # If num_reviews is 0, don't print anything
+    if num_reviews == 0:
+        print("No reviews to display (num_reviews = 0)")
+        return
+    
+    # Print the reviews
+    reviews_to_print = reviews_list[:num_reviews]
+        
     reviews_to_print = reviews_list[:num_reviews] if num_reviews else reviews_list
+    
     actual_printed = len(reviews_to_print)
 
     print(f"==== {actual_printed} Steam Reviews Preview ====")
     print("=" * 60)
-    
     
     for i, review in enumerate(reviews_to_print, 1):
         timestamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(review['timestamp_created']))
