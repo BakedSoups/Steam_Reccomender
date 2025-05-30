@@ -1,12 +1,7 @@
-## this creates steam_games_sample_with_reviews.json
-
 import re
-import requests
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-
 analyzer = SentimentIntensityAnalyzer()
 
-# Keywords indicating descriptive reviews
 KEYWORDS = [
     # gameplay
     "gameplay", "mechanics", "controls", "combat", "story", "graphics", "soundtrack",
@@ -14,29 +9,23 @@ KEYWORDS = [
     # descriptive words
     "charming"
 ]
+
 # If the keywords lower case or upper case it doesnt matter
 KEYWORD_PATTERN = re.compile(r'\b(' + '|'.join(KEYWORDS) + r')\b', re.IGNORECASE)
 
-SAMPLE_SIZE = 10
-
-# Spam filter patterns
 SPAM_PATTERN = re.compile(r"(free key|giveaway|visit my channel|https?://|check my profile)", re.IGNORECASE)
 
-def fetch_reviews(appid: int, num_reviews: int = 500) -> list:
-    reviews = []
-    cursor = "*"
-    while len(reviews) < num_reviews:
-        url = f"https://store.steampowered.com/appreviews/{appid}?json=1&filter=recent&language=english&num_per_page=100&cursor={cursor}"
-        response = requests.get(url)
-        if not response.ok:
-            break
-        data = response.json()
-        new_reviews = data.get("reviews", [])
-        reviews.extend(new_reviews)
-        if not data.get("cursor") or not new_reviews:
-            break
-        cursor = data["cursor"]
-    return reviews
+ENGLISH_PATTERN = re.compile(r'[a-zA-Z0-9\s\.,!?;:\'"()\-]') 
+
+def count_non_english_letters(text: str) -> int:
+    """Count letters that are not in the English alphabet"""
+    non_english_chars = ENGLISH_PATTERN.sub('', text)
+    non_english_letters = re.findall(r'[^\W\d_]', non_english_chars)
+    return len(non_english_letters)
+
+def has_too_many_non_english(text: str, threshold: int = 15) -> bool:
+    """Check if text has more than threshold non-English letters"""
+    return count_non_english_letters(text) > threshold 
 
 # returns the amount of keywords in reviews
 def keyword_score(text: str) -> int:
@@ -49,16 +38,15 @@ def spam(text: str) -> bool:
         return False
     if SPAM_PATTERN.search(text):
         return False
-    
+    if has_too_many_non_english(text):
+            return False
     return True
 
-
-def get_top_descriptive_reviews(appid: int) -> list:
-    raw_reviews = fetch_reviews(appid)
+def filter_descriptve(steam_reviews):
+    raw_reviews = steam_reviews
     valid_reviews = []
-
-    for review in raw_reviews:
-        text = review.get("review", "")
+    for i, review in enumerate(raw_reviews, 1): 
+        text = review['review']
 
         if not spam(text):
             continue
