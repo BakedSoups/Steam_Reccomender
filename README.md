@@ -32,6 +32,9 @@ Basically, we gather as much info on a game that we can, create tags, apply weig
 ![image](https://github.com/user-attachments/assets/3d99ff7f-d75b-48f4-a5c9-cf9a1c59a0fc)
 
 ![image](https://github.com/user-attachments/assets/5f2c0604-38f6-497f-ab21-1363ce99a627)
+![image](https://github.com/user-attachments/assets/b1e3cb2b-4166-4313-b554-713aa32edf32)
+![image](https://github.com/user-attachments/assets/8c100651-145b-452c-a85c-8d135281d356)
+![image](https://github.com/user-attachments/assets/10b85291-8a23-406b-922b-6cc93554452c)
 
 
 ### Our glorious tech stack
