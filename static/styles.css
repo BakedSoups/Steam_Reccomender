@@ -193,37 +193,6 @@ input[type="text"]:focus {
   z-index: 1;
 }
 
-/* Github link styling */
-.github-link {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  display: flex;
-  align-items: center;
-  color: var(--steam-blue-light);
-  text-decoration: none;
-  font-weight: bold;
-  transition: color 0.3s;
-  z-index: 100;
-  background-color: rgba(27, 40, 56, 0.7);
-  padding: 8px 12px;
-  border-radius: 6px;
-  box-shadow: var(--shadow-small);
-  backdrop-filter: blur(5px);
-}
-
-.github-link:hover {
-  color: var(--steam-blue);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-.github-icon {
-  width: 24px;
-  height: 24px;
-  margin-right: 8px;
-}
-
 /* Live search results styling */
 .search-results {
   position: absolute;
@@ -1054,9 +1023,6 @@ input[type="text"]:focus {
     padding: 30px 20px;
   }
   
-  .github-link {
-    top: 70px;
-  }
 }
 
 @media (max-width: 480px) {
@@ -1152,4 +1118,153 @@ input[type="text"]:focus {
 .game-info > :not(.card-header):not(.tag-container):not(.tag-bars):not(.game-meta) {
   display: none !important;
 }
-1
+
+/* Coffee link styling - ADD THIS TO YOUR CSS */
+.coffee-link {
+  position: absolute;
+  top: 80px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  color: #000000;
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  z-index: 100;
+  background-color: rgba(255, 221, 51, 0.9);
+  padding: 8px 12px;
+  border-radius: 6px;
+  box-shadow: var(--shadow-small);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 221, 51, 0.3);
+}
+
+.coffee-link:hover {
+  color: #000000;
+  background-color: rgba(255, 221, 51, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 221, 51, 0.4);
+}
+
+/* Update mobile responsive section - ADD THIS TOO */
+@media (max-width: 768px) {
+  .coffee-link {
+    top: 130px;
+  }
+}
+/* -------- TOP-RIGHT NAVIGATION BUTTONS -------- */
+
+/* Github link styling */
+.github-link {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  color: var(--steam-blue-light);
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  background-color: rgba(27, 40, 56, 0.9);
+  padding: 8px 12px;
+  border-radius: 6px;
+  box-shadow: var(--shadow-small);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(102, 192, 244, 0.2);
+}
+
+.github-link:hover {
+  color: var(--steam-blue);
+  background-color: rgba(27, 40, 56, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.github-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 6px;
+}
+
+/* Coffee link styling */
+.coffee-link {
+  position: fixed;
+  top: 20px;
+  right: 140px;
+  display: flex;
+  align-items: center;
+  color: #000000;
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  background-color: rgba(255, 221, 51, 0.95);
+  padding: 8px 12px;
+  border-radius: 6px;
+  box-shadow: var(--shadow-small);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 200, 0, 0.4);
+}
+
+.coffee-link:hover {
+  color: #000000;
+  background-color: rgba(255, 221, 51, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 221, 51, 0.5);
+}
+
+.coffee-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 6px;
+}
+
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+  .github-link {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+  
+  .coffee-link {
+    position: fixed;
+    top: 65px;
+    right: 15px;
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+  
+  .github-icon,
+  .coffee-icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .github-link {
+    top: 10px;
+    right: 10px;
+    padding: 5px 8px;
+    font-size: 12px;
+  }
+  
+  .coffee-link {
+    top: 55px;
+    right: 10px;
+    padding: 5px 8px;
+    font-size: 12px;
+  }
+  
+  .github-icon,
+  .coffee-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+  }
+}

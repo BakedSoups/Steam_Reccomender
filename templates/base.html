@@ -5,8 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Steam Game Recommender{% endblock %}</title>
     
+    <!-- Gaming-focused meta tags for better ad targeting -->
+    <meta name="description" content="Find similar Steam games based on gameplay elements. Discover new PC games, indie games, and Steam recommendations tailored to your preferences.">
+    <meta name="keywords" content="steam games, pc games, game recommendations, steam game finder, similar games, indie games, gaming, video games, game discovery">
+    <meta name="theme-color" content="#66c0f4">
+    
+    <!-- Open Graph for gaming content -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Steam Game Recommender - Find Similar Games">
+    <meta property="og:description" content="Discover Steam games similar to ones you love. Get personalized game recommendations based on gameplay elements.">
+    <meta property="og:image" content="{{ url_for('static', filename='logo.png') if url_for else '/static/logo.png' }}">
+    
+    <!-- Schema.org structured data for gaming -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Steam Game Recommender",
+        "description": "Find Steam games similar to ones you enjoy based on gameplay elements and tags",
+        "applicationCategory": "GameApplication",
+        "operatingSystem": "Web Browser",
+        "keywords": "steam, games, recommendations, pc gaming, game discovery"
+    }
+    </script>
+    
+    <!-- Google AdSense Auto Placement -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2034273389649557"
+            crossorigin="anonymous"></script>
+    
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') if url_for else '/static/styles.css' }}">
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -39,6 +67,13 @@
     {% block head %}{% endblock %}
 </head>
 <body class="{% block body_class %}dark-theme{% endblock %}">
+    <!-- Hidden gaming keywords for ad targeting -->
+    <div style="display: none;">
+        Steam games, PC gaming, video games, game recommendations, indie games, 
+        gaming accessories, gaming hardware, game reviews, Steam sales, 
+        game discovery, multiplayer games, single player games
+    </div>
+    
     {% block content %}{% endblock %}
     
     {% block scripts %}{% endblock %}
