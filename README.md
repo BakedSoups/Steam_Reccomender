@@ -41,10 +41,10 @@ Basically, we gather as much info on a game that we can, create tags, apply weig
 ![image](https://github.com/user-attachments/assets/2266a005-ea0d-4081-9836-69bc965eac51)
 
 ## Todo
-- we should be able to have context of previous games if the review is mentioning it and build tags from that 
-- Convert the MVP flask ap to fast api (starting to get limited)
-- Implement Chroma db 
-- humble bundle affiliates
+- Make the search landing page auto suggest beyound fuzzy
+- add more depth to tag matching
+- In the results page add buttons to sort by reviews and tags
+- Add multiple game inputs
 
 ## IMPORTANT Notice
 if any of the reviewing companies I pulled data from would like to be removed from this program let me know
