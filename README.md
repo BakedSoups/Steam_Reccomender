@@ -43,12 +43,13 @@ because the data pipeline is based of endpoints creating the db takes 3 days due
 ![image](https://github.com/user-attachments/assets/722b1706-3bd8-48d8-8eb5-934d260a3fbd)
 
 ### Whats under the Hood
-![image](https://github.com/user-attachments/assets/b1e3cb2b-4166-4313-b554-713aa32edf32)
-![image](https://github.com/user-attachments/assets/10b85291-8a23-406b-922b-6cc93554452c)
+![image](https://github.com/user-attachments/assets/02d68c6e-acde-4cdc-822c-4f6ac7ac6805)
+![image](https://github.com/user-attachments/assets/d5a3c9c9-2f6f-4af9-8a80-12c7c21f362a)
+
 
 
 ### Our glorious tech stack
-![image](https://github.com/user-attachments/assets/2266a005-ea0d-4081-9836-69bc965eac51)
+![image](https://github.com/user-attachments/assets/a6270639-6a4e-4792-8462-5e7525f046f9)
 
 ## Todo
 - Convert to FAST API
