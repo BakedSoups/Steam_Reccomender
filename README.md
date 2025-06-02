@@ -1,26 +1,32 @@
 # Steam Recommender 
 Find your new favorite game through game simularity, this algorithm attepts to reward video games that can't afford advertising
 
-## Why does the Results page only have a steam review filter?
-Ideally this is a oneshot app that gives you exactly what you were looking for first try!
-if it isn't then we have done something wrong 
 this app is in https://nextsteamgame.com/ 
+## High-Level on how this works 
+sorting steam games by the default steam tags and by what is most relevant is functional but from my personal expeirence it can be limited, looking for a desired game because I like the nuances is hard to do if its official steam tags are just "JRPG" and "Action" 
+to solve this I procedurally create new game tags from reviews to help form vectors on what a games focus is, then place it in a Genre heiarchy tree,
+
 ## How this works
-Steam Reccomender creates tags from 3 endpoints, 1 website and video reviews and apply weights to each tag
-from this we also add a "unique" tag, this is what seperates this game from its others in its genre
-then I upload it all into a sqlite database so when the user is searching for something its quick
+I gather review data from 3 endpoints, 1 website and youtube video reviews, then I filter our the reviews and sort them by what is the most descriptive.From that using the default steam tags I procedurally determine where this game lands in the genre umbrella (Main Genre -> Sub genre -> sub sub genre) 
 
+### For example: 
+Persona 5 
+Input: 
+ Review:
+ "this game has great cel shaded graphics, a social link system, a great balance of living a highschool life then exploring the dungeon, along with a jazz sound track" 
+ Steam tags:
 
-## Comparisons
-Using estimations from the ratios we form from the tags we compare the game the user input to other games in the database
-applying:
- 80% descriptive tags 
- 20% unique in its genre tag
+Output: 
+Descriptive Tag Vector:30% JRPG 20% Social links 30% Action 20% Jazz
+SUbjective Tag Vector :50% non-replayable 30% Artistic 20%
+Genre: JRPG -> Turn-Based -> Social-link 
+Art style : cel shaded 
+Music : Jazz 
 
-## Plans:
-Currently only has around 350 games in the database, looking into scraping more ingo
-going to implement chroma db and use vector simularitys as another "layer" to the simularity search
-Ideally this fixes semantic differences
+## Searching 
+When the user inputs a game we go to the heirachy tree and go to the sub sub genre then do vector comparisons if there are vectors that are way of we move up the tree to sub genre, This system helps keep the results on theme but also makes sure to go for "game play" first
+Additionally I add a 25% bonus if there is a game that shares the same Subjective tag
+I also add a 10% boost if it has both Art style + Music
 
 ### Limitations
 because the data pipeline is based of endpoints creating the db takes 3 days due to rate limiting because of this the data
@@ -45,6 +51,7 @@ Basically, we gather as much info on a game that we can, create tags, apply weig
 - add more depth to tag matching
 - In the results page add buttons to sort by reviews and tags
 - Add multiple game inputs
+- Art style image classification based on game preview images
 
 ## IMPORTANT Notice
 if any of the reviewing companies I pulled data from would like to be removed from this program let me know
