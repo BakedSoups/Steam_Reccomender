@@ -51,6 +51,10 @@ because the data pipeline is based of endpoints creating the db takes 3 days due
 ![image](https://github.com/user-attachments/assets/2266a005-ea0d-4081-9836-69bc965eac51)
 
 ## Todo
+- Convert to FAST API
+- Create a blog post
+- Implement Modern Bert
+- Work on Converting the ETL to full python then create a Step by step guide for future collaborators 
 - Make the search landing page auto suggest beyound fuzzy
 - add more depth to tag matching
 - In the results page add buttons to sort by reviews and tags
