@@ -61,6 +61,7 @@ because the data pipeline is based of endpoints creating the db takes 3 days due
 - In the results page add buttons to sort by reviews and tags
 - Add multiple game inputs
 - Art style image classification based on game preview images
+- Apply "resistance" when moving from sub genre -> genre based on how vauge the next step up is for example moving from action -> rougelike should be weighted stronger
 
 ## IMPORTANT Notice
 if any of the reviewing companies I pulled data from would like to be removed from this program let me know
