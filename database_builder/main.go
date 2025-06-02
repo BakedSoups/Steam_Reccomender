@@ -1,5 +1,7 @@
 package main
 
+// this creates the steam_api.db which helps load images
+// currently migrating the output json file from the python files in tag builder is still manual (takes 4 clicks)
 import (
 	"bufio"
 	"fmt"
@@ -14,19 +16,19 @@ import (
 )
 
 func main() {
-	// // FIRST RUN tag_builder scrape.py then extract_verdicts.py this program needs game_verdicts_with_ratio_tags.json to run
-	// if warning() {
-	// 	fmt.Println("Proceeding...")
-	// } else {
-	// 	fmt.Println("Operation canceled.")
-	// }
+	// FIRST RUN tag_builder scrape.py then extract_verdicts.py this program needs game_verdicts_with_ratio_tags.json to run
+	if warning() {
+		fmt.Println("Proceeding...")
+	} else {
+		fmt.Println("Operation canceled.")
+	}
 
-	// // creates steamspy (this gives us the appids we need)
-	// createSteamSpy()
+	// creates steamspy (this gives us the appids we need)
+	createSteamSpy()
 
-	// // creates tables for steam powered end points
-	// // poppulates tables
-	// initDB()
+	// creates tables for steam powered end points
+	// poppulates tables
+	initDB()
 	migrate()
 }
 

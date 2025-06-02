@@ -18,22 +18,18 @@ class HierarchicalDatabaseConverter:
         with open(self.json_file_path, 'r', encoding='utf-8') as f:
             self.games_data = json.load(f)
         
-        print(f"✅ Loaded {len(self.games_data)} games")
         return True
     
     def create_database_schema(self):
         """Create the SQLite database schema"""
         print(f"Creating database schema in {self.db_file_path}...")
         
-        # Remove existing database if it exists
         if os.path.exists(self.db_file_path):
             os.remove(self.db_file_path)
-            print(f"🗑️ Removed existing database")
         
         conn = sqlite3.connect(self.db_file_path)
         cursor = conn.cursor()
         
-        # Main games table with hierarchical structure
         cursor.execute("""
         CREATE TABLE games (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
