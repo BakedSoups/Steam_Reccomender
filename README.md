@@ -13,22 +13,26 @@ I gather review data from 3 endpoints, 1 website and youtube video reviews, then
 ### For example: 
 Persona 5 
 Input: 
+```
  Review:
  "this game has great cel shaded graphics, a social link system, a great balance of living a highschool life then exploring the dungeon, along with a jazz sound track" 
- Steam tags:
+ Steam tags: JRPG, Story Rich, Great Soundtrack, Anime
+```
 
 Output: 
+```
 Descriptive Tag Vector:30% JRPG 20% Social links 30% Action 20% Jazz
 SUbjective Tag Vector :50% non-replayable 30% Artistic 20%
 Genre: JRPG -> Turn-Based -> Social-link 
-Art style : cel shaded 
-Music : Jazz 
+Art style : 50% cel shaded,50% Anime
+Music : Jazz
+```
 
 With this output I place it into my vector db
 
 ## Searching 
-When the user inputs a game we go to the heirachy tree and go to the sub sub genre then do vector comparisons if there are vectors that are way of we move up the tree to sub genre, This system helps keep the results on theme but also makes sure to go for "game play" first
-Additionally I add a 25% bonus if there is a game that shares the same Subjective tag
+When the user inputs a game we go to the heirachy tree and go to the sub sub genre then do vector comparisons if there are only vectors that are way off we move up the tree to sub genre then to genre, This system helps keep the results on theme but also makes sure to go for "gameplay" first
+Additionally I add a 25% bonus if there is a game that shares the same Subjective tag (if I like darksouls 1 for its interconnected world that should be prioritized) 
 I also add a 10% boost if it has both Art style + Music
 
 ### Limitations
