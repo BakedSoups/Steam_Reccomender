@@ -52,6 +52,7 @@ because the data pipeline is based of endpoints creating the db takes 3 days due
 ![image](https://github.com/user-attachments/assets/a6270639-6a4e-4792-8462-5e7525f046f9)
 
 ## Todo
+- Add translations
 - Convert to FAST API
 - Create a blog post
 - Implement Modern Bert
