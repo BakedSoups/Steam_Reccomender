@@ -26,14 +26,15 @@ def count_review_keywords(review_text) -> int:
     # Define categories of relevant keywords
     keywords = {
         # Gameplay related
-        'gameplay': ['gameplay', 'game play', 'mechanics', 'controls', 'difficulty'],
+        'gameplay': ['gameplay', 'game play', 'mechanics', 'controls', 'difficulty',],
         'graphics': ['graphics', 'visuals', 'art style', 'animation', 'textures', 'fps'],
         'story': ['story', 'plot', 'narrative', 'characters', 'dialogue', 'writing'],
         'audio': ['sound', 'music', 'audio', 'soundtrack', 'voice acting', 'sfx'],
         'performance': ['performance', 'optimization', 'bugs', 'glitches', 'lag', 'framerate'],
         'content': ['content', 'length', 'replay', 'replayability', 'hours', 'campaign'],
         'multiplayer': ['multiplayer', 'online', 'co-op', 'pvp', 'servers', 'matchmaking'],
-        'value': ['price', 'worth', 'value', 'money', 'cost', 'expensive', 'cheap']
+        'value': ['price', 'worth', 'value', 'money', 'cost', 'expensive', 'cheap'],
+        'reviewer':['underated', 'gem']
     }
     
     # Convert to lowercase for case-insensitive matching

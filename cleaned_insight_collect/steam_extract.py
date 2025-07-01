@@ -23,9 +23,7 @@ class EndpointHandler:
         self.appid = appid
     
     def gather_steam_reviews(self, count=40, filter="recent"):
-        """
-        filter (str): Filter type - "recent", "updated", or "all" (default: "recent")
-        """
+        # filter (str): Filter type - "recent", "updated", or "all" (default: "recent")
         target_appid = self.appid
         if not target_appid:
             raise ValueError("No appid provided. Set it in constructor or pass as parameter.")
@@ -86,7 +84,7 @@ class EndpointHandler:
                 
             
         return all_reviews   
-
+    
 # Convenience function for direct access (like pandas style)
 def get_steam_reviews(appid, count=40, filter="recent"):
     handler = EndpointHandler(appid)
