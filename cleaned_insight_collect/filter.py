@@ -16,6 +16,10 @@ def filter_handler(review, length, ideal_sentiment, expected_keywords):
     if sum(keyword_frequencies.values()) < expected_keywords: 
        return False, {}
     
+    # remove this anoying ahh vauge ahhh ahha review
+    # why did someone make this template 🙏
+    if 'You forget what reality is' in review: 
+        return False,{}
     
     return True, keyword_frequencies
     
