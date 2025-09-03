@@ -37,8 +37,6 @@ class SQLiteGameSearcher:
         """Find games by name using SQLite full-text search"""
         if not os.path.exists(self.recommendations_db):
             print(f"Database not found: {self.recommendations_db}")
-            print(f"Current working directory: {os.getcwd()}")
-            print(f"Absolute path would be: {os.path.abspath(self.recommendations_db)}")
             return []
         
         conn = sqlite3.connect(self.recommendations_db)
@@ -50,10 +48,9 @@ class SQLiteGameSearcher:
             
             # Try exact match first
             cursor.execute("""
-            SELECT m.steam_appid, m.game_name as name, i.genre as main_genre, '' as sub_genre, '' as sub_sub_genre
-            FROM main_game m
-            LEFT JOIN ign_scores i ON m.steam_appid = i.steam_appid
-            WHERE LOWER(m.game_name) = ?
+            SELECT steam_appid, name, main_genre, sub_genre, sub_sub_genre
+            FROM games 
+            WHERE LOWER(name) = ?
             LIMIT 1
             """, (query_lower,))
             
@@ -66,16 +63,15 @@ class SQLiteGameSearcher:
             
             # Fuzzy search with ranking
             search_query = """
-            SELECT m.steam_appid, m.game_name as name, i.genre as main_genre, '' as sub_genre, '' as sub_sub_genre,
+            SELECT steam_appid, name, main_genre, sub_genre, sub_sub_genre,
                    CASE 
-                       WHEN LOWER(m.game_name) LIKE LOWER(? || '%') THEN 0.9
-                       WHEN LOWER(m.game_name) LIKE LOWER('%' || ? || '%') THEN 0.7
+                       WHEN LOWER(name) LIKE LOWER(? || '%') THEN 0.9
+                       WHEN LOWER(name) LIKE LOWER('%' || ? || '%') THEN 0.7
                        ELSE 0.5
                    END as similarity_score
-            FROM main_game m
-            LEFT JOIN ign_scores i ON m.steam_appid = i.steam_appid
-            WHERE LOWER(m.game_name) LIKE LOWER('%' || ? || '%')
-            ORDER BY similarity_score DESC, m.game_name
+            FROM games 
+            WHERE LOWER(name) LIKE LOWER('%' || ? || '%')
+            ORDER BY similarity_score DESC, name
             LIMIT ?
             """
             
@@ -159,11 +155,7 @@ class SQLiteGameSearcher:
         try:
             # Get main game info
             cursor.execute("""
-            SELECT m.*, i.genre as main_genre, '' as sub_genre, '' as sub_sub_genre,
-                   '' as art_style, '' as theme, '' as music_style
-            FROM main_game m
-            LEFT JOIN ign_scores i ON m.steam_appid = i.steam_appid
-            WHERE m.steam_appid = ?
+            SELECT * FROM games WHERE steam_appid = ?
             """, (steam_appid,))
             
             game = cursor.fetchone()
@@ -174,22 +166,22 @@ class SQLiteGameSearcher:
             
             # Get all tags
             cursor.execute("""
-            SELECT tag FROM ign_tags WHERE steam_appid = ? ORDER BY tag
+            SELECT tag FROM steam_tags WHERE steam_appid = ? ORDER BY tag_order
             """, (steam_appid,))
             game_dict['steam_tags'] = [row[0] for row in cursor.fetchall()]
             
             cursor.execute("""
-            SELECT tag FROM ign_unique_tags WHERE steam_appid = ? ORDER BY tag
+            SELECT tag FROM unique_tags WHERE steam_appid = ? ORDER BY tag_order
             """, (steam_appid,))
             game_dict['unique_tags'] = [row[0] for row in cursor.fetchall()]
             
             cursor.execute("""
-            SELECT tag FROM ign_subjective_tags WHERE steam_appid = ? ORDER BY tag
+            SELECT tag FROM subjective_tags WHERE steam_appid = ? ORDER BY tag_order
             """, (steam_appid,))
             game_dict['subjective_tags'] = [row[0] for row in cursor.fetchall()]
             
             cursor.execute("""
-            SELECT tag, ratio FROM ign_tags WHERE steam_appid = ?
+            SELECT tag, ratio FROM tag_ratios WHERE steam_appid = ?
             """, (steam_appid,))
             game_dict['tag_ratios'] = {row[0]: row[1] for row in cursor.fetchall()}
             
@@ -235,11 +227,8 @@ class SQLiteGameSearcher:
         try:
             # Get target game info
             cursor.execute("""
-            SELECT m.game_name as name, i.genre as main_genre, '' as sub_genre, '' as sub_sub_genre, 
-                   '' as art_style, '' as theme, '' as music_style
-            FROM main_game m
-            LEFT JOIN ign_scores i ON m.steam_appid = i.steam_appid
-            WHERE m.steam_appid = ?
+            SELECT name, main_genre, sub_genre, sub_sub_genre, art_style, theme, music_style
+            FROM games WHERE steam_appid = ?
             """, (target_appid,))
             
             target_game = cursor.fetchone()
@@ -298,14 +287,14 @@ class SQLiteGameSearcher:
     def _is_soulslike_game_sql(self, steam_appid, cursor):
         """Check if game is soulslike using SQL queries"""
         # Check name
-        cursor.execute("SELECT game_name FROM main_game WHERE steam_appid = ?", (steam_appid,))
+        cursor.execute("SELECT name FROM games WHERE steam_appid = ?", (steam_appid,))
         name = cursor.fetchone()
         if name and any(indicator in name[0].lower() for indicator in ['souls', 'elden ring', 'bloodborne']):
             return True
         
         # Check tags
         cursor.execute("""
-        SELECT COUNT(*) FROM ign_unique_tags 
+        SELECT COUNT(*) FROM unique_tags 
         WHERE steam_appid = ? AND (
             LOWER(tag) LIKE '%souls%' OR 
             LOWER(tag) LIKE '%soulslike%' OR 
@@ -317,13 +306,13 @@ class SQLiteGameSearcher:
         if cursor.fetchone()[0] > 0:
             return True
         
-        # Check sub-sub genre (not available in current schema)
-        # cursor.execute("""
-        # SELECT sub_sub_genre FROM games 
-        # WHERE steam_appid = ? AND LOWER(sub_sub_genre) LIKE '%souls%'
-        # """, (steam_appid,))
+        # Check sub-sub genre
+        cursor.execute("""
+        SELECT sub_sub_genre FROM games 
+        WHERE steam_appid = ? AND LOWER(sub_sub_genre) LIKE '%souls%'
+        """, (steam_appid,))
         
-        return False
+        return cursor.fetchone() is not None
     
     def _get_sql_candidates(self, target_appid, main_genre, sub_genre, sub_sub_genre, is_soulslike, cursor):
         """Get candidate games using SQL hierarchy search"""
@@ -333,10 +322,11 @@ class SQLiteGameSearcher:
         if is_soulslike:
             cursor.execute("""
             SELECT DISTINCT g.steam_appid, 'soulslike' as match_type, 0.5 as hierarchy_bonus
-            FROM main_game g
-            LEFT JOIN ign_unique_tags ut ON g.steam_appid = ut.steam_appid
+            FROM games g
+            LEFT JOIN unique_tags ut ON g.steam_appid = ut.steam_appid
             WHERE g.steam_appid != ? AND (
-                LOWER(g.game_name) LIKE '%souls%' OR
+                LOWER(g.name) LIKE '%souls%' OR
+                LOWER(g.sub_sub_genre) LIKE '%souls%' OR
                 LOWER(ut.tag) LIKE '%souls%' OR
                 LOWER(ut.tag) LIKE '%soulslike%'
             )
@@ -345,27 +335,35 @@ class SQLiteGameSearcher:
             
             candidates.extend([(row[0], row[1], row[2]) for row in cursor.fetchall()])
         
-        # Exact hierarchy matches (simplified since we don't have sub-genres in current schema)
+        # Exact hierarchy matches
         cursor.execute("""
-        SELECT m.steam_appid, 'exact' as match_type, 0.4 as hierarchy_bonus
-        FROM main_game m
-        LEFT JOIN ign_scores i ON m.steam_appid = i.steam_appid
-        WHERE m.steam_appid != ? AND i.genre = ?
+        SELECT steam_appid, 'exact' as match_type, 0.4 as hierarchy_bonus
+        FROM games 
+        WHERE steam_appid != ? AND main_genre = ? AND sub_genre = ? AND sub_sub_genre = ?
         LIMIT 15
-        """, (target_appid, main_genre))
+        """, (target_appid, main_genre, sub_genre, sub_sub_genre))
         
         candidates.extend([(row[0], row[1], row[2]) for row in cursor.fetchall() 
                           if row[0] not in [c[0] for c in candidates]])
         
-        # Similar genre matches (using random selection since we don't have fine-grained genres)
+        # Sub-genre matches
         cursor.execute("""
-        SELECT m.steam_appid, 'similar' as match_type, 0.2 as hierarchy_bonus
-        FROM main_game m
-        LEFT JOIN ign_scores i ON m.steam_appid = i.steam_appid
-        WHERE m.steam_appid != ? AND (i.genre = ? OR i.genre IS NULL)
-        ORDER BY RANDOM()
-        LIMIT 25
-        """, (target_appid, main_genre))
+        SELECT steam_appid, 'sub' as match_type, 0.25 as hierarchy_bonus
+        FROM games 
+        WHERE steam_appid != ? AND main_genre = ? AND sub_genre = ? AND sub_sub_genre != ?
+        LIMIT 15
+        """, (target_appid, main_genre, sub_genre, sub_sub_genre))
+        
+        candidates.extend([(row[0], row[1], row[2]) for row in cursor.fetchall() 
+                          if row[0] not in [c[0] for c in candidates]])
+        
+        # Main genre matches
+        cursor.execute("""
+        SELECT steam_appid, 'main' as match_type, 0.15 as hierarchy_bonus
+        FROM games 
+        WHERE steam_appid != ? AND main_genre = ? AND sub_genre != ?
+        LIMIT 10
+        """, (target_appid, main_genre, sub_genre))
         
         candidates.extend([(row[0], row[1], row[2]) for row in cursor.fetchall() 
                           if row[0] not in [c[0] for c in candidates]])
@@ -418,9 +416,9 @@ class SQLiteGameSearcher:
         """Fallback tag-based similarity calculation"""
         # Get target game tags
         cursor.execute("""
-        SELECT tag FROM ign_unique_tags WHERE steam_appid = ?
+        SELECT tag FROM unique_tags WHERE steam_appid = ?
         UNION
-        SELECT tag FROM ign_subjective_tags WHERE steam_appid = ?
+        SELECT tag FROM subjective_tags WHERE steam_appid = ?
         """, (target_appid, target_appid))
         
         target_tags = set(row[0] for row in cursor.fetchall())
@@ -429,9 +427,9 @@ class SQLiteGameSearcher:
         for candidate_appid, match_type, hierarchy_bonus in candidates:
             # Get candidate tags
             cursor.execute("""
-            SELECT tag FROM ign_unique_tags WHERE steam_appid = ?
+            SELECT tag FROM unique_tags WHERE steam_appid = ?
             UNION
-            SELECT tag FROM ign_subjective_tags WHERE steam_appid = ?
+            SELECT tag FROM subjective_tags WHERE steam_appid = ?
             """, (candidate_appid, candidate_appid))
             
             candidate_tags = set(row[0] for row in cursor.fetchall())
@@ -468,7 +466,18 @@ class SQLiteGameSearcher:
         
         bonus = 0
         
-        # Aesthetic preferences (not available in current schema - skipped)
+        # Aesthetic preferences
+        aesthetics = user_preferences.get('aesthetics', {})
+        if aesthetics:
+            cursor.execute("""
+            SELECT art_style, theme, music_style FROM games WHERE steam_appid = ?
+            """, (candidate_appid,))
+            
+            game_aesthetics = cursor.fetchone()
+            if game_aesthetics:
+                for pref_type, pref_value in aesthetics.items():
+                    if pref_value and game_aesthetics[pref_type] == pref_value:
+                        bonus += 0.1
         
         # Unique/subjective tag preferences
         preferred_tags = user_preferences.get('preferred_tags', [])
@@ -476,9 +485,9 @@ class SQLiteGameSearcher:
             placeholders = ','.join(['?' for _ in preferred_tags])
             cursor.execute(f"""
             SELECT COUNT(*) FROM (
-                SELECT tag FROM ign_unique_tags WHERE steam_appid = ? AND tag IN ({placeholders})
+                SELECT tag FROM unique_tags WHERE steam_appid = ? AND tag IN ({placeholders})
                 UNION
-                SELECT tag FROM ign_subjective_tags WHERE steam_appid = ? AND tag IN ({placeholders})
+                SELECT tag FROM subjective_tags WHERE steam_appid = ? AND tag IN ({placeholders})
             )
             """, [candidate_appid] + preferred_tags + [candidate_appid] + preferred_tags)
             
@@ -491,7 +500,7 @@ class SQLiteGameSearcher:
         if preferred_steam_tags:
             placeholders = ','.join(['?' for _ in preferred_steam_tags])
             cursor.execute(f"""
-            SELECT COUNT(*) FROM ign_tags 
+            SELECT COUNT(*) FROM steam_tags 
             WHERE steam_appid = ? AND tag IN ({placeholders})
             """, [candidate_appid] + preferred_steam_tags)
             
@@ -515,7 +524,7 @@ class SQLiteGameSearcher:
                     if all(tag in selected_tags_lower for tag in combo):
                         # Check if candidate has this combo too
                         cursor.execute(f"""
-                        SELECT COUNT(*) FROM ign_tags 
+                        SELECT COUNT(*) FROM steam_tags 
                         WHERE steam_appid = ? AND LOWER(tag) IN ({','.join(['?' for _ in combo])})
                         """, [candidate_appid] + list(combo))
                         
@@ -657,25 +666,23 @@ def debug_stats():
         stats = {}
         
         # Basic counts
-        cursor.execute("SELECT COUNT(*) FROM main_game")
+        cursor.execute("SELECT COUNT(*) FROM games")
         stats['total_games'] = cursor.fetchone()[0]
         
-        # Top genres
+        # Top hierarchies
         cursor.execute("""
-        SELECT i.genre, COUNT(*) as count
-        FROM main_game m
-        LEFT JOIN ign_scores i ON m.steam_appid = i.steam_appid
-        WHERE i.genre IS NOT NULL
-        GROUP BY i.genre
+        SELECT main_genre, sub_genre, sub_sub_genre, COUNT(*) as count
+        FROM games 
+        GROUP BY main_genre, sub_genre, sub_sub_genre
         ORDER BY count DESC
         LIMIT 20
         """)
-        stats['top_genres'] = cursor.fetchall()
+        stats['top_hierarchies'] = cursor.fetchall()
         
         # Popular tags
         cursor.execute("""
         SELECT tag, COUNT(*) as count
-        FROM ign_unique_tags
+        FROM unique_tags
         GROUP BY tag
         ORDER BY count DESC
         LIMIT 20
