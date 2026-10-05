@@ -324,52 +324,39 @@ export default function NextSteamGamePage() {
       return
     }
 
-    let cancelled = false
-
-    async function loadRecommendations() {
-      if (!selectedGame) {
-        return
-      }
-      try {
+    return scheduleRequest({
+      delayMs: 300,
+      load: (signal) => fetchJson<{ results: RecommendedGame[] }>("/api/recommendations", {
+        method: "POST",
+        signal,
+        body: JSON.stringify({
+          appid: selectedGame.id,
+          weights,
+          limit: 32,
+        }),
+      }),
+      onStart: () => {
         setResultsLoading(true)
         setResultsError(null)
-        const payload = await fetchJson<{ results: RecommendedGame[] }>("/api/recommendations", {
-          method: "POST",
-          body: JSON.stringify({
-            appid: selectedGame.id,
-            weights,
-            limit: 32,
-          }),
+      },
+      onSuccess: (payload) => {
+        setRawRecommendations(payload.results)
+        posthog.capture("recommendations_loaded", {
+          source_appid: selectedGame.id,
+          source_game_name: selectedGame.title,
+          release_date: selectedGame.releaseDate || null,
+          results_count: payload.results.length,
         })
-        if (!cancelled) {
-          setRawRecommendations(payload.results)
-          posthog.capture("recommendations_loaded", {
-            source_appid: selectedGame.id,
-            source_game_name: selectedGame.title,
-            release_date: selectedGame.releaseDate || null,
-            results_count: payload.results.length,
-          })
-        }
-      } catch (error) {
-        if (!cancelled) {
-          captureCaughtError("recommendations_load_failed", error, {
-            source_appid: selectedGame.id,
-            source_game_name: selectedGame.title,
-          })
-          setResultsError(caughtErrorMessage(error, "Recommendation load failed"))
-        }
-      } finally {
-        if (!cancelled) {
-          setResultsLoading(false)
-        }
-      }
-    }
-
-    loadRecommendations()
-
-    return () => {
-      cancelled = true
-    }
+      },
+      onError: (error) => {
+        captureCaughtError("recommendations_load_failed", error, {
+          source_appid: selectedGame.id,
+          source_game_name: selectedGame.title,
+        })
+        setResultsError(caughtErrorMessage(error, "Recommendation load failed"))
+      },
+      onSettled: () => setResultsLoading(false),
+    })
   }, [screen, selectedGame, weights])
 
   const recommendations = useMemo(() => {

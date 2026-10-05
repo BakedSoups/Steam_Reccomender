@@ -65,3 +65,23 @@ test("active failures still clear loading and surface the error", async (t) => {
   await flush()
   assert.deepEqual(events, ["start", "error", "settled"])
 })
+
+test("rapid slider updates send only the final recommendation request", async (t) => {
+  t.mock.timers.enable({ apis: ["setTimeout"] })
+  const sentWeights = [], events = []
+  let cancel = () => {}
+  for (let weight = 0; weight <= 100; weight++) {
+    cancel()
+    cancel = scheduleRequest({
+      delayMs: 300,
+      load: async () => { sentWeights.push(weight); return weight },
+      ...callbacks(events),
+    })
+    t.mock.timers.tick(10)
+  }
+  assert.deepEqual(sentWeights, [])
+  t.mock.timers.tick(300)
+  await flush()
+  assert.deepEqual(sentWeights, [100])
+  assert.deepEqual(events, ["start", 100, "settled"])
+})

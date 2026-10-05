@@ -45,6 +45,17 @@ class CandidateRetrieverTests(unittest.TestCase):
         self.assertEqual(store.precomputed_calls, [10])
         self.assertEqual(store.prescreen_calls, [])
 
+    def test_default_request_prescreens_when_precomputed_and_chroma_are_unavailable(self) -> None:
+        store = FakeStore(precomputed_appids=[])
+        retriever = self.make_retriever(store)
+
+        candidates = retriever.retrieve_candidates({"appid": 10}, prescreen_limit=450, merged_limit=300)
+
+        self.assertEqual([candidate["appid"] for candidate in candidates], [201, 202])
+        self.assertEqual(store.precomputed_calls, [10])
+        self.assertEqual(len(store.prescreen_calls), 1)
+        self.assertEqual(store.prescreen_calls[0]["limit"], 450)
+
     def test_tuned_tag_request_uses_precomputed_candidates(self) -> None:
         store = FakeStore()
         retriever = self.make_retriever(store)

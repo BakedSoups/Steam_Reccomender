@@ -323,7 +323,8 @@ class CandidateRetriever:
             prescreen_future = None
             chroma_future = None
 
-            if self.store is not None and not use_default_chroma_path:
+            # Default requests still need live candidates when Chroma is unavailable.
+            if self.store is not None and (not use_default_chroma_path or self._collection is None):
                 prescreen_future = executor.submit(
                     _timed_call,
                     self.store.prescreen_candidate_appids,
