@@ -11,6 +11,7 @@ import { SelectedGamePanel } from "@/components/selected-game-panel"
 import { ControlPanel } from "@/components/control-panel"
 import { RecommendationsPanel } from "@/components/recommendations-panel"
 import { TagFilterPanel } from "@/components/tag-filter-panel"
+import { scheduleRequest } from "@/lib/scheduled-request"
 import { unique } from "@/lib/collections"
 import { clampPercent } from "@/lib/number"
 import { updatePercentWeight } from "@/lib/percent-weights"
@@ -280,29 +281,32 @@ export default function NextSteamGamePage() {
       return
     }
 
-    const timeoutId = window.setTimeout(async () => {
-      try {
+    return scheduleRequest({
+      delayMs: 180,
+      load: (signal) => fetchJson<{ results: Game[] }>(
+        `/api/search?q=${encodeURIComponent(query)}`, { signal },
+      ),
+      onStart: () => {
         setSearchLoading(true)
         setSearchError(null)
-        const payload = await fetchJson<{ results: Game[] }>(`/api/search?q=${encodeURIComponent(query)}`)
+      },
+      onSuccess: (payload) => {
         setSearchResults(payload.results)
         posthog.capture("search_results_loaded", {
           query,
           query_length: query.length,
           results_count: payload.results.length,
         })
-      } catch (error) {
+      },
+      onError: (error) => {
         captureCaughtError("search_load_failed", error, {
           query,
           query_length: query.length,
         })
         setSearchError(caughtErrorMessage(error, "Search failed"))
-      } finally {
-        setSearchLoading(false)
-      }
-    }, 180)
-
-    return () => window.clearTimeout(timeoutId)
+      },
+      onSettled: () => setSearchLoading(false),
+    })
   }, [searchQuery])
 
   useEffect(() => {
