@@ -329,10 +329,11 @@ def _serialize_recommendation(item: dict) -> dict[str, Any]:
     }
 
 
-def _normalize_tag_weight_map(payload: dict[str, dict[str, float]] | None) -> tuple[dict[str, dict[str, float]], dict[str, float]]:
+def _normalize_tag_weight_map(payload: dict[str, dict[str, float]] | None) -> tuple[dict[str, dict[str, float]], dict[str, float] | None]:
     payload = payload or {}
     vector_weights: dict[str, dict[str, float]] = {}
-    soundtrack_weights: dict[str, float] = {}
+    # None preserves defaults; an explicit empty music map clears them.
+    soundtrack_weights: dict[str, float] | None = None
     for context, entries in payload.items():
         cleaned = {
             str(tag).replace("_", " "): value

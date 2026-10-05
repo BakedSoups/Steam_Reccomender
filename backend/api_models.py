@@ -1,18 +1,27 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
+
+
+# Weight maps use the same percentage scale and keys as the frontend controls.
+Percentage = Annotated[float, Field(ge=0, le=100, allow_inf_nan=False)]
+TagWeight = Annotated[float, Field(le=100, allow_inf_nan=False)]
+Context = Literal["mechanics", "narrative", "vibe", "structure_loop", "identity", "setting", "music"]
+Match = Literal["vector", "genre", "appeal", "music"]
+Appeal = Literal["challenge", "complexity", "pace", "narrative_focus", "social_energy", "creativity"]
+GenreBranch = Literal["primary", "sub", "sub_sub", "traits"]
 
 
 class RecommendationWeights(BaseModel):
     model_config = ConfigDict(extra="ignore")
 
-    match: dict[str, Any] | None = None
-    context: dict[str, Any] | None = None
-    appeal: dict[str, Any] | None = None
-    tags: dict[str, dict[str, float]] | None = None
-    genres: dict[str, Any] | None = None
+    match: dict[Match, Percentage] | None = None
+    context: dict[Context, Percentage] | None = None
+    appeal: dict[Appeal, Percentage] | None = None
+    tags: dict[Context, dict[str, TagWeight]] | None = None
+    genres: dict[GenreBranch, list[str] | str] | None = None
 
     @field_validator("tags")
     @classmethod

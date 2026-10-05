@@ -220,8 +220,8 @@ def _build_vector_preferences(
     multipliers = context_multipliers or VECTOR_CONTEXT_MULTIPLIERS
     preferences: dict[str, dict[str, float]] = {}
     for context, tag_weights in vectors.items():
-        override_weights = boosts.get(context, {})
-        normalized = _normalize_weights(override_weights or tag_weights)
+        override_weights = boosts.get(context, tag_weights)
+        normalized = _normalize_weights(override_weights)
         context_multiplier = multipliers.get(context, 1.0)
         adjusted: dict[str, float] = {}
         for tag, weight in normalized.items():
@@ -256,10 +256,11 @@ def _build_music_preferences(
     extra_boosts: dict[str, float] | None = None,
     soundtrack_multiplier: float = 1.0,
 ) -> dict[str, float]:
-    default_tags = _metadata_music_tags(metadata)
-    source_weights = {tag: 1.0 for tag in default_tags}
-    for tag, weight in (extra_boosts or {}).items():
-        source_weights[str(tag)] = max(source_weights.get(str(tag), 0.0), float(weight) + 0.45)
+    # An explicit map replaces defaults, including empty maps and zero weights.
+    source_weights = (
+        {tag: 1.0 for tag in _metadata_music_tags(metadata)}
+        if extra_boosts is None else extra_boosts
+    )
     if not source_weights:
         return {}
     normalized = _normalize_weights(source_weights)
@@ -274,33 +275,7 @@ def _build_identity_preferences(
     extra_boosts: dict[str, float] | None = None,
     identity_multiplier: float = 1.0,
 ) -> dict[str, float]:
-    source_weights = _identity_source_weights(metadata)
-    signature_tag = str(metadata.get("signature_tag", "")).strip()
-    niche_anchors = {str(tag).strip() for tag in metadata.get("niche_anchors", []) or [] if str(tag).strip()}
-    identity_details = {
-        str(tag).strip()
-        for tag in [
-            *(metadata.get("identity_tags", []) or []),
-            *(metadata.get("micro_tags", []) or []),
-        ]
-        if str(tag).strip()
-    }
-
-    for tag, weight in (extra_boosts or {}).items():
-        text = str(tag).strip()
-        if not text:
-            continue
-        boost = float(weight)
-        if text == signature_tag:
-            boost += 1.15
-        elif text in niche_anchors:
-            boost += 0.78
-        elif text in identity_details:
-            boost += 0.42
-        else:
-            boost += 0.28
-        source_weights[text] = max(source_weights.get(text, 0.0), boost)
-
+    source_weights = _identity_source_weights(metadata) if extra_boosts is None else extra_boosts
     if not source_weights:
         return {}
     normalized = _normalize_weights(source_weights)
@@ -315,12 +290,7 @@ def _build_setting_preferences(
     extra_boosts: dict[str, float] | None = None,
     setting_multiplier: float = 1.0,
 ) -> dict[str, float]:
-    source_weights = _setting_source_weights(metadata)
-    for tag, weight in (extra_boosts or {}).items():
-        text = str(tag).strip()
-        if not text:
-            continue
-        source_weights[text] = max(source_weights.get(text, 0.0), float(weight) + 0.38)
+    source_weights = _setting_source_weights(metadata) if extra_boosts is None else extra_boosts
     if not source_weights:
         return {}
     normalized = _normalize_weights(source_weights)
