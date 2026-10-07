@@ -36,20 +36,22 @@ INSTALL_BASE=0 RUN_CERTBOT=0 DOMAIN="${DOMAIN}" EMAIL="${EMAIL}" APP_DIR="${APP_
 echo "[3/8] Stopping old docker stack"
 docker compose down --remove-orphans || true
 
-echo "[4/8] Building and starting docker stack"
-docker compose up -d --build
+echo "[4/8] Building stack and starting Postgres"
+docker compose build
+docker compose up -d postgres
 
 echo "[5/8] Rebuilding final canonical SQLite DB from canon_groups_v6.csv"
-docker compose exec api python -m db_creation.final_db --skip-canon
+docker compose run --rm api python -m db_creation.final_db --skip-canon
 
 echo "[6/8] Refreshing Postgres from final canonical SQLite DB"
-docker compose exec api python -m db_creation.postgres.load_from_sqlite
+docker compose run --rm api python -m db_creation.postgres.load_from_sqlite
 
 echo "[7/8] Rebuilding Chroma and precomputed candidate cache"
-docker compose exec api python -m db_creation.chroma_db_migration
-docker compose exec api python -m db_creation.precompute_candidates --per-game "${PRECOMPUTE_PER_GAME}" --batch-size "${PRECOMPUTE_BATCH_SIZE}"
+docker compose run --rm api python -m db_creation.chroma_db_migration
+docker compose run --rm api python -m db_creation.precompute_candidates --per-game "${PRECOMPUTE_PER_GAME}" --batch-size "${PRECOMPUTE_BATCH_SIZE}"
 
-echo "[8/8] Final nginx reload"
+echo "[8/8] Starting validated stack and reloading nginx"
+docker compose up -d api frontend
 nginx -t
 systemctl reload nginx
 

@@ -421,6 +421,7 @@ def main(*, reset_all: bool = False) -> int:
         with psycopg.connect(postgres_dsn()) as pg_connection:
             with pg_connection.cursor() as cursor:
                 log("Resetting Postgres tables")
+                log("This clears precomputed candidates; keep the API stopped until Chroma and candidate precomputation complete")
                 reset_postgres_tables(cursor, reset_all=reset_all)
                 log("Applying schema")
                 cursor.execute(schema_sql)

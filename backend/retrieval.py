@@ -74,10 +74,12 @@ class CandidateRetriever:
         try:
             import chromadb
         except ImportError:
+            logger.warning("Chroma is unavailable: chromadb is not installed")
             return None
         self._chroma_errors = _chroma_exception_types(chromadb)
 
         if not self.chroma_dir.exists():
+            logger.warning("Chroma is unavailable: directory %s does not exist", self.chroma_dir)
             return None
 
         try:
@@ -318,6 +320,13 @@ class CandidateRetriever:
                 )
                 if candidates:
                     return candidates
+
+            logger.warning(
+                "Precomputed candidates missing or unusable for appid=%s; "
+                "chroma_available=%s. Rebuild and validate the candidate cache.",
+                game.get("appid"),
+                self._collection is not None,
+            )
 
         with ThreadPoolExecutor(max_workers=2) as executor:
             prescreen_future = None

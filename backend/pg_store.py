@@ -190,6 +190,17 @@ class PostgresGameStore:
         with self._connect() as connection:
             return list(connection.execute(select(games.c.appid).order_by(games.c.appid)).scalars())
 
+    def list_incomplete_candidate_appids(self, *, minimum: int) -> list[int]:
+        statement = (
+            select(games.c.appid)
+            .select_from(games.outerjoin(candidates, candidates.c.source_appid == games.c.appid))
+            .group_by(games.c.appid)
+            .having(func.count(candidates.c.candidate_appid) < minimum)
+            .order_by(games.c.appid)
+        )
+        with self._connect() as connection:
+            return list(connection.execute(statement).scalars())
+
     def prescreen_candidate_appids(
         self,
         base_game: dict[str, Any],
