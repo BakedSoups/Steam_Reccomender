@@ -16,7 +16,7 @@ from backend.coercion import coerce_json_dict, coerce_json_list, normalize_searc
 # Runtime projections of the existing schema; database creation stays in the
 # ingestion pipeline. Core expressions bind values without interpolating input.
 _GAME_FIELDS = (
-    "appid", "name", "canonical_vectors", "canonical_metadata",
+    "appid", "name", "canonical_vectors", "canonical_metadata", "platforms",
     "metacritic_score", "recommendations_total", "steamspy_owner_estimate",
     "steamspy_ccu", "positive", "negative", "estimated_review_count",
     "release_date_parsed", "short_description", "header_image", "capsule_image",
@@ -25,11 +25,11 @@ _GAME_FIELDS = (
     "release_date_text",
 )
 _SEARCH_FIELDS = (
-    "appid", "name", "canonical_metadata", "short_description", "header_image",
+    "appid", "name", "canonical_metadata", "platforms", "short_description", "header_image",
     "capsule_image", "capsule_imagev5", "background_image", "background_image_raw",
     "logo_image", "library_hero_image", "library_capsule_image",
 )
-_JSON_FIELDS = {"canonical_vectors", "canonical_metadata", "developers", "publishers"}
+_JSON_FIELDS = {"platforms", "canonical_vectors", "canonical_metadata", "developers", "publishers"}
 _INTEGER_FIELDS = {
     "appid", "metacritic_score", "recommendations_total", "steamspy_owner_estimate",
     "steamspy_ccu", "positive", "negative", "estimated_review_count",
@@ -303,6 +303,7 @@ class PostgresGameStore:
             "name": row.get("name"),
             "vectors": coerce_json_dict(row.get("canonical_vectors")),
             "metadata": metadata,
+            "platforms": coerce_json_dict(row.get("platforms")) if row.get("platforms") is not None else None,
             "signals": {
                 "metacritic_score": row.get("metacritic_score"),
                 "recommendations_total": row.get("recommendations_total"),
@@ -374,6 +375,7 @@ class PostgresGameStore:
             results.append(
                 {
                     "appid": int(row["appid"]),
+                    "platforms": coerce_json_dict(row.get("platforms")) if row.get("platforms") is not None else None,
                     "name": row.get("name"),
                     "signature_tag": metadata.get("signature_tag", ""),
                     "music_primary": str(metadata.get("music_primary", "")).strip(),

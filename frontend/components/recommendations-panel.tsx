@@ -2,8 +2,9 @@
 
 import { memo, useState } from "react"
 import Image from "next/image"
-import { ChevronDown, ChevronUp, Radar, Target, AudioLines, ThumbsDown, ThumbsUp } from "lucide-react"
+import { ChevronDown, ChevronUp, Compass, Radar, Target, AudioLines, ThumbsDown, ThumbsUp } from "lucide-react"
 import type { Game, RecommendedGame, Weights } from "@/lib/types"
+import { PlatformBadges } from "@/components/platform-badges"
 import { MATCH_LABELS } from "@/lib/score-labels"
 import { useTimedToast } from "@/lib/use-timed-toast"
 import {
@@ -61,25 +62,6 @@ const TAG_CONTEXT_COLORS: Record<TagContextKey, string> = {
   identity: "#fb7185",
   setting: "#60a5fa",
   music: "#fcd34d",
-}
-
-function SteamRecommendationMark() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-      className="h-6 w-6 text-[#66c0f4]"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <circle cx="15.75" cy="7.25" r="3.45" stroke="currentColor" strokeWidth="1.7" />
-      <circle cx="15.75" cy="7.25" r="1.15" fill="currentColor" />
-      <path d="M12.75 8.95 8.9 12.1" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" />
-      <circle cx="7.1" cy="13.65" r="2.45" stroke="currentColor" strokeWidth="1.7" />
-      <path d="M4.9 12.6 2.75 11.7" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
-      <path d="M4.1 18.25h15.8M6.25 21h11.5" stroke="currentColor" strokeWidth="1.45" strokeLinecap="round" opacity=".72" />
-    </svg>
-  )
 }
 
 interface RecommendationsPanelProps {
@@ -464,6 +446,7 @@ const RecommendationCard = memo(function RecommendationCard({ game, rank, weight
                   {(game.matchScore * 100).toFixed(0)}% match
                 </span>
               </div>
+              <PlatformBadges platforms={game.platforms} />
               <div className="mt-1 flex flex-wrap items-center gap-2">
                 <span className="tag-chip">{game.category}</span>
                 {primaryHighlight ? (
@@ -897,7 +880,7 @@ export function RecommendationsPanel({
       <div className="panel p-3 glow-box sm:p-4">
         <div className="flex items-center justify-between gap-2 sm:gap-4">
           <div className="flex min-w-0 items-center gap-2 sm:gap-3">
-            <SteamRecommendationMark />
+            <Compass className="h-6 w-6 shrink-0 text-[#66c0f4]" aria-hidden="true" />
             <div className="hidden sm:block">
               <h2 className="text-sm font-semibold text-foreground">Recommendations</h2>
               <p className="mt-1 text-base font-semibold text-slate-100">

@@ -49,6 +49,15 @@ def open_sqlite_readonly(path: Path) -> sqlite3.Connection:
     return sqlite3.connect(f"file:{resolved}?mode=ro&immutable=1", uri=True)
 
 
+def load_platform_rows(connection: sqlite3.Connection) -> dict[int, dict[str, bool]]:
+    return {
+        int(appid): {"windows": bool(windows), "mac": bool(mac), "linux": bool(linux)}
+        for appid, windows, mac, linux in connection.execute(
+            "SELECT appid, windows, mac, linux FROM game_platforms"
+        )
+    }
+
+
 def load_preview_rows(connection: sqlite3.Connection) -> dict[int, dict]:
     connection.row_factory = sqlite3.Row
     rows = connection.execute(
@@ -290,6 +299,7 @@ def _clean_canonical_metadata(raw_json: str | None) -> dict:
 
 
 def ensure_postgres_schema(cursor) -> None:
+    cursor.execute("ALTER TABLE games ADD COLUMN IF NOT EXISTS platforms JSONB")
     cursor.execute(
         """
         ALTER TABLE canonical_tag_groups
@@ -346,11 +356,12 @@ def insert_game_batch(cursor, game_payload: list[tuple]) -> None:
             library_capsule_image,
             developers,
             publishers,
-            release_date_text
+            release_date_text,
+            platforms
         )
         VALUES (
             %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
-            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
         )
         """,
         game_payload,
@@ -396,6 +407,7 @@ def main(*, reset_all: bool = False) -> int:
     try:
         log("Reading preview rows from metadata SQLite")
         preview_rows = load_preview_rows(metadata_sqlite)
+        platform_rows = load_platform_rows(metadata_sqlite)
         log(f"Loaded preview rows: {len(preview_rows)}")
 
         log("Counting canonical rows from final SQLite")
@@ -520,6 +532,7 @@ def main(*, reset_all: bool = False) -> int:
                                 Jsonb(json.loads(preview.get("developers_json") or "[]")),
                                 Jsonb(json.loads(preview.get("publishers_json") or "[]")),
                                 preview.get("release_date_text") or "",
+                                Jsonb(platform_rows[int(row["appid"])]) if int(row["appid"]) in platform_rows else None,
                             )
                         )
                     insert_game_batch(cursor, game_payload)

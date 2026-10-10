@@ -1,6 +1,7 @@
 "use client"
 
 import type { Game } from "@/lib/types"
+import { PlatformBadges } from "@/components/platform-badges"
 import Image from "next/image"
 
 const IMAGE_FALLBACK = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='460' height='215'><rect width='100%' height='100%' fill='%2311161f'/></svg>"
@@ -37,6 +38,7 @@ export function SelectedGamePanel({ game }: SelectedGamePanelProps) {
 
         <div className="min-w-0 self-center space-y-2">
           <h2 className="text-lg font-semibold leading-tight text-foreground">{game.title}</h2>
+          <PlatformBadges platforms={game.platforms} />
 
           {(primaryGenres.length > 0 || game.category) ? (
             <p className="text-sm leading-5 text-muted-foreground">

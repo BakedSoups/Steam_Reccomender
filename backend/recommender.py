@@ -641,6 +641,7 @@ def recommend_games(
             {
                 "appid": int(game["appid"]),
                 "name": game["name"],
+                "platforms": game.get("platforms"),
                 "total_score": total_score,
                 "vector_score": vector_score,
                 "genre_score": genre_score,
