@@ -1,5 +1,7 @@
 # NextSteamGame
 
+<img src="docs/assets/greg.png" alt="Greg" width="96" align="right" />
+
 `NextSteamGame` is a Steam recommendation project built around the idea that games
 should be matched by what they are, not only by player-overlap signals.
 

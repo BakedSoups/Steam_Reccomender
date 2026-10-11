@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS games (
     source_review_samples JSONB NOT NULL,
     source_vectors JSONB NOT NULL,
     source_metadata JSONB NOT NULL,
+    platforms JSONB,
     metacritic_score INTEGER,
     recommendations_total INTEGER,
     steamspy_owner_estimate BIGINT,

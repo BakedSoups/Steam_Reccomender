@@ -61,6 +61,7 @@
     @apply border-border outline-ring/50;
   }
   body {
+    --page-zoom: 1;
     @apply bg-background text-foreground;
     background-image:
       radial-gradient(circle at top left, rgba(86, 182, 255, 0.11), transparent 24rem),
@@ -69,7 +70,8 @@
 
   @media (min-width: 768px) {
     body {
-      zoom: 0.8;
+      --page-zoom: 0.8;
+      zoom: var(--page-zoom);
     }
   }
 }
@@ -383,4 +385,38 @@ input[type="range"]::-moz-range-thumb {
   background: var(--foreground);
   border: 2px solid var(--background);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Viewport units must compensate for the desktop body zoom. */
+.viewport-height {
+  min-height: calc(100dvh / var(--page-zoom, 1));
+}
+
+/* Anchor the search independently of the expandable story's height. */
+@media (min-width: 640px) {
+  .home-search-content {
+    padding-top: max(12rem, calc(34dvh / var(--page-zoom, 1)));
+  }
+}
+
+/* Expanding the story must not resize or recrop the shelf background. */
+.home-shelf-background {
+  height: calc(100dvh / var(--page-zoom, 1));
+}
+
+@media (max-width: 639px) {
+  .mobile-game-profile { background: #09131e; }
+  .profile-hero-art,
+  .profile-hero-shade { height: 320px !important; }
+  .profile-hero-art > img {
+    height: 100%;
+    object-fit: contain;
+    object-position: center center !important;
+    transform: none !important;
+    opacity: 0.65;
+  }
+  .profile-hero-shade {
+    background: linear-gradient(180deg, rgba(9, 19, 30, 0.15), rgba(9, 19, 30, 0.35) 60%, #09131e 100%);
+  }
+  .profile-hero-bottom { display: none; }
 }

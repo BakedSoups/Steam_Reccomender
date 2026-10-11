@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import uuid
 import sqlite3
 from pathlib import Path
 from typing import Callable
@@ -110,7 +111,11 @@ def run_chroma_migration(
     progress: Callable[[dict], None] | None = None,
 ) -> dict:
     client = _ensure_chroma_client(chroma_dir_path)
-    collection = client.get_or_create_collection(name=COLLECTION_NAME)
+    rebuild_id = uuid.uuid4().hex
+    collection = client.create_collection(
+        name=f"{COLLECTION_NAME}_rebuild_{rebuild_id}",
+        configuration={"hnsw": {"space": "l2", "ef_construction": 200, "ef_search": 500, "max_neighbors": 32}},
+    )
 
     total_rows = _count_rows(final_db_path)
     processed_rows = 0
@@ -134,7 +139,7 @@ def run_chroma_migration(
                 }
             )
 
-        collection.upsert(ids=ids, documents=documents, metadatas=metadatas)
+        collection.add(ids=ids, documents=documents, metadatas=metadatas)
         processed_rows += len(rows)
 
         if progress is not None:
@@ -145,6 +150,19 @@ def run_chroma_migration(
                     "total_rows": total_rows,
                 }
             )
+
+    if not total_rows or collection.count() != total_rows:
+        raise RuntimeError("Chroma rebuild did not produce a complete, nonempty collection")
+
+    existing = next((item for item in client.list_collections() if item.name == COLLECTION_NAME), None)
+    if existing is not None:
+        existing.modify(name=f"{COLLECTION_NAME}_backup_{rebuild_id}")
+    try:
+        collection.modify(name=COLLECTION_NAME)
+    except Exception:
+        if existing is not None:
+            existing.modify(name=COLLECTION_NAME)
+        raise
 
     return {
         "status": "completed",

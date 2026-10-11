@@ -31,11 +31,12 @@ INSTALL_BASE="${INSTALL_BASE}" RUN_CERTBOT="${RUN_CERTBOT}" \
 echo "[2/7] Starting Postgres"
 docker compose up -d postgres
 
-echo "[3/7] Loading Postgres from SQLite"
+echo "[3/7] Stopping API and loading Postgres from SQLite"
+docker compose stop api
 docker compose --profile loader run --rm postgres_loader
 
-echo "[4/7] Starting API and frontend"
-docker compose up -d --build api frontend
+echo "[4/7] Building API and frontend with the API stopped"
+docker compose build api frontend
 
 echo "[5/7] Rebuilding Chroma"
 docker compose run --rm api python -m db_creation.chroma_db_migration
@@ -45,7 +46,8 @@ docker compose run --rm api python -m db_creation.precompute_candidates \
   --per-game "${PRECOMPUTE_PER_GAME}" \
   --batch-size "${PRECOMPUTE_BATCH_SIZE}"
 
-echo "[7/7] Final status"
+echo "[7/7] Starting API and frontend after validated precomputation"
+docker compose up -d api frontend
 docker compose ps
 
 cat <<EOF

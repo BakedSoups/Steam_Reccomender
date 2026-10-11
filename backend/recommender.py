@@ -220,6 +220,8 @@ def _build_vector_preferences(
     multipliers = context_multipliers or VECTOR_CONTEXT_MULTIPLIERS
     preferences: dict[str, dict[str, float]] = {}
     for context, tag_weights in vectors.items():
+        if context not in VECTOR_CONTEXT_ORDER or not isinstance(tag_weights, dict):
+            continue
         override_weights = boosts.get(context, tag_weights)
         normalized = _normalize_weights(override_weights)
         context_multiplier = multipliers.get(context, 1.0)
@@ -639,6 +641,7 @@ def recommend_games(
             {
                 "appid": int(game["appid"]),
                 "name": game["name"],
+                "platforms": game.get("platforms"),
                 "total_score": total_score,
                 "vector_score": vector_score,
                 "genre_score": genre_score,
