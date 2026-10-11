@@ -791,9 +791,7 @@ export default function NextSteamGamePage() {
                     <p className="mx-auto max-w-2xl pt-3 text-balance text-lg leading-8 text-slate-100 sm:text-xl sm:leading-9">
                       This engine aims to give you more control over your search by letting you choose specific aspects of a game you love.
                     </p>
-                    <p className="mx-auto hidden sm:block max-w-2xl pt-2 text-balance text-base leading-7 text-white sm:text-lg sm:leading-8">
-                      For example: &ldquo;I want a game like Halo Wars for its mission based structure. It doesn&apos;t have to be sci fi.&rdquo;
-                    </p>
+
                   </div>
                 </div>
                 <div className="mx-auto mt-6 max-w-4xl sm:mt-10">
