@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="40 60 450 410" width="512" height="512" role="img" aria-labelledby="title desc">
+  <title id="title">Greg, the Steam Rec reader</title>
+  <desc id="desc">A reader with glasses looks up from a simple open magazine beside a lit desk lamp aimed toward him, illustrated in navy and seafoam with a warm yellow light.</desc>
+  <defs>
+    <linearGradient id="lamplight" gradientUnits="userSpaceOnUse" x1="375" y1="140" x2="235" y2="390">
+      <stop stop-color="#ffe08a" stop-opacity=".48" />
+      <stop offset="1" stop-color="#ffe08a" stop-opacity=".16" />
+    </linearGradient>
+    <linearGradient id="warm-reader" x1="0" y1="0.5" x2="1" y2="0.35">
+      <stop offset=".35" stop-color="#91c9c5" />
+      <stop offset="1" stop-color="#c5cfad" />
+    </linearGradient>
+    <linearGradient id="warm-paper" x1="0" y1="1" x2="1" y2="0">
+      <stop stop-color="#91c9c5" />
+      <stop offset="1" stop-color="#ddd59f" />
+    </linearGradient>
+  </defs>
+  <path d="M347 147 411 174 365 414 155 365Z" fill="url(#lamplight)"/>
+  <g stroke="#0b1823" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <!-- A clean angled shade, two joined arms, and a flat base. -->
+    <path d="M430 403V254L458 199 423 112" fill="none" stroke-width="30"/>
+    <path d="M430 403V254L458 199 423 112" fill="none" stroke="#91c9c5" stroke-width="10"/>
+    <circle cx="458" cy="199" r="10" fill="#91c9c5"/>
+    <rect x="399" y="398" width="69" height="15" rx="7" fill="#91c9c5"/>
+    <!-- Cylindrical housing and a flared cone, aimed down toward the reader. -->
+    <path d="M391 110 405 77Q416 72 437 86Q443 90 441 97L428 130Z" fill="#91c9c5"/>
+    <path d="M391 110Q408 108 428 130L411 174Q374 171 347 147Z" fill="#91c9c5"/>
+    <path d="M347 147C350 136 416 158 411 174C406 187 342 159 347 147Z" fill="#0b1823"/>
+    <path d="M355 148Q381 151 403 170" fill="none" stroke="#ffe08a" stroke-width="5"/>
+    <!-- Loose shoulders and a long neck follow the original sketch. -->
+    <path d="M115 273Q87 274 74 305L57 412Q112 436 278 426L291 286Q255 268 212 274" fill="url(#warm-reader)"/>
+    <path d="M183 223 165 279Q170 310 192 301L218 242" fill="url(#warm-reader)"/>
+    <g transform="rotate(-24 210 238)">
+    <path d="M124 174C112 125 144 88 188 88C244 88 278 112 296 158C316 206 283 250 240 250C215 250 184 237 157 225C135 215 124 197 124 174Z" fill="url(#warm-reader)"/>
+    <!-- Glasses sit down and to the right, toward the magazine. -->
+    <g transform="translate(18 10)">
+    <path d="M130 146 188 150Q201 152 200 164L195 191Q191 202 177 198L134 190Q123 188 124 175Z" fill="#ffffff" stroke-width="10"/>
+    <path d="M224 164 264 173Q276 176 271 189L264 209Q260 219 248 214L216 204Q206 201 211 190Z" fill="#ffffff" stroke-width="10"/>
+    <path d="M200 176 217 181M124 159 112 155M275 183 283 186" fill="none" stroke-width="10"/>
+    </g>
+    </g>
+    <!-- Two flat magazine pages, a center fold, and simple printed bars. -->
+    <path d="M133 331 271 300 301 421 156 447Z" fill="url(#warm-paper)" stroke-width="10"/>
+    <path d="M271 300 364 277 400 394 301 421Z" fill="url(#warm-paper)" stroke-width="10"/>
+    <path d="M271 300 301 421" fill="none" stroke-width="10"/>
+    <path d="M171 362 224 350M177 390 230 378M309 328 348 318M317 356 356 346" fill="none" stroke-width="7"/>
+  </g>
+</svg>

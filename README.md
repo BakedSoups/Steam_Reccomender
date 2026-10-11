@@ -1,5 +1,9 @@
 # NextSteamGame
 
+![Greg says: Hey, welcome to Steam Rec!](docs/assets/greg-welcome.png)
+
+Meet Greg, the reader who welcomes you to Steam Rec. [Download his transparent PNG](docs/assets/greg.png) for promotional material.
+
 `NextSteamGame` is a Steam recommendation project built around the idea that games
 should be matched by what they are, not only by player-overlap signals.
 
