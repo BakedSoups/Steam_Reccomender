@@ -1,5 +1,19 @@
 # NextSteamGame
 
+<img src="docs/assets/greg.png" alt="Greg" width="96" align="right" />
+
+## How Steam Rec Works
+
+<img width="1688" height="1260" alt="pipeline" src="https://github.com/user-attachments/assets/fb48c02d-53c1-4afd-ae4a-d7f58fee58f1" />
+
+Steam Rec is essentially a RAG style retrieval system built around a hierarchical genre tree and the specific aspects of each game. The genre tree organizes games into primary genres, subgenres, and more specific branches. Review derived tags and vectors describe what players enjoy within those branches, from mission structure and combat systems to atmosphere and music. The genre branches contribute to both the embedded retrieval profile and the live genre match score; retrieval does not traverse the tree.
+
+The expensive work happens ahead of time: collect reviews, extract game profiles, canonicalize tags, embed those profiles, and retrieve candidate games for each reference game. Those candidate pools are saved in Postgres. My small Vultr instance then loads a pool and reranks it using the aspects and weights you choose.
+
+The RAG comparison describes the retrieval approach. The live engine returns scored game matches rather than generating an answer with an LLM. Keeping extraction and retrieval offline lets the project serve personalized searches without repeating that expensive work for every user.
+
+## Why This Engine Exists
+
 `NextSteamGame` is a Steam recommendation project built around the idea that games
 should be matched by what they are, not only by player-overlap signals.
 
@@ -31,21 +45,7 @@ Current runtime application:
 <img width="1958" height="1198" alt="image" src="https://github.com/user-attachments/assets/05f8ca2c-5578-41c2-8b3e-7d45d4ae61ff" />
 <img width="1986" height="1433" alt="image" src="https://github.com/user-attachments/assets/26c461ad-472d-41d3-aee9-02e57d3ee42a" />
 
-## How Recommendations Work
-
-I wanted a recommendation system that could answer:
-
-> Why is this game being recommended?
-
-Traditional recommenders often know that two games are related but cannot clearly explain the connection.
-
-For example:
-
-- Star Wars and Lord of the Rings may both be recommended because of a hero's journey.
-- Two players may enjoy the same game for completely different reasons.
-- A niche mechanic may be more important than the genre itself.
-
-The goal of NextSteamGame is to build recommendations around a game's semantic identity rather than only player behavior.
+## Data and Build Stages
 
 The current database contains roughly:
 
@@ -54,6 +54,8 @@ The current database contains roughly:
 - semantic vectors
 - identity tags
 - canonicalized genre and tag relationships
+
+The expensive retrieval work is precomputed for each reference game. The live server loads that candidate pool and reranks it using the aspects and weights you choose. This leaves my small Vultr instance with a much lighter job than searching the entire catalog for every adjustment.
 
 ### Stage 1: Metadata Collection
 
@@ -158,26 +160,29 @@ steam_final_canon.db
 
 ### Stage 5: Retrieval Optimization
 
-Computing similarity between every game at runtime would be expensive.
+The recommendation system follows a retrieve and rerank approach. Think of it as the retrieval stage of RAG, with the expensive search computed ahead of time. LLMs extract focus vectors and identity metadata from reviews during the offline pipeline; the live app scores existing game profiles rather than generating recommendations with an LLM on each request.
 
-Instead, NextSteamGame precomputes candidate relationships offline.
+During precomputation, Chroma finds nearby games using embeddings of their canonical profiles. The pipeline saves a candidate pool for each reference game in Postgres, in the `precomputed_candidates` table. The build default is 300 candidates per game, configurable with `--per-game`. The live retriever also defaults to a maximum pool of 300 candidates.
 
-When a user searches:
+When a user asks for recommendations:
 
-1. candidate games are retrieved
-2. user weighting is applied
-3. recommendations are reranked
+1. the server loads the reference game's saved candidate IDs from Postgres
+2. it loads those games' profiles and scores their mechanics, narrative, vibe, structure, genres, identity, setting, music, and appeal against the user's preferences
+3. it combines the weighted scores, applies metadata penalties and confidence adjustments, sorts the results, and returns the top matches
 
-This keeps the live application extremely cheap while still allowing real-time customization.
+The normal path uses the saved pool. If it is missing or unusable, the retriever logs a warning and can fall back to Postgres prescreening and live Chroma retrieval when available.
 
-## Pipeline
+Adjusting the controls changes the ranking within that candidate pool. The candidate relationships are precomputed; the final personalized order is calculated at request time.
 
-<img width="1688" height="1260" alt="pipeline" src="https://github.com/user-attachments/assets/fb48c02d-53c1-4afd-ae4a-d7f58fee58f1" />
+This is how I keep my poor Vultr instance from doing the expensive work repeatedly. Review processing, LLM extraction, embedding generation, and catalog retrieval happen ahead of time. The usual live request is database reads and scoring a few hundred profiles, which keeps compute needs modest as more people use the engine. It also means a game outside the saved pool cannot appear through reranking alone; expanding discovery requires a broader pool or rebuilding retrieval.
+
+## Runtime Stack
 
 - backend: `FastAPI`
 - frontend: `Next.js` / React
 - runtime game store: `Postgres` through SQLAlchemy Core
-- retrieval target: local `Chroma`
+- offline candidate retrieval: local `Chroma`
+- live candidate lookup: `Postgres` (`precomputed_candidates`)
 - upstream build artifacts: `SQLite`
 
 The app flow is:
@@ -185,4 +190,4 @@ The app flow is:
 1. search for a Steam game
 2. open it as the reference profile
 3. inspect and adjust its focus vectors, identity tags, genres, and appeal axes
-4. rerank recommendations from the game's semantic profile
+4. rerank the reference game's precomputed candidate pool using your chosen aspects and weights

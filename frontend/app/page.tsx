@@ -2,16 +2,19 @@
 
 import { useEffect, useMemo, useState } from "react"
 import posthog from "posthog-js"
-import { ArrowLeft, ArrowRight, ExternalLink, Github, Menu, MessageCircleMore, Star, X } from "lucide-react"
-import steamLogo from "@/art_assets/Steam-Logo.png"
+import { ArrowLeft, ArrowRight, ExternalLink, Github, Home, Menu, ChevronDown, Star, X } from "lucide-react"
 import gameShelfBackground from "@/art_assets/game_collection_background.webp"
 import sneakyFishyImage from "@/art_assets/sneaky-fishy-card.jpg"
 import { SearchBar } from "@/components/search-bar"
+import { CozyReader } from "@/components/cozy-reader"
+import { EngineStoryExpand } from "@/components/engine-story-expand"
 import { SelectedGamePanel } from "@/components/selected-game-panel"
 import { ControlPanel } from "@/components/control-panel"
 import { RecommendationsPanel } from "@/components/recommendations-panel"
 import { TagFilterPanel } from "@/components/tag-filter-panel"
 import { scheduleRequest } from "@/lib/scheduled-request"
+import { PlatformBadges } from "@/components/platform-badges"
+import { supportsOperatingSystem } from "@/lib/platforms"
 import { unique } from "@/lib/collections"
 import { clampPercent } from "@/lib/number"
 import { updatePercentWeight } from "@/lib/percent-weights"
@@ -167,11 +170,8 @@ function logUiActivity(
 
 export default function NextSteamGamePage() {
   const [screen, setScreen] = useState<Screen>("search")
+  const [advancedWarningDismissed, setAdvancedWarningDismissed] = useState(false)
   const [controlMode, setControlMode] = useState<"simple" | "advanced">("simple")
-  const [dismissedModeHints, setDismissedModeHints] = useState<{ simple: boolean; advanced: boolean }>({
-    simple: false,
-    advanced: false,
-  })
   const [selectedGame, setSelectedGame] = useState<Game | null>(null)
   const [selectedSimpleTags, setSelectedSimpleTags] = useState<string[]>([])
   const [simpleHighlightedContexts, setSimpleHighlightedContexts] = useState<TagContextKey[]>([])
@@ -226,7 +226,6 @@ export default function NextSteamGamePage() {
     selectedGame?.image ||
     selectedGame?.headerImage ||
     ""
-  const showModeHint = !dismissedModeHints[controlMode]
   const selectedGameHasSemanticProfile = hasSemanticProfile(selectedGame)
   const selectedGameSteamUrl = steamStoreUrl(selectedGame)
   const selectedGameScreenshots = selectedGame?.screenshots?.slice(0, 3) ?? []
@@ -414,6 +413,7 @@ export default function NextSteamGamePage() {
       })
     }
 
+    filtered = filtered.filter((rec) => supportsOperatingSystem(rec.platforms, tagFilters.operatingSystem ?? ""))
     return filtered
   }, [rawRecommendations, tagFilters])
 
@@ -435,7 +435,8 @@ export default function NextSteamGamePage() {
     tagFilters.include.length +
     tagFilters.exclude.length +
     ((tagFilters.minReviewPercent ?? 0) > 0 ? 1 : 0) +
-    ((tagFilters.minReviewRelevance ?? 0) > 0 ? 1 : 0)
+    ((tagFilters.minReviewRelevance ?? 0) > 0 ? 1 : 0) +
+    (tagFilters.operatingSystem ? 1 : 0)
 
   const goToScreen = (nextScreen: Screen) => {
     setMobileFiltersOpen(false)
@@ -700,113 +701,60 @@ export default function NextSteamGamePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="viewport-height relative flex flex-col bg-background">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLdScriptValue(websiteStructuredData) }}
       />
-      <header className="sticky top-0 z-50 border-b border-white/8 bg-[#07111b]/92 backdrop-blur-xl">
-        <div className="mx-auto max-w-[1800px] px-6 py-4">
-          <div className="relative flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => goToScreen("search")}
-                className="group/logo inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-black/30 p-2 text-sm text-foreground shadow-[0_10px_28px_rgba(0,0,0,0.22)] transition hover:border-cyan-200/35 hover:bg-white/5"
-                aria-label="Home"
-                title="Home"
-              >
-                <img
-                  src={steamLogo.src}
-                  alt="Steam"
-                  className="h-full w-full object-contain transition-transform duration-300 group-hover/logo:rotate-6"
-                />
-              </button>
-              <button onClick={() => goToScreen("search")} className="hidden text-left sm:block" aria-label="NextSteamGame home">
-                <span className="block text-sm font-semibold tracking-wide text-slate-100">NextSteamGame</span>
-              </button>
-              <div className="inline-flex rounded-full border border-border bg-secondary/40 p-0.5 shadow-[0_10px_28px_rgba(0,0,0,0.18)]">
-                <button
-                  onClick={() => setControlMode("simple")}
-                  className={`rounded-full px-3 py-1.5 text-xs transition-colors ${
-                    controlMode === "simple" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  Simple
-                </button>
-                <button
-                  onClick={() => {
-                    setControlMode("advanced")
-                    setDismissedModeHints((prev) => ({
-                      ...prev,
-                      advanced: false,
-                    }))
-                  }}
-                  className={`hidden rounded-full px-3 py-1.5 text-xs transition-colors sm:block ${
-                    controlMode === "advanced" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  Advanced
-                </button>
-              </div>
-            </div>
 
-            {controlMode === "advanced" && showModeHint ? (
-              <div
-                className="pointer-events-auto absolute left-3 right-3 top-[58px] z-[70] rounded-[22px] border border-black/10 bg-white px-4 py-3 text-xs leading-5 text-slate-950 shadow-[0_18px_42px_rgba(0,0,0,0.28)] sm:left-[92px] sm:right-auto sm:w-[240px]"
-              >
-                <div className="absolute -top-2 left-10 h-4 w-4 rotate-45 border-l border-t border-black/10 bg-white sm:left-[118px]" />
-                <div className="flex items-start gap-3">
-                  <div className="mt-0.5 rounded-full border border-black/10 bg-slate-100 p-1.5 text-slate-900">
-                    <MessageCircleMore className="h-3.5 w-3.5" />
-                  </div>
-                  <div className="flex-1">
-                    Advanced mode unlocks full vector tuning, match weighting, deeper profile shaping, and direct result filters. We recommend staying in simple mode for the first few runs.
-                  </div>
-                  <button
-                    onClick={() =>
-                      setDismissedModeHints((prev) => ({
-                        ...prev,
-                        [controlMode]: true,
-                      }))
-                    }
-                    className="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full text-current/70 transition hover:bg-white/10 hover:text-current"
-                    aria-label={`Dismiss ${controlMode} mode description`}
-                    title="Dismiss"
-                  >
-                    <X className="h-3.5 w-3.5" />
-                  </button>
-                </div>
-              </div>
-            ) : null}
-          </div>
+      {screen === "results" && (
+        <div className="pointer-events-none absolute inset-x-0 top-10 z-[80] mx-auto hidden w-full max-w-[1920px] px-3 md:px-4 xl:block xl:px-5">
+          <button type="button" onClick={() => goToScreen("search")} className="pointer-events-auto inline-flex min-h-14 items-center gap-2 rounded-full border border-white/30 bg-[#18364b] px-5 py-3 text-base font-semibold text-white transition hover:bg-[#24506b]">
+            <Home className="h-5 w-5" aria-hidden="true" /> Home
+          </button>
         </div>
-      </header>
+      )}
+      <div className={`absolute right-4 top-8 z-[80] flex-col items-end gap-2 sm:right-6 sm:top-10 ${screen === "search" ? "flex" : "hidden sm:flex"}`}>
+        <div className="flex items-center gap-2">
 
-      <main className={screen === "search" ? "" : "mx-auto max-w-[1920px] px-3 py-4 sm:py-8 md:px-4 xl:px-5"}>
+        <a href="https://github.com/BakedSoups/NextSteamGame" target="_blank" rel="noreferrer" className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/20 bg-black/50 px-3 py-2 text-sm sm:min-h-14 sm:gap-3 sm:px-5 sm:py-3 sm:text-lg font-semibold text-white shadow-lg backdrop-blur transition hover:border-cyan-200/50 hover:bg-black/65">
+          <Github className="h-5 w-5 sm:h-7 sm:w-7" /><span>GitHub</span>
+          {githubStarCount !== null ? <span className="rounded-full bg-white/15 px-2 py-0.5 text-sm font-bold leading-5 sm:px-3 sm:py-1 sm:text-lg sm:leading-6 tabular-nums">{githubStarCount.toLocaleString()}</span> : null}
+          <Star className="h-4 w-4 fill-current" />
+        </a>
+        </div>
+        <details className="relative hidden sm:block">
+          <summary className="flex min-h-12 cursor-pointer list-none items-center gap-2 rounded-full border border-sky-200/60 bg-[#18364b] px-5 py-2.5 text-base font-semibold text-sky-100 shadow-lg [&::-webkit-details-marker]:hidden">
+            Mode: {controlMode === "simple" ? "Simple" : "Advanced"} <ChevronDown className="h-4 w-4" />
+          </summary>
+          <div className="absolute right-0 mt-2 w-56 rounded-xl border border-white/15 bg-[#09131e] p-2 shadow-xl">
+            {(["simple", "advanced"] as const).map((mode) => (
+              <button key={mode} type="button" aria-pressed={controlMode === mode} onClick={(event) => { setControlMode(mode); setAdvancedWarningDismissed(false); event.currentTarget.closest("details")?.removeAttribute("open") }} className={`block w-full rounded-lg px-3 py-2.5 text-left text-sm ${controlMode === mode ? "bg-sky-300/20 text-sky-100" : "text-slate-200 hover:bg-white/10"}`}>
+                <span className="block font-semibold">{mode === "simple" ? "Simple" : "Advanced"}</span>
+                <span className="mt-1 block text-xs text-slate-400">{mode === "simple" ? "Choose the aspects you enjoy" : "Full weights, tuning, and filters"}</span>
+              </button>
+            ))}
+          </div>
+        </details>
+        {controlMode === "advanced" && !advancedWarningDismissed && (
+          <div role="status" className="relative hidden sm:block w-[min(22rem,calc(100vw-2rem))] rounded-xl border border-amber-200/40 bg-[#17202b] px-4 py-3 pr-11 text-left text-sm leading-6 text-white shadow-xl">
+            <button type="button" onClick={() => setAdvancedWarningDismissed(true)} aria-label="Dismiss Advanced mode warning" className="absolute right-1 top-1 flex h-9 w-9 items-center justify-center rounded-lg text-white/70 hover:bg-white/10 hover:text-white"><X className="h-4 w-4" /></button>
+            <p className="font-semibold text-amber-200">Advanced mode</p>
+            <p>This shows all the axes you can control! Watch out: this isn&apos;t mobile friendly and is lowkey confusing.</p>
+          </div>
+        )}
+      </div>
+
+      <main className={screen === "search" ? "flex flex-1" : "mx-auto w-full max-w-[1920px] px-3 pb-4 pt-6 sm:pt-36 sm:pb-8 md:px-4 xl:px-5"}>
         {screen === "search" && (
-          <div className="relative isolate min-h-[calc(100svh-77px)] overflow-hidden bg-[#050a10] md:min-h-[calc(125dvh-77px)]">
+          <div className="relative isolate flex flex-1 overflow-hidden bg-[#050a10]">
             <img
               src={gameShelfBackground.src}
               alt=""
-              className="launch-background absolute inset-0 h-full w-full object-cover object-center md:object-[center_42%]"
+              className="launch-background home-shelf-background fixed inset-0 w-full object-cover object-center md:object-[center_42%]"
             />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_47%,rgba(31,142,190,0.13),transparent_26rem),linear-gradient(180deg,rgba(5,11,17,0.42)_0%,rgba(8,13,19,0.65)_42%,rgba(5,10,16,0.88)_100%),linear-gradient(90deg,rgba(3,8,13,0.44)_0%,rgba(8,13,19,0.18)_48%,rgba(3,8,13,0.58)_100%)]" />
-            <div className="launch-scanlines pointer-events-none absolute inset-0 opacity-[0.055]" />
-            <a
-              href="https://github.com/BakedSoups/NextSteamGame"
-              target="_blank"
-              rel="noreferrer"
-              className="absolute right-4 top-4 z-20 inline-flex items-center gap-2 rounded-full border border-white/18 bg-black/40 px-3 py-2 text-sm font-medium text-white shadow-[0_12px_30px_rgba(0,0,0,0.28)] backdrop-blur transition hover:border-cyan-200/45 hover:bg-black/55 sm:right-6 sm:top-6"
-            >
-              <Github className="h-4 w-4" />
-              <span>GitHub</span>
-              {githubStarCount !== null ? (
-                <span className="rounded-full bg-white/12 px-2 py-0.5 text-xs font-semibold tabular-nums text-white/90">
-                  {githubStarCount.toLocaleString()}
-                </span>
-              ) : null}
-              <Star className="h-3.5 w-3.5 fill-current" />
-            </a>
+            <div className="home-shelf-background fixed inset-0 bg-[radial-gradient(circle_at_50%_47%,rgba(31,142,190,0.13),transparent_26rem),linear-gradient(180deg,rgba(5,11,17,0.42)_0%,rgba(8,13,19,0.65)_42%,rgba(5,10,16,0.88)_100%),linear-gradient(90deg,rgba(3,8,13,0.44)_0%,rgba(8,13,19,0.18)_48%,rgba(3,8,13,0.58)_100%)]" />
+            <div className="launch-scanlines home-shelf-background pointer-events-none fixed inset-0 opacity-[0.055]" />
             <a
               href={SNEAKY_FISHY_URL}
               target="_blank"
@@ -832,26 +780,20 @@ export default function NextSteamGamePage() {
                 </span>
               </span>
             </a>
-            <div className="relative z-10 flex min-h-[calc(100svh-77px)] items-start justify-center px-4 pb-10 pt-20 sm:items-center sm:px-8 sm:pb-12 sm:pt-8 md:min-h-[calc(125dvh-77px)] md:px-12 md:pt-10">
+            <div className="home-search-content relative z-10 flex flex-1 items-start justify-center px-4 pb-10 pt-28 sm:px-8 sm:pb-12 md:px-12">
               <div className="w-full max-w-5xl text-center">
-                <div className="group/hero-logo flex items-center justify-center gap-4 sm:gap-6">
-                  <img
-                    src={steamLogo.src}
-                    alt="Steam"
-                    className="launch-logo h-14 w-14 shrink-0 object-contain transition-transform duration-500 group-hover/hero-logo:rotate-3 sm:h-32 sm:w-32 md:h-40 md:w-40"
-                  />
-                  <div className="min-w-0 space-y-2 text-left">
+                <div className="group/hero-logo flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
+                  <CozyReader />
+                  <div className="min-w-0 space-y-2 text-center">
                     <h1 className="text-[1.75rem] font-semibold leading-[1.08] tracking-tight text-white sm:text-[2.85rem] md:text-[3.5rem] xl:text-[3.9rem]">
                       Find Similar Steam Games
                     </h1>
-                    <div className="text-xs font-medium uppercase tracking-[0.22em] text-slate-300/88 sm:text-sm sm:tracking-[0.24em]">
-                      NextSteamGame
-                    </div>
+                    <p className="mx-auto max-w-2xl pt-3 text-balance text-lg leading-8 text-slate-100 sm:text-xl sm:leading-9">
+                      This engine aims to give you more control over your search by letting you choose specific aspects of a game you love.
+                    </p>
+
                   </div>
                 </div>
-                <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-slate-200 sm:mt-5 sm:text-base sm:leading-7 md:text-lg">
-                  This site turns Steam reviews into usable tags and vectors, so games here represent the community&apos;s voice instead of only store categories.
-                </p>
                 <div className="mx-auto mt-6 max-w-4xl sm:mt-10">
                   <SearchBar
                     games={searchResults}
@@ -861,12 +803,13 @@ export default function NextSteamGamePage() {
                     selectedGame={selectedGame}
                   />
                 </div>
+                <EngineStoryExpand />
                 {searchError && <p className="mt-4 text-sm text-red-300">{searchError}</p>}
                 <a
                   href={SNEAKY_FISHY_URL}
                   target="_blank"
                   rel="noreferrer"
-                  className="mx-auto mt-6 flex max-w-md overflow-hidden rounded-2xl border border-cyan-200/25 bg-[#09131e]/94 text-left text-white shadow-[0_20px_50px_rgba(0,0,0,0.4)] backdrop-blur lg:hidden sm:mt-8"
+                  className="mx-auto mt-6 hidden sm:flex max-w-md overflow-hidden rounded-2xl border border-cyan-200/25 bg-[#09131e]/94 text-left text-white shadow-[0_20px_50px_rgba(0,0,0,0.4)] backdrop-blur lg:hidden sm:mt-8"
                 >
                   <span aria-hidden="true" className="w-28 shrink-0 bg-cover bg-center sm:w-36" style={{ backgroundImage: `url(${sneakyFishyImage.src})` }} />
                   <span className="min-w-0 px-4 py-3">
@@ -881,14 +824,14 @@ export default function NextSteamGamePage() {
         )}
 
         {screen === "profile" && (
-          <div className="relative -mx-3 -mt-4 overflow-hidden bg-[#121b27] sm:-mx-6 sm:-mt-8">
+          <div className="mobile-game-profile relative -mx-3 -mt-4 overflow-hidden bg-[#121b27] sm:-mx-6 sm:-mt-8">
               {profileHeroImage && (
                 <>
-                  <div className="absolute inset-x-0 top-0 flex items-start justify-center overflow-hidden" style={{ height: backgroundHeroHeight }}>
+                  <div className="profile-hero-art absolute inset-x-0 top-0 flex items-start justify-center overflow-hidden" style={{ height: backgroundHeroHeight }}>
                     <img
                       src={profileHeroImage}
                       alt={selectedGame?.title || "Selected game"}
-                      className="h-full w-full object-cover blur-[1.5px] saturate-[0.82] md:blur-0 md:saturate-100"
+                      className="h-full w-full object-cover saturate-100"
                       style={{
                         objectPosition: backgroundHeroPosition,
                         transform: `scale(${backgroundHeroZoom})`,
@@ -897,11 +840,11 @@ export default function NextSteamGamePage() {
                     />
                   </div>
                   <div
-                    className="absolute inset-x-0 top-0 bg-[linear-gradient(180deg,rgba(9,14,20,0.34),rgba(9,14,20,0.48)_32%,rgba(9,14,20,0.68)_60%,rgba(9,14,20,0.96)_100%),linear-gradient(90deg,rgba(9,14,20,0.66)_0%,rgba(9,14,20,0.36)_50%,rgba(9,14,20,0.40)_100%)] md:bg-[linear-gradient(180deg,rgba(9,14,20,0.08),rgba(9,14,20,0.22)_32%,rgba(9,14,20,0.46)_60%,rgba(9,14,20,0.90)_100%),linear-gradient(90deg,rgba(9,14,20,0.46)_0%,rgba(9,14,20,0.18)_36%,rgba(9,14,20,0.06)_68%,rgba(9,14,20,0.22)_100%)]"
+                    className="profile-hero-shade absolute inset-x-0 top-0 bg-[linear-gradient(180deg,rgba(9,14,20,0.34),rgba(9,14,20,0.48)_32%,rgba(9,14,20,0.68)_60%,rgba(9,14,20,0.96)_100%),linear-gradient(90deg,rgba(9,14,20,0.66)_0%,rgba(9,14,20,0.36)_50%,rgba(9,14,20,0.40)_100%)] md:bg-[linear-gradient(180deg,rgba(9,14,20,0.08),rgba(9,14,20,0.22)_32%,rgba(9,14,20,0.46)_60%,rgba(9,14,20,0.90)_100%),linear-gradient(90deg,rgba(9,14,20,0.46)_0%,rgba(9,14,20,0.18)_36%,rgba(9,14,20,0.06)_68%,rgba(9,14,20,0.22)_100%)]"
                     style={{ height: backgroundHeroHeight }}
                   />
                   <div
-                    className="absolute inset-x-0 h-40 bg-[linear-gradient(180deg,rgba(14,22,33,0)_0%,rgba(14,22,33,0.24)_34%,rgba(14,22,33,0.72)_100%)] blur-2xl"
+                    className="profile-hero-bottom absolute inset-x-0 h-40 bg-[linear-gradient(180deg,rgba(14,22,33,0)_0%,rgba(14,22,33,0.24)_34%,rgba(14,22,33,0.72)_100%)] blur-2xl"
                     style={{ top: backgroundHeroHeight - 64 }}
                   />
                 </>
@@ -921,8 +864,9 @@ export default function NextSteamGamePage() {
                     </div>
                   </div>
 
+                  <div aria-hidden="true" className="h-12 sm:hidden" />
                   <div
-                    className="grid grid-cols-[116px_minmax(0,1fr)] items-end gap-3 sm:grid-cols-[148px_minmax(0,1fr)] sm:gap-5 md:[grid-template-columns:210px_minmax(0,1fr)] xl:gap-8"
+                    className="grid grid-cols-[72px_minmax(0,1fr)] items-end gap-3 sm:grid-cols-[148px_minmax(0,1fr)] sm:gap-5 md:[grid-template-columns:210px_minmax(0,1fr)] xl:gap-8"
                   >
                     <div className="contents md:hidden">
                       <div
@@ -930,7 +874,7 @@ export default function NextSteamGamePage() {
                         style={{ borderRadius: `${thumbnailRadius}px` }}
                       >
                         {profileCardImage ? (
-                          <div className="h-[168px] sm:h-[208px]">
+                          <div className="h-[104px] sm:h-[208px]">
                             <img
                               src={profileCardImage}
                               alt={selectedGame?.title || "Selected game"}
@@ -972,9 +916,10 @@ export default function NextSteamGamePage() {
                     </div>
 
                     <div className="min-w-0 pt-2">
-                      <h2 className="text-2xl font-semibold leading-tight tracking-tight text-white sm:text-4xl md:text-5xl">
+                      <h2 className="text-xl font-semibold leading-tight tracking-tight text-white sm:text-4xl md:text-5xl">
                         {selectedGame?.title}
                       </h2>
+                      <PlatformBadges platforms={selectedGame?.platforms} />
                       <div className="mt-3 flex flex-wrap gap-1.5 sm:mt-4 sm:gap-2">
                         {selectedGame?.genres.primary.slice(0, 2).map((genre) => (
                           <span
@@ -989,7 +934,7 @@ export default function NextSteamGamePage() {
                             {selectedGame.category}
                           </span>
                         ) : null}
-                        <span className="rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[10px] uppercase tracking-[0.12em] text-white/85 sm:px-3 sm:text-xs sm:tracking-[0.18em]">
+                        <span className="hidden sm:inline-flex rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[10px] uppercase tracking-[0.12em] text-white/85 sm:px-3 sm:text-xs sm:tracking-[0.18em]">
                           AppID {selectedGame?.id}
                         </span>
                       </div>
@@ -1026,12 +971,12 @@ export default function NextSteamGamePage() {
                             href={url}
                             target="_blank"
                             rel="noreferrer"
-                            className="group min-w-[72vw] snap-start overflow-hidden rounded-xl border border-white/10 bg-black/20 sm:min-w-[46vw]"
+                            className="group min-w-[62vw] snap-start overflow-hidden rounded-xl border border-white/10 bg-black/20 sm:min-w-[46vw]"
                           >
                             <img
                               src={url}
                               alt={`${selectedGame?.title || "Selected game"} screenshot ${index + 1}`}
-                              className="h-28 w-full object-cover transition-transform duration-200 group-hover:scale-[1.02] sm:h-32"
+                              className="h-24 w-full object-cover transition-transform duration-200 group-hover:scale-[1.02] sm:h-32"
                             />
                           </a>
                         ))}
@@ -1133,6 +1078,7 @@ export default function NextSteamGamePage() {
         {screen === "results" && (
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-[270px_minmax(0,1fr)_340px] xl:gap-5">
             <div className="hidden space-y-4 xl:sticky xl:top-24 xl:block xl:h-fit xl:max-h-[calc(100vh-7rem)] xl:overflow-y-auto custom-scrollbar xl:pr-1">
+
               <button
                 onClick={() => goToScreen("profile")}
                 className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm text-foreground hover:bg-secondary/30"
@@ -1149,7 +1095,10 @@ export default function NextSteamGamePage() {
             </div>
 
             <div className="space-y-4">
-              <div className="sticky top-[76px] z-40 -mx-1 flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-[#07111b]/94 p-2 shadow-[0_14px_34px_rgba(0,0,0,0.32)] backdrop-blur-xl xl:hidden">
+              <div className="relative -mx-1 flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-[#07111b]/94 p-2 shadow-[0_14px_34px_rgba(0,0,0,0.32)] backdrop-blur-xl xl:hidden">
+                <button type="button" onClick={() => goToScreen("search")} className="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-white hover:bg-white/[0.07]">
+                  <Home className="h-4 w-4" aria-hidden="true" /> Home
+                </button>
                 <button
                   type="button"
                   onClick={() => goToScreen("profile")}

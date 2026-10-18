@@ -1,9 +1,13 @@
+export type OperatingSystem = "windows" | "mac" | "linux"
+export type PlatformSupport = Record<OperatingSystem, boolean>
+
 export interface Game {
   id: number
   appId: string
   title: string
   description: string
   releaseDate: string
+  platforms?: PlatformSupport | null
   category: string
   image: string
   headerImage: string
@@ -83,6 +87,7 @@ export interface RecommendedGame extends Game {
 }
 
 export interface TagFilters {
+  operatingSystem?: OperatingSystem | ""
   include: string[]
   exclude: string[]
   minReviewPercent?: number

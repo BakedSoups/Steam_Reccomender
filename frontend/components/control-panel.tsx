@@ -726,7 +726,8 @@ export function ControlPanel({
                   />
                 </div>
                 <p className="mt-3 text-base leading-7 text-slate-100/90">
-                  These are the game&apos;s main focuses shown as vectors. If you want recommendations that focus on something else, slide that reason up; the other reasons will move down so the three sliders always stay at 100 total.
+                  <span className="sm:hidden">Choose what you enjoy most. Adjust the sliders to shape your recommendations.</span>
+                  <span className="hidden sm:inline">These are the game&apos;s main focuses shown as vectors. If you want recommendations that focus on something else, slide that reason up; the other reasons will move down so the three sliders always stay at 100 total.</span>
                 </p>
               </div>
               <div className="grid gap-4">

@@ -2,8 +2,11 @@
 
 import { useState, useMemo, type CSSProperties } from "react"
 import { Check, Search, X, Filter, ChevronDown, ChevronRight, ListFilter, Gamepad, MessageSquareText, Cloud, Repeat, BadgeInfo, Globe2, Volume2, type LucideIcon } from "lucide-react"
+import { OPERATING_SYSTEMS } from "@/lib/platforms"
+import type { OperatingSystem } from "@/lib/types"
 
 interface TagFilterState {
+  operatingSystem?: OperatingSystem | ""
   include: string[]
   exclude: string[]
   minReviewPercent?: number
@@ -95,7 +98,8 @@ export function TagFilterPanel({ filters, tagOptions, onFiltersChange }: TagFilt
     filters.include.length +
     filters.exclude.length +
     ((filters.minReviewPercent ?? 0) > 0 ? 1 : 0) +
-    ((filters.minReviewRelevance ?? 0) > 0 ? 1 : 0)
+    ((filters.minReviewRelevance ?? 0) > 0 ? 1 : 0) +
+    (filters.operatingSystem ? 1 : 0)
 
   return (
     <div className="panel overflow-hidden glow-box-subtle">
@@ -135,6 +139,20 @@ export function TagFilterPanel({ filters, tagOptions, onFiltersChange }: TagFilt
           </div>
         </div>
       ) : null}
+
+      <div className="border-b border-border p-3">
+        <label className="mb-2 block text-sm text-foreground">
+          Operating system
+          <select
+            value={filters.operatingSystem ?? ""}
+            onChange={(event) => onFiltersChange({ ...filters, operatingSystem: event.target.value as OperatingSystem | "" })}
+            className="mt-2 w-full rounded border border-border bg-input px-3 py-2 text-sm"
+          >
+            <option value="">Any OS</option>
+            {OPERATING_SYSTEMS.map(({ id, label }) => <option key={id} value={id}>{label}</option>)}
+          </select>
+        </label>
+      </div>
 
       {/* Search Input */}
       <div className="border-b border-border p-3">

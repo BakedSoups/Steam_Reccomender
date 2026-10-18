@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/controller-icon.png',
+        url: '/nextsteamgame-icon.png?v=flared-lamp-6',
         width: 512,
         height: 512,
         alt: 'NextSteamGame',
@@ -37,15 +37,18 @@ export const metadata: Metadata = {
     title: 'Find Similar Steam Games | NextSteamGame',
     description:
       'Find similar Steam games by mechanics, tags, structure, genre, and music.',
-    images: ['/controller-icon.png'],
+    images: ['/nextsteamgame-icon.png'],
   },
   robots: {
     index: true,
     follow: true,
   },
   icons: {
-    icon: '/controller-icon.png',
-    apple: '/controller-icon.png',
+    icon: [
+      { url: '/nextsteamgame-icon.svg?v=flared-lamp-6', type: 'image/svg+xml' },
+      { url: '/nextsteamgame-icon.png?v=flared-lamp-6', type: 'image/png', sizes: '512x512' },
+    ],
+    apple: '/apple-touch-icon.png?v=flared-lamp-6',
   },
 }
 
