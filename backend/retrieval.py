@@ -51,6 +51,8 @@ class CandidateRetriever:
         seen: set[int] = set()
         indices = [0 for _ in candidate_lists]
 
+        # Interleave sources so one long list cannot consume the entire limit.
+        # Each source keeps its ranking, and shared appids occupy only one slot.
         while len(merged) < limit:
             progressed = False
             for list_index, candidate_ids in enumerate(candidate_lists):
@@ -153,6 +155,8 @@ class CandidateRetriever:
         tag_boosts: dict[str, dict[str, float]] | None,
         soundtrack_boosts: dict[str, float] | None,
     ) -> bool:
+        # A saved embedding represents the untuned profile. Custom preferences
+        # need query text when retrieval falls back to a live Chroma search.
         if tag_boosts:
             return False
         if soundtrack_boosts:
@@ -215,6 +219,8 @@ class CandidateRetriever:
                 parts.append(f"{context}:{tag}")
 
         active_contexts = context_percentages or {}
+        # Repetition expresses emphasis to the text embedding model; these are
+        # query hints, separate from the numeric weights used by the reranker.
         for context, weight in active_contexts.items():
             numeric_weight = max(float(weight), 0.0)
             if numeric_weight <= 0:

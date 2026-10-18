@@ -220,6 +220,8 @@ def _build_vector_preferences(
     multipliers = context_multipliers or VECTOR_CONTEXT_MULTIPLIERS
     preferences: dict[str, dict[str, float]] = {}
     for context, tag_weights in vectors.items():
+        # Despite the "boosts" name, a supplied context replaces its tag weights.
+        # Normalize within the context before applying its overall influence.
         override_weights = boosts.get(context, tag_weights)
         normalized = _normalize_weights(override_weights)
         context_multiplier = multipliers.get(context, 1.0)
@@ -553,6 +555,8 @@ def recommend_games(
         vector_breakdown = _vector_context_breakdown(game["vectors"], vector_preferences)
         identity_score = _identity_match_score(game["metadata"], identity_preferences)
         setting_score = _setting_match_score(game["metadata"], setting_preferences)
+        # Only contexts with preferences enter the average, so missing source
+        # evidence does not dilute the score as if it were a failed match.
         active_vector_contexts = [
             context for context, preferred_weights in vector_preferences.items() if preferred_weights
         ]

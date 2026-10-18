@@ -55,6 +55,7 @@ function normalizeToHundred(tags: string[]): Record<string, number> {
   if (tags.length === 0) return {}
   const base = Math.floor(100 / tags.length)
   const remainder = 100 - base * tags.length
+  // Spread rounding leftovers across the first tags so integer weights sum to 100.
   return tags.reduce<Record<string, number>>((weights, tag, index) => {
     weights[tag] = base + (index < remainder ? 1 : 0)
     return weights
@@ -73,6 +74,8 @@ function displayTagWeights(tags: string[], liveWeights?: Record<string, number>)
     return weights
   }, {})
   const resolved = tags.reduce<Record<string, number>>((weights, tag) => {
+    // Prefer exact labels, then tolerate spacing/hyphen differences from stored
+    // keys. Nullish fallback preserves an explicitly disabled tag's zero weight.
     weights[tag] = rawWeights[tag] ?? normalizedEntries[normalizeTagKey(tag)] ?? fallbackWeights[tag] ?? 0
     return weights
   }, {})
